@@ -7,7 +7,7 @@ import { InstitutionCategoryBadge } from '../components/common/InstitutionCatego
 import { SkeletonLoader, ErrorMessage, EmptyState } from '../components/common/FeedbackComponents';
 import { Search, Filter, MapPin, Building, GraduationCap, ArrowRight, ShieldCheck, Award, Sparkles, Landmark } from 'lucide-react';
 import { AddCollegeModal } from '../components/common/AddCollegeModal';
-import { FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
+import { FALLBACK_ALL_COLLEGES, FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
 
 export const CollegeDirectoryPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,11 +39,11 @@ export const CollegeDirectoryPage = () => {
       if (res.data?.success && res.data.data.colleges?.length > 0) {
         setColleges(res.data.data.colleges);
       } else {
-        const allFallback = [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES];
+        const allFallback = [...FALLBACK_ALL_COLLEGES];
         let filtered = allFallback;
         if (search) {
           const q = search.toLowerCase();
-          filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || (c.shortName && c.shortName.toLowerCase().includes(q)) || c.city.toLowerCase().includes(q));
+          filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || (c.shortName && c.shortName.toLowerCase().includes(q)) || c.city.toLowerCase().includes(q) || (c.state && c.state.toLowerCase().includes(q)));
         }
         if (tier) filtered = filtered.filter(c => c.tierClassification?.tier === tier);
         if (state) filtered = filtered.filter(c => c.state?.toLowerCase() === state.toLowerCase());
@@ -51,12 +51,14 @@ export const CollegeDirectoryPage = () => {
       }
     } catch (err) {
       console.warn('Directory API failed, using embedded colleges dataset:', err.message);
-      const allFallback = [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES];
+      const allFallback = [...FALLBACK_ALL_COLLEGES];
       let filtered = allFallback;
       if (search) {
         const q = search.toLowerCase();
-        filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || (c.shortName && c.shortName.toLowerCase().includes(q)) || c.city.toLowerCase().includes(q));
+        filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || (c.shortName && c.shortName.toLowerCase().includes(q)) || c.city.toLowerCase().includes(q) || (c.state && c.state.toLowerCase().includes(q)));
       }
+      if (tier) filtered = filtered.filter(c => c.tierClassification?.tier === tier);
+      if (state) filtered = filtered.filter(c => c.state?.toLowerCase() === state.toLowerCase());
       setColleges(filtered);
     } finally {
       setLoading(false);
@@ -274,10 +276,10 @@ export const CollegeDirectoryPage = () => {
                           Community Added
                         </span>
                       )}
-                      {college.nirfRanking?.engineeringRank && (
+                      {(college.nirfRanking?.engineeringRank || college.nirfEngineeringRank) && (
                         <span className="text-[10px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-semibold border border-purple-200 flex items-center gap-1">
                           <Award className="w-2.5 h-2.5" />
-                          NIRF #{college.nirfRanking.engineeringRank}
+                          NIRF #{college.nirfRanking?.engineeringRank || college.nirfEngineeringRank}
                         </span>
                       )}
                     </div>

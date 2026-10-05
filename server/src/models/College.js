@@ -36,8 +36,8 @@ const collegeSchema = new mongoose.Schema(
     },
     campusType: {
       type: String,
-      enum: ['Government', 'IIT', 'NIT', 'IIIT', 'Central University', 'State University', 'Private Deemed University', 'Private Institute'],
       default: 'Private Institute',
+      trim: true,
     },
     establishedYear: {
       type: Number,
@@ -53,26 +53,14 @@ const collegeSchema = new mongoose.Schema(
     institutionCategory: {
       category: {
         type: String,
-        enum: ['Category A: Premium Public', 'Category B: Private', 'Unclassified'],
         default: 'Unclassified',
+        trim: true,
         index: true,
       },
       subCategory: {
         type: String,
-        enum: [
-          'IIT',
-          'NIT',
-          'IIIT',
-          'Private University',
-          'Private Engineering College',
-          'Deemed-to-be University (Private)',
-          'Deemed University',
-          'State University / Public',
-          'Other Premium Public',
-          'Other Private',
-          'Unclassified',
-        ],
         default: 'Unclassified',
+        trim: true,
       },
       policyType: {
         type: String,

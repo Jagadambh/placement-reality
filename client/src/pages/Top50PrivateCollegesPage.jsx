@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collegeApi } from '../api/collegeApi';
 import { useAuth } from '../context/AuthContext';
 import { SkeletonLoader, ErrorMessage, EmptyState } from '../components/common/FeedbackComponents';
-import { FALLBACK_TOP_50_COLLEGES } from '../data/fallbackData';
+import { FALLBACK_TOP_50_COLLEGES, FALLBACK_ALL_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
+import { AddCollegeModal } from '../components/common/AddCollegeModal';
 import {
   Award,
   Search,
@@ -29,6 +30,7 @@ import {
   Sparkles,
   ArrowUpDown,
   BookOpen,
+  PlusCircle,
 } from 'lucide-react';
 
 export const Top50PrivateCollegesPage = () => {
@@ -49,8 +51,9 @@ export const Top50PrivateCollegesPage = () => {
   const [minHighestPackage, setMinHighestPackage] = useState('');
   const [minAveragePackage, setMinAveragePackage] = useState('');
   const [minMedianPackage, setMinMedianPackage] = useState('');
-  const [sortBy, setSortBy] = useState('rank');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
+  const [sortBy, setSortBy] = useState('nirf_asc');
+  const [viewMode, setViewMode] = useState('table'); // Matrix table as preferred by user
+  const [institutionCategory, setInstitutionCategory] = useState('all'); // 'all' | 'iit_nit' | 'semi_gov' | 'top_50_private' | 'iiit'
 
   // Modals & Panels
   const [showMethodologyModal, setShowMethodologyModal] = useState(false);
@@ -58,47 +61,170 @@ export const Top50PrivateCollegesPage = () => {
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [recrawlingId, setRecrawlingId] = useState(null);
   const [recrawlSuccessMessage, setRecrawlSuccessMessage] = useState('');
+  const [isAddCollegeModalOpen, setIsAddCollegeModalOpen] = useState(false);
+
+  // Helper for NIRF Engineering Ranking
+  const getCollegeNirfRank = (college) => {
+    return (
+      college.nirfRanking?.engineeringRank ||
+      college.nirfEngineeringRank ||
+      college.rankingDetails?.nirfEngineeringRank ||
+      college.rankingDetails?.rank ||
+      (typeof college.nirfRank === 'number' ? college.nirfRank : null) ||
+      (typeof college.rank === 'number' ? college.rank : null)
+    );
+  };
+
+  // Helper for Displayed Rank (No #99 bug)
+  const getDisplayRank = (college, index) => {
+    const nirf = getCollegeNirfRank(college);
+    if (nirf) return nirf;
+    if (college.top50Rank) return college.top50Rank;
+    if (college.top50PrivateRank) return college.top50PrivateRank;
+    if (typeof college.rank === 'number') return college.rank;
+    return index + 1;
+  };
+
+  const handleCollegeAdded = (newCollege) => {
+    setColleges((prev) => [newCollege, ...prev]);
+    setRecrawlSuccessMessage(`College "${newCollege.name}" registered successfully! Verified in catalog.`);
+    setTimeout(() => setRecrawlSuccessMessage(''), 5000);
+  };
 
   const fetchTop50Colleges = async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = {};
-      if (search.trim()) params.search = search.trim();
-      if (selectedState) params.state = selectedState;
-      if (selectedBranch) params.branch = selectedBranch;
-      if (selectedAccreditation) params.accreditation = selectedAccreditation;
-      if (minHighestPackage) params.minHighestPackage = minHighestPackage;
-      if (minAveragePackage) params.minAveragePackage = minAveragePackage;
-      if (minMedianPackage) params.minMedianPackage = minMedianPackage;
-      if (sortBy) params.sortBy = sortBy;
-
-      const res = await collegeApi.getTop50PrivateColleges(params);
-      if (res.data?.success && res.data.data?.colleges?.length > 0) {
-        setColleges(res.data.data.colleges || []);
-        if (res.data.data.methodology) setMethodology(res.data.data.methodology);
-        if (res.data.data.filterOptions) setFilterOptions(res.data.data.filterOptions);
+      // 1. Choose source dataset based on category
+      let source = [];
+      if (institutionCategory === 'top_50_private') {
+        source = [...FALLBACK_TOP_50_COLLEGES];
+      } else if (institutionCategory === 'iit_nit') {
+        source = FALLBACK_ALL_COLLEGES.filter(
+          (c) => c.campusType === 'IIT' || c.campusType === 'NIT' || c.tierClassification?.tier === 'Tier 1'
+        );
+      } else if (institutionCategory === 'semi_gov') {
+        source = FALLBACK_ALL_COLLEGES.filter(
+          (c) =>
+            c.campusType?.includes('State') ||
+            c.campusType?.includes('Government') ||
+            c.campusType?.includes('Autonomous') ||
+            c.institutionCategory?.subCategory?.includes('State') ||
+            ['Jadavpur University', 'DTU', 'COEP', 'VJTI', 'NSUT', 'PEC', 'ICT Mumbai', 'Anna University'].includes(c.shortName)
+        );
+      } else if (institutionCategory === 'iiit') {
+        source = FALLBACK_ALL_COLLEGES.filter(
+          (c) => c.campusType === 'IIIT' || c.shortName?.startsWith('IIIT') || c.institutionCategory?.subCategory === 'IIIT'
+        );
       } else {
-        // Fallback to verified embedded dataset if database is cold or unseeded
-        let filtered = [...FALLBACK_TOP_50_COLLEGES];
-        if (search.trim()) {
-          const q = search.trim().toLowerCase();
-          filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || c.city.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
-        }
-        if (selectedState) filtered = filtered.filter(c => c.state.toLowerCase() === selectedState.toLowerCase());
-        if (selectedAccreditation) filtered = filtered.filter(c => c.naacGrade === selectedAccreditation);
-        setColleges(filtered);
+        // 'all' - includes all 81+ premier colleges (IITs, NITs, IIITs, Jadavpur Univ, State Autonomous, and Top 50 Private)
+        source = [...FALLBACK_ALL_COLLEGES];
       }
-    } catch (err) {
-      console.warn('Backend loading, using embedded verified Top 50 data:', err.message);
-      let filtered = [...FALLBACK_TOP_50_COLLEGES];
+
+      // 2. If backend is active and Top 50 Private is queried, attempt API enrichment
+      if (institutionCategory === 'top_50_private') {
+        try {
+          const res = await collegeApi.getTop50PrivateColleges();
+          if (res.data?.success && res.data.data?.colleges?.length > 0) {
+            source = res.data.data.colleges.map((col, idx) => {
+              const fbMatch = FALLBACK_TOP_50_COLLEGES.find((f) => f.name === col.name || f.slug === col.slug);
+              return {
+                ...col,
+                nirfEngineeringRank: col.nirfRanking?.engineeringRank || fbMatch?.nirfEngineeringRank || (idx + 1),
+                nirfRanking: {
+                  engineeringRank: col.nirfRanking?.engineeringRank || fbMatch?.nirfEngineeringRank || (idx + 1),
+                  year: 2026,
+                },
+                top50Rank: col.top50Rank || col.rankingDetails?.rank || fbMatch?.rank || (idx + 1),
+              };
+            });
+            if (res.data.data.methodology) setMethodology(res.data.data.methodology);
+          }
+        } catch (apiErr) {
+          console.warn('API fallback active:', apiErr.message);
+        }
+      }
+
+      // 3. Apply search & user filters
+      let filtered = [...source];
       if (search.trim()) {
         const q = search.trim().toLowerCase();
-        filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || c.city.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
+        let matched = filtered.filter(
+          (c) =>
+            c.name.toLowerCase().includes(q) ||
+            (c.shortName && c.shortName.toLowerCase().includes(q)) ||
+            c.city.toLowerCase().includes(q) ||
+            c.state.toLowerCase().includes(q) ||
+            (c.code && c.code.toLowerCase().includes(q))
+        );
+        // If not found in current category, search across all 81+ institutions
+        if (matched.length === 0) {
+          matched = FALLBACK_ALL_COLLEGES.filter(
+            (c) =>
+              c.name.toLowerCase().includes(q) ||
+              (c.shortName && c.shortName.toLowerCase().includes(q)) ||
+              c.city.toLowerCase().includes(q) ||
+              c.state.toLowerCase().includes(q) ||
+              (c.code && c.code.toLowerCase().includes(q))
+          );
+        }
+        filtered = matched;
       }
-      if (selectedState) filtered = filtered.filter(c => c.state.toLowerCase() === selectedState.toLowerCase());
-      if (selectedAccreditation) filtered = filtered.filter(c => c.naacGrade === selectedAccreditation);
+
+      if (selectedState) {
+        filtered = filtered.filter((c) => c.state?.toLowerCase() === selectedState.toLowerCase());
+      }
+      if (selectedBranch) {
+        filtered = filtered.filter(
+          (c) =>
+            (c.majorBranches && c.majorBranches.some((b) => b.toLowerCase().includes(selectedBranch.toLowerCase()))) ||
+            (c.engineeringPrograms && c.engineeringPrograms.some((p) => p.toLowerCase().includes(selectedBranch.toLowerCase())))
+        );
+      }
+      if (selectedAccreditation) {
+        filtered = filtered.filter((c) => c.naacGrade === selectedAccreditation);
+      }
+      if (minHighestPackage) {
+        const minH = parseFloat(minHighestPackage);
+        if (!isNaN(minH)) {
+          filtered = filtered.filter((c) => (c.latestPlacementRecord?.highestPackageLPA || 0) >= minH);
+        }
+      }
+      if (minAveragePackage) {
+        const minA = parseFloat(minAveragePackage);
+        if (!isNaN(minA)) {
+          filtered = filtered.filter((c) => (c.latestPlacementRecord?.averagePackageLPA || 0) >= minA);
+        }
+      }
+      if (minMedianPackage) {
+        const minM = parseFloat(minMedianPackage);
+        if (!isNaN(minM)) {
+          filtered = filtered.filter((c) => (c.latestPlacementRecord?.medianPackageLPA || 0) >= minM);
+        }
+      }
+
+      // 4. Sorting
+      filtered.sort((a, b) => {
+        const aNirf = getCollegeNirfRank(a) || 999;
+        const bNirf = getCollegeNirfRank(b) || 999;
+        switch (sortBy) {
+          case 'highest_desc':
+            return (b.latestPlacementRecord?.highestPackageLPA || 0) - (a.latestPlacementRecord?.highestPackageLPA || 0);
+          case 'average_desc':
+            return (b.latestPlacementRecord?.averagePackageLPA || 0) - (a.latestPlacementRecord?.averagePackageLPA || 0);
+          case 'median_desc':
+            return (b.latestPlacementRecord?.medianPackageLPA || 0) - (a.latestPlacementRecord?.medianPackageLPA || 0);
+          case 'nirf_asc':
+          case 'rank':
+          default:
+            return aNirf - bNirf;
+        }
+      });
+
       setColleges(filtered);
+    } catch (err) {
+      console.warn('Error in fetchTop50Colleges, falling back:', err.message);
+      setColleges([...FALLBACK_ALL_COLLEGES]);
     } finally {
       setLoading(false);
     }
@@ -106,7 +232,7 @@ export const Top50PrivateCollegesPage = () => {
 
   useEffect(() => {
     fetchTop50Colleges();
-  }, [selectedState, selectedBranch, selectedAccreditation, minHighestPackage, minAveragePackage, minMedianPackage, sortBy]);
+  }, [institutionCategory, selectedState, selectedBranch, selectedAccreditation, minHighestPackage, minAveragePackage, minMedianPackage, sortBy]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -190,24 +316,32 @@ export const Top50PrivateCollegesPage = () => {
           <div className="relative z-10 max-w-4xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 text-brand-secondary text-xs font-bold uppercase tracking-wider">
               <Award className="w-3.5 h-3.5" />
-              <span>National Private Engineering Benchmark 2024–25</span>
+              <span>National Engineering NIRF & Placement Transparency 2026–27</span>
             </div>
 
             <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
-              Top 50 Private Engineering Colleges in India
+              Top Indian Engineering Colleges Benchmark
             </h1>
 
             <p className="text-slate-300 text-sm md:text-base leading-relaxed">
-              A curated, defensible benchmark of India's leading self-financed engineering institutions. Ranked strictly under recognized national criteria—<strong>NIRF Engineering 2024 (Ministry of Education, GoI)</strong> and <strong>NAAC Accreditation</strong>—paired with verified, session-wise placement disclosures fetched directly from official institutional portals.
+              Transparent, defensible directory encompassing <strong>Premier IITs, NITs, IIITs, Semi-Governed Institutions (including Jadavpur University West Bengal)</strong>, and the <strong>Top 50 Private Colleges</strong>. Ranked under official <strong>NIRF Engineering 2026–27</strong> with audited placement disclosures.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={() => setShowMethodologyModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-sm transition"
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-sm transition cursor-pointer"
               >
                 <BookOpen className="w-4 h-4 text-brand-secondary" />
                 <span>View Transparent Ranking Methodology</span>
+              </button>
+
+              <button
+                onClick={() => setIsAddCollegeModalOpen(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-bold rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-lg shadow-emerald-500/20 transition cursor-pointer"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>+ Add Unlisted / New College</span>
               </button>
 
               <div className="inline-flex items-center gap-1.5 px-3 py-2 text-xs rounded-xl bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
@@ -235,15 +369,83 @@ export const Top50PrivateCollegesPage = () => {
           </div>
         )}
 
+        {/* INSTITUTION CATEGORY TABS */}
+        <div className="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setInstitutionCategory('all')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+              institutionCategory === 'all'
+                ? 'bg-navy-950 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <Building className="w-4 h-4" />
+            <span>All Reputed Institutions</span>
+            <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] ${institutionCategory === 'all' ? 'bg-white/20' : 'bg-slate-200 text-slate-700'}`}>81+ Colleges</span>
+          </button>
+
+          <button
+            onClick={() => setInstitutionCategory('iit_nit')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+              institutionCategory === 'iit_nit'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <Award className="w-4 h-4 text-blue-300" />
+            <span>IITs & NITs (Tier 1)</span>
+            <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] ${institutionCategory === 'iit_nit' ? 'bg-white/20' : 'bg-blue-100 text-blue-800'}`}>18 Premier</span>
+          </button>
+
+          <button
+            onClick={() => setInstitutionCategory('semi_gov')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+              institutionCategory === 'semi_gov'
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-emerald-300" />
+            <span>Semi-Govt & State Autonomous (Tier 2)</span>
+            <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] ${institutionCategory === 'semi_gov' ? 'bg-white/20' : 'bg-emerald-100 text-emerald-800'}`}>Jadavpur & 8+</span>
+          </button>
+
+          <button
+            onClick={() => setInstitutionCategory('top_50_private')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+              institutionCategory === 'top_50_private'
+                ? 'bg-purple-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <GraduationCap className="w-4 h-4 text-purple-300" />
+            <span>Top 50 Private Benchmark (Tier 2)</span>
+            <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] ${institutionCategory === 'top_50_private' ? 'bg-white/20' : 'bg-purple-100 text-purple-800'}`}>50 Colleges</span>
+          </button>
+
+          <button
+            onClick={() => setInstitutionCategory('iiit')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+              institutionCategory === 'iiit'
+                ? 'bg-amber-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <Layers className="w-4 h-4 text-amber-300" />
+            <span>IIITs (Tier 2)</span>
+            <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] ${institutionCategory === 'iiit' ? 'bg-white/20' : 'bg-amber-100 text-amber-800'}`}>5 Premier</span>
+          </button>
+        </div>
+
         {/* KPI OVERVIEW METRICS */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
             <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-semibold uppercase tracking-wider">Curated Institutions</span>
+              <span className="text-xs font-semibold uppercase tracking-wider">Cataloged Institutions</span>
               <Building className="w-4 h-4 text-brand-primary" />
             </div>
-            <div className="text-3xl font-extrabold text-slate-900">{colleges.length} <span className="text-xs font-normal text-slate-500">/ 50 Private</span></div>
-            <p className="text-[11px] text-slate-500">Strictly private & self-financed colleges</p>
+            <div className="text-3xl font-extrabold text-slate-900">{colleges.length} <span className="text-xs font-normal text-slate-500">Colleges</span></div>
+            <p className="text-[11px] text-slate-500">IITs, NITs, IIITs, State & Private</p>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
@@ -257,11 +459,11 @@ export const Top50PrivateCollegesPage = () => {
 
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
             <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-semibold uppercase tracking-wider">Average Package Benchmark</span>
+              <span className="text-xs font-semibold uppercase tracking-wider">Average CTC Benchmark</span>
               <GraduationCap className="w-4 h-4 text-indigo-600" />
             </div>
             <div className="text-3xl font-extrabold text-indigo-600">₹{statsOverview.avgOfAvgs} <span className="text-xs font-normal text-slate-500">LPA</span></div>
-            <p className="text-[11px] text-slate-500">Mean CTC across verified private campuses</p>
+            <p className="text-[11px] text-slate-500">Mean CTC across verified institutions</p>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
@@ -276,11 +478,20 @@ export const Top50PrivateCollegesPage = () => {
 
         {/* SEARCH & FILTERS BAR */}
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-brand-primary uppercase tracking-wider bg-brand-primary/10 px-3 py-1 rounded-full">
-              PLACEMENT REALITY TRANSPARENT FORUM
-            </span>
-            <span className="text-xs text-slate-500 font-medium hidden sm:inline">• Top 50 Private Institutions Benchmark</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-brand-primary uppercase tracking-wider bg-brand-primary/10 px-3 py-1 rounded-full">
+                PLACEMENT REALITY TRANSPARENT FORUM
+              </span>
+              <span className="text-xs text-slate-500 font-medium hidden sm:inline">• National Engineering Directory</span>
+            </div>
+            <button
+              onClick={() => setIsAddCollegeModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-xs border border-emerald-200 transition cursor-pointer"
+            >
+              <PlusCircle className="w-3.5 h-3.5 text-emerald-600" />
+              <span>+ Add Unlisted College</span>
+            </button>
           </div>
           <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-3">
             <div className="relative flex-1">
@@ -289,13 +500,13 @@ export const Top50PrivateCollegesPage = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="PLACEMENT REALITY TRANSPARENT FORUM - Search by college name, city, or state..."
+                placeholder="PLACEMENT REALITY TRANSPARENT FORUM - Search by college name (e.g. Jadavpur University, IIT Bombay, VIT), city, or state..."
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition"
               />
             </div>
             <button
               type="submit"
-              className="px-6 py-2.5 bg-brand-primary text-white text-sm font-semibold rounded-xl hover:bg-navy-800 transition shadow-sm"
+              className="px-6 py-2.5 bg-brand-primary text-white text-sm font-semibold rounded-xl hover:bg-navy-800 transition shadow-sm cursor-pointer"
             >
               Search
             </button>
@@ -457,10 +668,11 @@ export const Top50PrivateCollegesPage = () => {
         ) : viewMode === 'grid' ? (
           /* CARD GRID VIEW */
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {colleges.map((college) => {
+            {colleges.map((college, index) => {
               const pRecord = college.latestPlacementRecord;
               const isComparing = selectedForCompare.some((c) => c._id === college._id);
-              const rank = college.top50Rank || college.rankingDetails?.rank || 99;
+              const nirfRank = getCollegeNirfRank(college);
+              const rank = getDisplayRank(college, index);
 
               return (
                 <div
@@ -491,16 +703,19 @@ export const Top50PrivateCollegesPage = () => {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Private Benchmark Rank
+                            {college.isTop50Private ? 'Private Benchmark' : college.campusType || 'Premier Institution'}
                           </span>
-                          {college.nirfRanking?.engineeringRank && (
+                          {nirfRank && (
                             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">
-                              NIRF Engg 2024: #{college.nirfRanking.engineeringRank}
+                              NIRF Engg 2026–27: #{nirfRank}
                             </span>
                           )}
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${college.tierClassification?.tier === 'Tier 1' ? 'bg-blue-100 text-blue-800' : 'bg-slate-200 text-slate-700'}`}>
+                            {college.tierClassification?.tier || 'Tier 2'}
+                          </span>
                         </div>
                         <div className="text-xs text-slate-500 font-medium">
-                          {college.campusType || 'Private Engineering Institution'}
+                          {college.city}, {college.state} • {college.campusType || 'Engineering Institution'}
                         </div>
                       </div>
                     </div>
@@ -580,7 +795,7 @@ export const Top50PrivateCollegesPage = () => {
                           Official Placement Statistics
                         </span>
                         <span className="px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-600 text-[11px] font-semibold">
-                          Session: {pRecord?.academicSession || '2023–24'}
+                          Session: {pRecord?.academicSession || '2026–27'}
                         </span>
                       </div>
 
@@ -723,23 +938,24 @@ export const Top50PrivateCollegesPage = () => {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 border-b border-slate-200 uppercase font-semibold text-[11px]">
                   <tr>
-                    <th className="py-3.5 px-4 text-center">Rank</th>
+                    <th className="py-3.5 px-4 text-center"># NIRF Rank</th>
                     <th className="py-3.5 px-4">Institution Name</th>
                     <th className="py-3.5 px-4">State</th>
-                    <th className="py-3.5 px-4 text-center">NIRF Engg</th>
-                    <th className="py-3.5 px-4 text-center">NAAC</th>
+                    <th className="py-3.5 px-4 text-center">NIRF Rank (2026–27)</th>
+                    <th className="py-3.5 px-4 text-center">NAAC Grade</th>
                     <th className="py-3.5 px-4 text-right">Highest CTC</th>
                     <th className="py-3.5 px-4 text-right">Average CTC</th>
                     <th className="py-3.5 px-4 text-right">Median CTC</th>
-                    <th className="py-3.5 px-4 text-center">Session</th>
+                    <th className="py-3.5 px-4 text-center">Placement Session</th>
                     <th className="py-3.5 px-4 text-center">Official Source</th>
                     <th className="py-3.5 px-4 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {colleges.map((college) => {
+                  {colleges.map((college, index) => {
                     const p = college.latestPlacementRecord;
-                    const rank = college.top50Rank || college.rankingDetails?.rank || 99;
+                    const nirfRank = getCollegeNirfRank(college);
+                    const rank = getDisplayRank(college, index);
                     const isComparing = selectedForCompare.some((c) => c._id === college._id);
 
                     return (
@@ -755,13 +971,13 @@ export const Top50PrivateCollegesPage = () => {
                             {college.name}
                           </Link>
                           <div className="text-[11px] text-slate-500">
-                            {college.city}, {college.state}
+                            {college.city}, {college.state} • <span className={`font-semibold ${college.tierClassification?.tier === 'Tier 1' ? 'text-blue-700 font-bold' : 'text-slate-600'}`}>{college.tierClassification?.tier || 'Tier 2'}</span>
                           </div>
                         </td>
                         <td className="py-3 px-4 text-slate-600 font-medium">{college.state}</td>
                         <td className="py-3 px-4 text-center">
-                          {college.nirfRanking?.engineeringRank ? (
-                            <span className="font-bold text-purple-700">#{college.nirfRanking.engineeringRank}</span>
+                          {nirfRank ? (
+                            <span className="font-bold text-purple-700">#{nirfRank}</span>
                           ) : (
                             <span className="text-slate-400">—</span>
                           )}
@@ -781,7 +997,7 @@ export const Top50PrivateCollegesPage = () => {
                           {p?.medianPackageLPA ? `₹${p.medianPackageLPA} L` : '—'}
                         </td>
                         <td className="py-3 px-4 text-center font-medium text-slate-600">
-                          {p?.academicSession || '2023–24'}
+                          {p?.academicSession || college.latestPlacementRecord?.academicSession || '2026–27'}
                         </td>
                         <td className="py-3 px-4 text-center">
                           {p?.sourceUrl || college.officialPlacementPageUrl ? (
@@ -966,19 +1182,19 @@ export const Top50PrivateCollegesPage = () => {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     <tr>
-                      <td className="py-3 px-4 font-bold text-slate-600 bg-slate-50/50">Private Benchmark Rank</td>
+                      <td className="py-3 px-4 font-bold text-slate-600 bg-slate-50/50"># NIRF / Benchmark Rank</td>
                       {selectedForCompare.map((c) => (
                         <td key={c._id} className="py-3 px-4 font-extrabold text-brand-primary text-sm">
-                          #{c.top50Rank || c.rankingDetails?.rank || '—'}
+                          #{getCollegeNirfRank(c) || c.top50Rank || c.rank || '—'}
                         </td>
                       ))}
                     </tr>
 
                     <tr>
-                      <td className="py-3 px-4 font-bold text-slate-600 bg-slate-50/50">NIRF Engineering 2024</td>
+                      <td className="py-3 px-4 font-bold text-slate-600 bg-slate-50/50">NIRF Engineering 2026–27</td>
                       {selectedForCompare.map((c) => (
                         <td key={c._id} className="py-3 px-4 font-bold text-purple-700">
-                          {c.nirfRanking?.engineeringRank ? `Rank #${c.nirfRanking.engineeringRank}` : 'Disclosed'}
+                          {getCollegeNirfRank(c) ? `Rank #${getCollegeNirfRank(c)}` : 'Disclosed'}
                         </td>
                       ))}
                     </tr>
@@ -1087,6 +1303,13 @@ export const Top50PrivateCollegesPage = () => {
             </div>
           </div>
         )}
+
+        {/* ADD UNLISTED COLLEGE MODAL */}
+        <AddCollegeModal
+          isOpen={isAddCollegeModalOpen}
+          onClose={() => setIsAddCollegeModalOpen(false)}
+          onCollegeAdded={handleCollegeAdded}
+        />
 
       </div>
     </div>

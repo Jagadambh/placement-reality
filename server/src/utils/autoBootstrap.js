@@ -23,7 +23,7 @@ async function autoBootstrapDatabase(force = false) {
 
     console.log(`[AutoBootstrap] Checking database: ${collegeCount} colleges (${top50Count} Top 50 Private), ${recordCount} placement records, ${postCount} community posts.`);
 
-    const needsColleges = force || collegeCount < 50 || top50Count < 45;
+    const needsColleges = force || collegeCount < 80 || top50Count < 50;
     const needsPosts = force || postCount === 0;
 
     if (!needsColleges && !needsPosts) {
