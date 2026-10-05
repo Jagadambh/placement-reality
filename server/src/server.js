@@ -116,6 +116,19 @@ if (fs.existsSync(clientDistPath)) {
   });
 }
 
+// Bootstrap trigger endpoint
+app.get('/api/admin/bootstrap', async (req, res) => {
+  try {
+    const { autoBootstrapDatabase } = require('./utils/autoBootstrap');
+    await autoBootstrapDatabase();
+    const College = require('./models/College');
+    const count = await College.countDocuments();
+    res.json({ success: true, message: `Bootstrapped successfully! Total colleges: ${count}` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Centralized Error Handling
 app.use(errorHandler);
 
@@ -126,7 +139,12 @@ if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[Server] Placement Reality API running on port ${PORT}`);
   });
-  connectDB().catch((err) => {
+  connectDB().then(() => {
+    const { autoBootstrapDatabase } = require('./utils/autoBootstrap');
+    autoBootstrapDatabase().catch((err) => {
+      console.error(`[Server] AutoBootstrap error: ${err.message}`);
+    });
+  }).catch((err) => {
     console.error(`[Server] Database connection error: ${err.message}`);
   });
 }

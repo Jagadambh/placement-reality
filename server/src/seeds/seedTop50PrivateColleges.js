@@ -2062,11 +2062,16 @@ async function seedTop50PrivateColleges() {
     }
 
     console.log(`\n✓ Successfully seeded all ${seededCount} Top Private Engineering Colleges!`);
-    await mongoose.disconnect();
-    process.exit(0);
+    if (require.main === module) {
+      await mongoose.disconnect();
+      process.exit(0);
+    }
   } catch (error) {
     console.error('❌ Error seeding Top 50 Private Colleges:', error);
-    process.exit(1);
+    if (require.main === module) {
+      process.exit(1);
+    }
+    throw error;
   }
 }
 

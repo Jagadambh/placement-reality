@@ -687,10 +687,17 @@ async function seedMultiCollegeOfficialData() {
 
   console.log('\n========================================');
   console.log('[MultiCollegeSeeder] Finished successfully! Multi-college official reports and verified links established.');
-  await mongoose.disconnect();
+  if (require.main === module) {
+    await mongoose.disconnect();
+    process.exit(0);
+  }
 }
 
-seedMultiCollegeOfficialData().catch((err) => {
-  console.error('[MultiCollegeSeeder Error]', err);
-  process.exit(1);
-});
+if (require.main === module) {
+  seedMultiCollegeOfficialData().catch((err) => {
+    console.error('[MultiCollegeSeeder Error]', err);
+    process.exit(1);
+  });
+}
+
+module.exports = { COLLEGE_DATA, seedMultiCollegeOfficialData };

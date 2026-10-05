@@ -3,9 +3,13 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/placement_reality';
-    console.log(`[Database] Connecting to MongoDB...`);
+    if (!process.env.MONGODB_URI) {
+      console.warn(`[Database Warning] MONGODB_URI environment variable is not defined! Defaulting to local: ${uri}`);
+    } else {
+      console.log(`[Database] Connecting using provided MONGODB_URI...`);
+    }
     const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 15000,
     });
     console.log(`[Database] MongoDB Connected successfully to host: ${conn.connection.host}, database: ${conn.connection.name}`);
     return conn;
