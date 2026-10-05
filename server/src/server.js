@@ -123,10 +123,11 @@ const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB and start server
 if (process.env.NODE_ENV !== 'test') {
-  connectDB().then(() => {
-    app.listen(PORT, () => {
-      console.log(`[Server] Placement Reality API running on http://localhost:${PORT}`);
-    });
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`[Server] Placement Reality API running on port ${PORT}`);
+  });
+  connectDB().catch((err) => {
+    console.error(`[Server] Database connection error: ${err.message}`);
   });
 }
 
