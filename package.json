@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Placement Reality - Independent College Placement Transparency & Auditing Platform",
   "scripts": {
-    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
+    "build": "npm install --prefix server && npm install --prefix client --include=dev && npm run build --prefix client",
     "start": "node server/src/server.js",
     "server": "npm start --prefix server",
     "client": "npm run dev --prefix client",
