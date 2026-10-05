@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const College = require('../models/College');
 const CommunityPost = require('../models/CommunityPost');
 const PlacementRecord = require('../models/PlacementRecord');
@@ -16,6 +17,12 @@ async function autoBootstrapDatabase(force = false) {
   isBootstrapping = true;
 
   try {
+    if (mongoose.connection.readyState !== 1) {
+      const uri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/placement_reality';
+      console.log(`[AutoBootstrap] Connecting to database...`);
+      await mongoose.connect(uri, { serverSelectionTimeoutMS: 15000 });
+    }
+
     const collegeCount = await College.countDocuments();
     const top50Count = await College.countDocuments({ isTop50Private: true });
     const postCount = await CommunityPost.countDocuments();

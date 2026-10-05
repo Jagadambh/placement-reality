@@ -557,9 +557,11 @@ try {
 }
 
 async function seedMultiCollegeOfficialData() {
-  console.log('[MultiCollegeSeeder] Connecting to MongoDB...');
-  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/placement_reality');
-  console.log('[MultiCollegeSeeder] Connected successfully.');
+  if (mongoose.connection.readyState !== 1) {
+    console.log('[MultiCollegeSeeder] Connecting to MongoDB...');
+    await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/placement_reality');
+    console.log('[MultiCollegeSeeder] Connected successfully.');
+  }
 
   for (const cData of COLLEGE_DATA) {
     console.log(`\n========================================`);

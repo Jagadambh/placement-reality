@@ -1842,9 +1842,11 @@ const TOP_50_PRIVATE_COLLEGES = [
 
 async function seedTop50PrivateColleges() {
   try {
-    const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/placement_reality';
-    console.log(`[SeedTop50] Connecting to MongoDB: ${mongoUri}`);
-    await mongoose.connect(mongoUri);
+    if (mongoose.connection.readyState !== 1) {
+      const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/placement_reality';
+      console.log(`[SeedTop50] Connecting to MongoDB: ${mongoUri}`);
+      await mongoose.connect(mongoUri);
+    }
 
     console.log(`[SeedTop50] Seeding ${TOP_50_PRIVATE_COLLEGES.length} Top Private Engineering Colleges in India...`);
 
