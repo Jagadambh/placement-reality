@@ -4,6 +4,7 @@ import { collegeApi } from '../api/collegeApi';
 import { DataBadge } from '../components/common/DataBadge';
 import { TierBadge } from '../components/common/TierBadge';
 import founderImage from '../assets/harish-sonkar.jpg';
+import { FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
 import {
   Search,
   CheckCircle2,
@@ -40,11 +41,15 @@ export const LandingPage = () => {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
 
   useEffect(() => {
-    collegeApi.getColleges({ limit: 8 }).then((res) => {
-      if (res.data?.success) {
+    collegeApi.getColleges({ limit: 12 }).then((res) => {
+      if (res.data?.success && res.data.data.colleges?.length > 0) {
         setColleges(res.data.data.colleges);
+      } else {
+        setColleges([...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES].slice(0, 12));
       }
-    }).catch(console.error);
+    }).catch(() => {
+      setColleges([...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES].slice(0, 12));
+    });
   }, []);
 
   const handleSearchChange = (e) => {
@@ -94,7 +99,12 @@ export const LandingPage = () => {
             </p>
 
             {/* College Search Bar */}
-            <div className="relative max-w-2xl mx-auto mt-4">
+            <div className="relative max-w-2xl mx-auto mt-4 space-y-2.5">
+              <div className="flex items-center justify-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-wider uppercase border border-brand-primary/20">
+                  PLACEMENT REALITY TRANSPARENT FORUM
+                </span>
+              </div>
               <form onSubmit={handleSearchSubmit} className="relative flex items-center">
                 <div className="absolute left-4 text-slate-400">
                   <Search className="w-5 h-5" />
@@ -103,7 +113,7 @@ export const LandingPage = () => {
                   type="text"
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  placeholder="Search college by name (e.g. KIIT, VIT, IIT Bombay, MIT)..."
+                  placeholder="PLACEMENT REALITY TRANSPARENT FORUM - Search colleges by name (e.g. KIIT, VIT, IIT Bombay)..."
                   className="w-full pl-12 pr-32 py-4 bg-white rounded-2xl border border-slate-300 shadow-lg shadow-slate-200/50 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary focus:border-transparent transition-all"
                 />
                 <button

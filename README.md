@@ -1,5 +1,5 @@
 # Placement Reality 🎓
-### AI-Powered College Placement Transparency & Analytics Platform
+### College Placement Transparency & Analytics Platform
 
 [![Node Version](https://img.shields.io/badge/Node.js-v24.x-339933?logo=node.js)](https://nodejs.org)
 [![React](https://img.shields.io/badge/React-v18.3-61DAFB?logo=react)](https://react.dev)
@@ -19,7 +19,7 @@ Rather than accepting unverified promotional marketing brochures, the platform e
 - **Distinguish unique placed students from total job offers** (preventing multi-offer double counting).
 - Enforce the **Denominator Rule**: If an institute suppresses its eligible candidate count, the platform **refuses to manufacture an estimated placement percentage**, highlighting the missing denominator instead.
 - Submit confidential, encrypted offer letters and internship experiences to earn the **Student-Verified** badge.
-- Consult **Placement AI**, a retrieval-augmented generation (RAG) assistant that answers questions using ground-truth disclosures with verified citations and zero hallucination.
+- Engage on the **Placement Reality Transparent Forum**, asking questions and getting authentic peer-reviewed insights from senior students.
 
 ---
 

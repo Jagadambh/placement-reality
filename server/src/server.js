@@ -104,6 +104,55 @@ app.use('/api/student-session-reports', studentSessionReportRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/roi', roiRoutes);
 
+// Bootstrap trigger endpoints (accessible for direct seeding in production)
+app.get(['/api/bootstrap', '/api/admin/bootstrap'], async (req, res) => {
+  try {
+    const { autoBootstrapDatabase } = require('./utils/autoBootstrap');
+    const force = req.query.force === 'true';
+    const result = await autoBootstrapDatabase(force);
+    res.json({
+      success: true,
+      message: 'Database bootstrap completed successfully.',
+      data: result,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Database diagnostics endpoint
+app.get('/api/db-status', async (req, res) => {
+  try {
+    const mongoose = require('mongoose');
+    const College = require('./models/College');
+    const CommunityPost = require('./models/CommunityPost');
+    const PlacementRecord = require('./models/PlacementRecord');
+
+    const stateNames = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+    const dbState = stateNames[mongoose.connection.readyState] || 'unknown';
+
+    const collegeCount = await College.countDocuments().catch(() => 0);
+    const top50Count = await College.countDocuments({ isTop50Private: true }).catch(() => 0);
+    const postCount = await CommunityPost.countDocuments().catch(() => 0);
+    const recordCount = await PlacementRecord.countDocuments().catch(() => 0);
+
+    res.json({
+      success: true,
+      databaseState: dbState,
+      databaseHost: mongoose.connection.host || 'none',
+      databaseName: mongoose.connection.name || 'none',
+      counts: {
+        totalColleges: collegeCount,
+        top50PrivateColleges: top50Count,
+        communityPosts: postCount,
+        placementRecords: recordCount,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Serve static client build in production if available
 const clientDistPath = path.resolve(__dirname, '../../client/dist');
 if (fs.existsSync(clientDistPath)) {
@@ -115,19 +164,6 @@ if (fs.existsSync(clientDistPath)) {
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
 }
-
-// Bootstrap trigger endpoint
-app.get('/api/admin/bootstrap', async (req, res) => {
-  try {
-    const { autoBootstrapDatabase } = require('./utils/autoBootstrap');
-    await autoBootstrapDatabase();
-    const College = require('./models/College');
-    const count = await College.countDocuments();
-    res.json({ success: true, message: `Bootstrapped successfully! Total colleges: ${count}` });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
 
 // Centralized Error Handling
 app.use(errorHandler);

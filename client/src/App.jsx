@@ -15,7 +15,6 @@ import { CollegeDirectoryPage } from './pages/CollegeDirectoryPage';
 import { CollegeDetailPage } from './pages/CollegeDetailPage';
 import { PlacementSubmissionPage } from './pages/PlacementSubmissionPage';
 import { CollegeComparisonPage } from './pages/CollegeComparisonPage';
-import { AiPlacementAssistantPage } from './pages/AiPlacementAssistantPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { StudentProfilePage } from './pages/StudentProfilePage';
 import { OfficialReportsPage } from './pages/OfficialReportsPage';

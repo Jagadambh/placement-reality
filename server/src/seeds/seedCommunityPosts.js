@@ -7,9 +7,11 @@ const User = require('../models/User');
 
 const seedCommunityData = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/placement_reality';
-    console.log('[SeedCommunity] Connecting to:', mongoUri);
-    await mongoose.connect(mongoUri);
+    if (mongoose.connection.readyState !== 1) {
+      const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/placement_reality';
+      console.log('[SeedCommunity] Connecting to:', mongoUri);
+      await mongoose.connect(mongoUri);
+    }
 
     // Fetch colleges for referencing
     const kiit = await College.findOne({ name: /Kalinga Institute/i });
@@ -246,11 +248,20 @@ How is the placement scenario at ITER in terms of companies visiting and coding 
     }
 
     console.log('✓ Successfully seeded Reddit-style community discussions and comments!');
-    process.exit(0);
+    if (require.main === module) {
+      process.exit(0);
+    }
   } catch (err) {
     console.error('❌ Error seeding community data:', err);
-    process.exit(1);
+    if (require.main === module) {
+      process.exit(1);
+    }
+    throw err;
   }
 };
 
-seedCommunityData();
+if (require.main === module) {
+  seedCommunityData();
+}
+
+module.exports = { seedCommunityData };

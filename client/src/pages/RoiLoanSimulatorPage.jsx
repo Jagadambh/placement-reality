@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { roiApi } from '../api/roiApi';
 import { runFullRoiSimulation } from '../utils/roiCalculator';
 import { SkeletonLoader, ErrorMessage } from '../components/common/FeedbackComponents';
+import { FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
 import {
   Calculator,
   TrendingUp,
@@ -66,19 +67,41 @@ export const RoiLoanSimulatorPage = () => {
     roiApi
       .getRoiColleges()
       .then((res) => {
-        if (res.data?.success) {
-          const list = res.data.data.colleges || [];
-          setColleges(list);
+        let list = (res.data?.success && res.data.data.colleges?.length > 0)
+          ? res.data.data.colleges
+          : [];
 
-          // If collegeId passed in URL or pick initial college
-          const initialId = searchParams.get('collegeId');
-          const matched = list.find((c) => c._id === initialId) || list[0];
-          if (matched) {
-            applyCollegePreset(matched);
-          }
+        if (list.length === 0) {
+          list = [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES].map(c => ({
+            _id: c._id,
+            name: c.name,
+            shortName: c.shortName,
+            totalCourseFeeInr: 1600000,
+            benchmarkMedianLPA: c.latestPlacementRecord?.medianPackageLPA || 8.0,
+            latestStats: { medianPackageLPA: c.latestPlacementRecord?.medianPackageLPA || 8.0 },
+          }));
+        }
+
+        setColleges(list);
+        const initialId = searchParams.get('collegeId');
+        const matched = list.find((c) => c._id === initialId) || list[0];
+        if (matched) {
+          applyCollegePreset(matched);
         }
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.warn('ROI colleges API error, using embedded dataset:', err);
+        const list = [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES].map(c => ({
+          _id: c._id,
+          name: c.name,
+          shortName: c.shortName,
+          totalCourseFeeInr: 1600000,
+          benchmarkMedianLPA: c.latestPlacementRecord?.medianPackageLPA || 8.0,
+          latestStats: { medianPackageLPA: c.latestPlacementRecord?.medianPackageLPA || 8.0 },
+        }));
+        setColleges(list);
+        if (list.length > 0) applyCollegePreset(list[0]);
+      })
       .finally(() => setLoadingColleges(false));
   }, []);
 

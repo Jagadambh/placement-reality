@@ -4,6 +4,7 @@ import { collegeApi } from '../api/collegeApi';
 import { DataBadge } from '../components/common/DataBadge';
 import { TierBadge } from '../components/common/TierBadge';
 import { SkeletonLoader, ErrorMessage } from '../components/common/FeedbackComponents';
+import { FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
 import {
   Layers,
   CheckCircle2,
@@ -36,15 +37,23 @@ export const CollegeComparisonPage = () => {
 
   useEffect(() => {
     collegeApi.getColleges({ limit: 50 }).then((res) => {
-      if (res.data?.success) {
-        const cols = res.data.data.colleges;
-        setAllColleges(cols);
-        // Pre-select top 2 for instant comparison
-        if (cols.length >= 2) {
-          const initial = [cols[0]._id, cols[1]._id];
-          setSelectedCollegeIds(initial);
-          runComparison(initial);
-        }
+      const cols = (res.data?.success && res.data.data.colleges?.length > 0)
+        ? res.data.data.colleges
+        : [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES];
+      setAllColleges(cols);
+      // Pre-select top 2 for instant comparison
+      if (cols.length >= 2) {
+        const initial = [cols[0]._id, cols[1]._id];
+        setSelectedCollegeIds(initial);
+        runComparison(initial);
+      }
+    }).catch(() => {
+      const cols = [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES];
+      setAllColleges(cols);
+      if (cols.length >= 2) {
+        const initial = [cols[0]._id, cols[1]._id];
+        setSelectedCollegeIds(initial);
+        runComparison(initial);
       }
     });
   }, []);

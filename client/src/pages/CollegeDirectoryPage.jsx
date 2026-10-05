@@ -7,6 +7,7 @@ import { InstitutionCategoryBadge } from '../components/common/InstitutionCatego
 import { SkeletonLoader, ErrorMessage, EmptyState } from '../components/common/FeedbackComponents';
 import { Search, Filter, MapPin, Building, GraduationCap, ArrowRight, ShieldCheck, Award, Sparkles, Landmark } from 'lucide-react';
 import { AddCollegeModal } from '../components/common/AddCollegeModal';
+import { FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
 
 export const CollegeDirectoryPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,11 +36,28 @@ export const CollegeDirectoryPage = () => {
       if (course) params.course = course;
 
       const res = await collegeApi.getColleges(params);
-      if (res.data?.success) {
+      if (res.data?.success && res.data.data.colleges?.length > 0) {
         setColleges(res.data.data.colleges);
+      } else {
+        const allFallback = [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES];
+        let filtered = allFallback;
+        if (search) {
+          const q = search.toLowerCase();
+          filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || (c.shortName && c.shortName.toLowerCase().includes(q)) || c.city.toLowerCase().includes(q));
+        }
+        if (tier) filtered = filtered.filter(c => c.tierClassification?.tier === tier);
+        if (state) filtered = filtered.filter(c => c.state?.toLowerCase() === state.toLowerCase());
+        setColleges(filtered);
       }
     } catch (err) {
-      setError(err.message || 'Failed to fetch colleges directory.');
+      console.warn('Directory API failed, using embedded colleges dataset:', err.message);
+      const allFallback = [...FALLBACK_CORE_COLLEGES, ...FALLBACK_TOP_50_COLLEGES];
+      let filtered = allFallback;
+      if (search) {
+        const q = search.toLowerCase();
+        filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || (c.shortName && c.shortName.toLowerCase().includes(q)) || c.city.toLowerCase().includes(q));
+      }
+      setColleges(filtered);
     } finally {
       setLoading(false);
     }
@@ -98,6 +116,12 @@ export const CollegeDirectoryPage = () => {
 
       {/* Filter and Search Bar */}
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-brand-primary uppercase tracking-wider bg-brand-primary/10 px-3 py-1 rounded-full">
+            PLACEMENT REALITY TRANSPARENT FORUM
+          </span>
+          <span className="text-xs text-slate-500 font-medium hidden sm:inline">• Comprehensive Institutional Directory</span>
+        </div>
         <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
@@ -105,7 +129,7 @@ export const CollegeDirectoryPage = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by college name, short code, or city..."
+              placeholder="PLACEMENT REALITY TRANSPARENT FORUM - Search by college name, short code, or city..."
               className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-brand-secondary focus:outline-none"
             />
           </div>

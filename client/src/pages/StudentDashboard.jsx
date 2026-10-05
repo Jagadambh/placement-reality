@@ -12,7 +12,7 @@ import {
   GraduationCap,
   TrendingUp,
   Briefcase,
-  Bot,
+  Award,
   PlusCircle,
   FileCheck2,
   Layers,
@@ -160,11 +160,11 @@ export const StudentDashboard = () => {
             <span>Submit New Offer</span>
           </Link>
           <Link
-            to="/ai"
-            className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5"
+            to="/top-private-engineering-colleges-india"
+            className="px-4 py-2.5 bg-brand-primary hover:bg-navy-800 text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5"
           >
-            <Bot className="w-4 h-4" />
-            <span>Launch Placement AI</span>
+            <Award className="w-4 h-4" />
+            <span>Top 50 Private Colleges</span>
           </Link>
         </div>
       </div>
@@ -354,15 +354,15 @@ export const StudentDashboard = () => {
         </Link>
 
         <Link
-          to="/ai"
+          to="/top-private-engineering-colleges-india"
           className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-brand-primary shadow-xs transition group space-y-2"
         >
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-            <Bot className="w-4 h-4" />
+          <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+            <Award className="w-4 h-4" />
           </div>
-          <h4 className="font-bold text-sm text-slate-900 group-hover:text-emerald-600 transition">Placement AI Query</h4>
+          <h4 className="font-bold text-sm text-slate-900 group-hover:text-purple-600 transition">Top 50 Private Colleges</h4>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Directly ask questions about company cutoffs, stipend percentiles, and multi-year placement evolutions.
+            Directly benchmark verified median packages, highest CTCs, and NIRF rankings across top private campuses.
           </p>
         </Link>
       </div>

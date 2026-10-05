@@ -73,20 +73,13 @@ export const Navbar = () => {
                   key={link.path}
                   to={link.path}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    link.isSpecial
-                      ? 'text-purple-600 hover:bg-purple-50 hover:text-purple-700'
-                      : active
+                    active
                       ? 'bg-slate-100 text-brand-primary font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${link.isSpecial ? 'text-purple-500' : ''}`} />
+                  <Icon className="w-4 h-4" />
                   <span>{link.name}</span>
-                  {link.isSpecial && (
-                    <span className="px-1.5 py-0.2 text-[10px] bg-purple-100 text-purple-700 rounded-full font-semibold">
-                      AI
-                    </span>
-                  )}
                   {link.isBadge && (
                     <span className="px-1.5 py-0.2 text-[10px] bg-amber-100 text-amber-800 rounded-full font-bold">
                       50
