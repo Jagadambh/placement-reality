@@ -24,6 +24,7 @@ import {
   ArrowUpRight,
   Award,
   GraduationCap,
+  ShieldCheck,
 } from 'lucide-react';
 import {
   BarChart,
@@ -407,10 +408,11 @@ export const LandingPage = () => {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link
-              to="/register"
-              className="px-6 py-3 rounded-xl bg-white text-navy-950 font-bold text-sm hover:bg-slate-100 transition shadow-lg"
+              to="/student-verified"
+              className="px-6 py-3 rounded-xl bg-white text-navy-950 font-bold text-sm hover:bg-slate-100 transition shadow-lg flex items-center gap-2"
             >
-              Join the Community
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>Student Verified Comments &amp; Stats</span>
             </Link>
             <Link
               to="/colleges"

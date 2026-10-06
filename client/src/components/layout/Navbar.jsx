@@ -19,6 +19,7 @@ import {
   Award,
   Flame,
   Calculator,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -179,16 +180,11 @@ export const Navbar = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <Link
-                  to="/login"
-                  className="px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition"
+                  to="/student-verified"
+                  className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl transition shadow-xs flex items-center gap-1.5 border border-emerald-500/30"
                 >
-                  Sign in
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-3.5 py-1.5 text-xs font-semibold text-white bg-brand-primary rounded-lg hover:bg-navy-800 transition shadow-sm"
-                >
-                  Join Transparency
+                  <ShieldCheck className="w-4 h-4 text-emerald-200" />
+                  <span>🎓 Student Verified Stats &amp; Comments</span>
                 </Link>
               </div>
             )}
@@ -262,18 +258,12 @@ export const Navbar = () => {
             ) : (
               <div className="flex flex-col gap-2 pt-2">
                 <Link
-                  to="/login"
+                  to="/student-verified"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2 text-sm font-medium text-slate-700 border border-slate-200 rounded-lg"
+                  className="w-full py-2.5 px-3 text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center gap-2 shadow-sm text-center"
                 >
-                  Sign in
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2 text-sm font-semibold text-white bg-brand-primary rounded-lg"
-                >
-                  Get Started
+                  <ShieldCheck className="w-4 h-4 text-emerald-200" />
+                  <span>🎓 Student Verified Comments &amp; Stats</span>
                 </Link>
               </div>
             )}

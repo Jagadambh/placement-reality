@@ -6,10 +6,7 @@ import { Footer } from './components/layout/Footer';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
-import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { StudentVerifiedPage } from './pages/StudentVerifiedPage';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { CollegeDirectoryPage } from './pages/CollegeDirectoryPage';
 import { CollegeDetailPage } from './pages/CollegeDetailPage';
@@ -36,7 +33,7 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/student-verified" replace />;
   }
 
   if (requiredRole === 'moderator' && !['moderator', 'admin'].includes(user?.role)) {
@@ -60,10 +57,14 @@ export const App = () => {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/student-verified" element={<StudentVerifiedPage />} />
+              <Route path="/student-verified-comments" element={<Navigate to="/student-verified" replace />} />
+              <Route path="/verified-comments" element={<Navigate to="/student-verified" replace />} />
+              <Route path="/verified-stats" element={<Navigate to="/student-verified" replace />} />
+              <Route path="/login" element={<StudentVerifiedPage />} />
+              <Route path="/register" element={<Navigate to="/student-verified" replace />} />
+              <Route path="/forgot-password" element={<Navigate to="/student-verified" replace />} />
+              <Route path="/reset-password" element={<Navigate to="/student-verified" replace />} />
               <Route path="/colleges" element={<CollegeDirectoryPage />} />
               <Route path="/colleges/:slugOrId" element={<CollegeDetailPage />} />
               <Route path="/top-private-engineering-colleges-india" element={<Top50PrivateCollegesPage />} />
