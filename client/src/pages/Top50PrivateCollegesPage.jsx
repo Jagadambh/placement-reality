@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   TrendingUp,
   Building,
+  Building2,
   GraduationCap,
   MapPin,
   Layers,
