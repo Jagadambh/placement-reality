@@ -25,6 +25,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { MandatoryPasswordChangeModal } from './components/common/MandatoryPasswordChangeModal';
+import { FloatingSubmitOfferButton } from './components/common/FloatingSubmitOfferButton';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children, requiredRole = null }) => {
@@ -39,7 +40,7 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/student-verified" replace />;
+    return <Navigate to="/join-us" replace />;
   }
 
   if (requiredRole === 'moderator' && !['moderator', 'admin'].includes(user?.role)) {
@@ -141,6 +142,7 @@ export const App = () => {
             </Routes>
           </main>
           <Footer />
+          <FloatingSubmitOfferButton />
         </div>
       </Router>
     </AuthProvider>
