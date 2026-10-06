@@ -26,6 +26,7 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { MandatoryPasswordChangeModal } from './components/common/MandatoryPasswordChangeModal';
 import { FloatingSubmitOfferButton } from './components/common/FloatingSubmitOfferButton';
+import { FloatingShareRealityButton } from './components/common/FloatingShareRealityButton';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children, requiredRole = null }) => {
@@ -142,6 +143,7 @@ export const App = () => {
             </Routes>
           </main>
           <Footer />
+          <FloatingShareRealityButton />
           <FloatingSubmitOfferButton />
         </div>
       </Router>
