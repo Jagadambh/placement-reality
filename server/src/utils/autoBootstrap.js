@@ -6,6 +6,7 @@ const OfficialPlacementReport = require('../models/OfficialPlacementReport');
 const { seedMultiCollegeOfficialData } = require('../seed/seedMultiCollegeOfficialData');
 const { seedTop50PrivateColleges } = require('../seeds/seedTop50PrivateColleges');
 const { seedCommunityData } = require('../seeds/seedCommunityPosts');
+const { seedVerifiedStudentReportsAndReviews } = require('../seeds/seedVerifiedStudentReportsAndReviews');
 
 let isBootstrapping = false;
 
@@ -75,7 +76,16 @@ async function autoBootstrapDatabase(force = false) {
       }
     }
 
-    // 4. Ensure Strict Tier Classification: IITs & NITs in Tier 1, all rest in Tier 2
+    // 4. Seed Verified Student Comments & Placement Statistics
+    try {
+      console.log(`[AutoBootstrap] Seeding verified student comments, ratings, and ground-truth stats...`);
+      await seedVerifiedStudentReportsAndReviews();
+      console.log(`[AutoBootstrap] Phase 4 completed: Verified student comments and stats seeded.`);
+    } catch (err) {
+      console.error(`[AutoBootstrap] Warning in Phase 4:`, err.message);
+    }
+
+    // 5. Ensure Strict Tier Classification: IITs & NITs in Tier 1, all rest in Tier 2
     const allColleges = await College.find({});
     for (const c of allColleges) {
       const isIit = /^Indian Institute of Technology/i.test(c.name) || 

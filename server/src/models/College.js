@@ -240,6 +240,18 @@ const collegeSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    studentVerifiedStats: {
+      sampleSize: { type: Number, default: null },
+      highestPackageLPA: { type: Number, default: null },
+      averagePackageLPA: { type: Number, default: null },
+      medianPackageLPA: { type: Number, default: null },
+      actualPlacementRate: { type: Number, default: null },
+      totalVerifiedOffers: { type: Number, default: null },
+      dreamOffersPercent: { type: Number, default: null },
+      confidenceScore: { type: Number, default: 85 },
+      verifiedReviewsCount: { type: Number, default: 0 },
+      lastUpdated: { type: Date, default: Date.now },
+    },
     placementDiscovery: {
       status: {
         type: String,

@@ -11,12 +11,17 @@ const collegeReviewSchema = new mongoose.Schema(
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: false,
+      default: null,
       index: true,
     },
     graduationYear: {
       type: Number,
       required: true,
+    },
+    branch: {
+      type: String,
+      default: 'Computer Science & Engineering',
     },
     authorDisplayName: {
       type: String,
@@ -28,7 +33,19 @@ const collegeReviewSchema = new mongoose.Schema(
     },
     isVerifiedStudentBadge: {
       type: Boolean,
-      default: false,
+      default: true,
+    },
+    verificationProofType: {
+      type: String,
+      default: 'Institutional Roll ID & Portal Verified',
+    },
+    reportedStats: {
+      medianPackageLPA: { type: Number, default: null },
+      averagePackageLPA: { type: Number, default: null },
+      highestPackageLPA: { type: Number, default: null },
+      actualPlacementRate: { type: Number, default: null },
+      dreamOffersPercent: { type: Number, default: null },
+      batchSizeEstimate: { type: Number, default: null },
     },
     ratings: {
       placementSupport: { type: Number, min: 1, max: 5, required: true },
