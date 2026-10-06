@@ -50,6 +50,7 @@ import {
 import { reviewApi } from '../api/reviewApi';
 import { StudentVerifiedCommentsModal } from '../components/common/StudentVerifiedCommentsModal';
 import { MethodologyExplanationModal } from '../components/common/MethodologyExplanationModal';
+import { TriangulationEngine } from '../components/college/TriangulationEngine';
 import {
   BarChart,
   Bar,
@@ -760,15 +761,22 @@ export const CollegeDetailPage = () => {
 
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
               <button
-                onClick={() => setActiveTab('verified-reviews')}
-                className="w-full sm:w-auto px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold rounded-xl transition text-center shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                onClick={() => setActiveTab('triangulation')}
+                className="w-full sm:w-auto px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-navy-900 hover:from-indigo-700 hover:to-navy-950 text-white text-xs font-bold rounded-xl transition text-center shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-200" />
+                <Scale className="w-3.5 h-3.5 text-indigo-200" />
+                <span>⚖️ 3-Way Triangulation</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('verified-reviews')}
+                className="w-full sm:w-auto px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 transition text-center shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span>🎓 Students &amp; Seniors Reality</span>
               </button>
               <Link
                 to={`/roi-calculator?collegeId=${college._id}`}
-                className="w-full sm:w-auto px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-xl border border-emerald-200 transition text-center shadow-xs flex items-center justify-center gap-1.5"
+                className="w-full sm:w-auto px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl border border-slate-200 transition text-center shadow-xs flex items-center justify-center gap-1.5"
               >
                 <Calculator className="w-3.5 h-3.5" />
                 <span>Loan & ROI Simulator</span>
@@ -850,11 +858,15 @@ export const CollegeDetailPage = () => {
       <div className="flex border-b border-slate-200 overflow-x-auto text-xs font-semibold space-x-2">
         {[
           {
+            id: 'triangulation',
+            label: '⚖️ 3-Way Triangulation (NIRF vs. Brochure vs. Reality)',
+          },
+          {
             id: 'verified-reviews',
             label: `🎓 Students & Seniors Reality (${verifiedReviews.length || college.verifiedStudentComments?.length || 0})`,
           },
           { id: 'tit-for-tat', label: 'Advertised vs. Reality (Tit-for-Tat)' },
-                    { id: 'internships', label: 'Internships' },
+          { id: 'internships', label: 'Internships & Stipends' },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -869,6 +881,17 @@ export const CollegeDetailPage = () => {
           </button>
         ))}
       </div>
+
+      {/* TAB: 3-WAY TRIANGULATION (NIRF vs. BROCHURE vs. STUDENT REALITY) */}
+      {activeTab === 'triangulation' && (
+        <TriangulationEngine
+          triangulationData={advRealityData?.triangulation}
+          college={college}
+          currentSessionLabel={currentSessionLabel}
+          studentStats={studentStats}
+          advRealityData={advRealityData}
+        />
+      )}
 
       {/* TAB: STUDENT VERIFIED COMMENTS & STATS */}
       {activeTab === 'verified-reviews' && (
