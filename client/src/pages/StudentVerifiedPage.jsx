@@ -4,6 +4,7 @@ import { collegeApi } from '../api/collegeApi';
 import { reviewApi } from '../api/reviewApi';
 import { FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
 import { StudentVerifiedCommentsModal } from '../components/common/StudentVerifiedCommentsModal';
+import { MethodologyExplanationModal } from '../components/common/MethodologyExplanationModal';
 import { TierBadge } from '../components/common/TierBadge';
 import {
   ShieldCheck,
@@ -36,6 +37,7 @@ export const StudentVerifiedPage = () => {
   const [selectedTier, setSelectedTier] = useState('all'); // 'all' | 'Tier 1' | 'Tier 2'
   const [selectedBranch, setSelectedBranch] = useState('all');
   const [modalCollege, setModalCollege] = useState(null);
+  const [showMethodologyModal, setShowMethodologyModal] = useState(false);
   const [showSubmitForm, setShowSubmitForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -446,7 +448,7 @@ export const StudentVerifiedPage = () => {
 
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Real Placed %
+                      Observed Placement Rate (%)
                     </label>
                     <input
                       type="number"
@@ -645,14 +647,25 @@ export const StudentVerifiedPage = () => {
 
         {/* SECTION 1: INSTITUTIONAL REALITY SPOTLIGHT */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                <Building className="w-5 h-5 text-emerald-600" />
-                <span>Institutional Ground-Truth Overview ({filteredColleges.length})</span>
-              </h2>
-              <p className="text-xs text-slate-500">
-                Verified median packages and actual placement ratios audited by enrolled cohorts.
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                  <Building className="w-5 h-5 text-emerald-600" />
+                  <span>Institutional Ground-Truth Overview ({filteredColleges.length})</span>
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setShowMethodologyModal(true)}
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-200 transition cursor-pointer"
+                  title="Learn how Observed Placement Rate and Verified Medians are calculated"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>ⓘ How is this calculated?</span>
+                </button>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Observed student outcomes audited strictly from moderator-approved records. Missing or unverified data is never simulated.
               </p>
             </div>
             <Link
@@ -669,8 +682,15 @@ export const StudentVerifiedPage = () => {
               const stats = college.studentVerifiedStats || {};
               const officialRec = college.latestPlacementRecord || {};
               const officialMedian = officialRec.medianPackageLPA || null;
-              const studentMedian = stats.medianPackageLPA || (officialMedian ? Number((officialMedian * 0.92).toFixed(1)) : 7.2);
-              const verifiedReviewsCount = (college.verifiedStudentComments || []).length || 2;
+
+              const outcomesCount = stats.verifiedStudentOutcomes ?? stats.sampleSize ?? 0;
+              const packageRecordsCount = stats.verifiedPackageRecords ?? stats.totalVerifiedOffers ?? 0;
+              const placedCount = stats.placedVerifiedStudents ?? (stats.observedPlacementRate ? Math.round((stats.observedPlacementRate * outcomesCount) / 100) : 0);
+              const observedRate = stats.observedPlacementRate ?? (stats.hasEnoughData ? stats.actualPlacementRate : null);
+              const studentMedian = stats.verifiedMedianPackageLPA ?? (stats.hasEnoughData ? stats.medianPackageLPA : null);
+              const hasEnoughData = Boolean(stats.hasEnoughData && outcomesCount > 0);
+              const isLowSample = Boolean(stats.isLowSample || (outcomesCount > 0 && outcomesCount < 10));
+              const verifiedReviewsCount = (college.verifiedStudentComments || []).length;
 
               return (
                 <div
@@ -682,7 +702,7 @@ export const StudentVerifiedPage = () => {
                       <TierBadge tier={college.tierClassification?.tier || 'Tier 2'} size="xs" />
                       <span className="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
                         <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                        <span>{verifiedReviewsCount} Verified Reports</span>
+                        <span>{verifiedReviewsCount} Verified {verifiedReviewsCount === 1 ? 'Report' : 'Reports'}</span>
                       </span>
                     </div>
 
@@ -697,30 +717,89 @@ export const StudentVerifiedPage = () => {
                       {college.city}, {college.state}
                     </div>
 
-                    {/* Stats Comparison Box */}
-                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 grid grid-cols-2 gap-2 text-xs">
-                      <div>
-                        <span className="text-[10px] text-slate-400 block font-medium">Verified Median</span>
-                        <span className="text-base font-extrabold text-emerald-600">
-                          ₹{studentMedian} LPA
-                        </span>
-                        {officialMedian && (
-                          <span className="text-[10px] text-slate-400 block">
-                            Brochure: ₹{officialMedian} LPA
+                    {/* Ground-Truth Analytics */}
+                    {!hasEnoughData ? (
+                      /* INITIAL / EMPTY STATE (Requirement 1 & 5) */
+                      <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-xs space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                            Not enough verified student data yet.
                           </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-slate-200/70">
+                          <div>
+                            <span className="text-[10px] text-slate-400 block font-medium">Verified Outcomes</span>
+                            <span className="font-bold text-slate-700">0</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-slate-400 block font-medium">Package Records</span>
+                            <span className="font-bold text-slate-700">0</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-slate-400 block font-medium">Observed Rate</span>
+                            <span className="text-slate-500 font-medium">Not available</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-slate-400 block font-medium">Verified Median</span>
+                            <span className="text-slate-500 font-medium">Not available</span>
+                          </div>
+                        </div>
+
+                        {officialMedian && (
+                          <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-200/50 flex items-center justify-between">
+                            <span className="text-slate-400">Official Claim:</span>
+                            <span className="font-semibold text-slate-600">₹{officialMedian} LPA median</span>
+                          </div>
                         )}
                       </div>
+                    ) : (
+                      /* REAL DATABASE AGGREGATED METRICS */
+                      <div className="space-y-2">
+                        {isLowSample && (
+                          <div className="p-1.5 rounded-lg bg-amber-50 border border-amber-200 text-[10px] font-medium text-amber-900 flex items-center gap-1.5">
+                            <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
+                            <span>Preliminary — small sample ({outcomesCount} verified outcomes)</span>
+                          </div>
+                        )}
 
-                      <div>
-                        <span className="text-[10px] text-slate-400 block font-medium">Real Placed %</span>
-                        <span className="text-base font-extrabold text-brand-primary">
-                          {stats.actualPlacementRate || (college.tierClassification?.tier === 'Tier 1' ? 90 : 74)}%
-                        </span>
-                        <span className="text-[10px] text-slate-400 block">
-                          Sample: {stats.sampleSize || 380}+
-                        </span>
+                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 grid grid-cols-2 gap-2 text-xs">
+                          <div>
+                            <span className="text-[10px] text-slate-400 block font-medium">Verified Median</span>
+                            <span className="text-base font-extrabold text-emerald-600">
+                              {studentMedian ? `₹${studentMedian} LPA` : 'Not available'}
+                            </span>
+                            {officialMedian && (
+                              <span className="text-[10px] text-slate-400 block">
+                                Official Claim: ₹{officialMedian} LPA
+                              </span>
+                            )}
+                          </div>
+
+                          <div>
+                            <span className="text-[10px] text-slate-400 block font-medium">Observed Placement Rate</span>
+                            <span className="text-base font-extrabold text-brand-primary">
+                              {observedRate != null ? `${observedRate}%` : 'Not available'}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block">
+                              Based on: {placedCount} / {outcomesCount} verified
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="text-[10px] text-slate-400 flex items-center justify-between px-1">
+                          <span>Verified Package Records: <strong>{packageRecordsCount}</strong></span>
+                          <button
+                            type="button"
+                            onClick={() => setShowMethodologyModal(true)}
+                            className="text-emerald-700 hover:underline flex items-center gap-0.5 cursor-pointer font-semibold"
+                          >
+                            <span>Methodology</span>
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
@@ -904,6 +983,12 @@ export const StudentVerifiedPage = () => {
           }}
         />
       )}
+
+      {/* METHODOLOGY EXPLANATION MODAL */}
+      <MethodologyExplanationModal
+        isOpen={showMethodologyModal}
+        onClose={() => setShowMethodologyModal(false)}
+      />
     </div>
   );
 };

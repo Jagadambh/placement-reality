@@ -110,16 +110,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 2310,
-      "medianPackageLPA": 7.5,
-      "averagePackageLPA": 8.7,
-      "highestPackageLPA": 88,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 4304,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -247,16 +246,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 2100,
-      "medianPackageLPA": 5.9,
-      "averagePackageLPA": 6.8,
-      "highestPackageLPA": 52,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 3630,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -384,16 +382,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 455,
-      "medianPackageLPA": 8.6,
-      "averagePackageLPA": 10.5,
-      "highestPackageLPA": 55.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 645,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -519,16 +516,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 585,
-      "medianPackageLPA": 6.9,
-      "averagePackageLPA": 8.1,
-      "highestPackageLPA": 75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 855,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -656,16 +652,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 688,
-      "medianPackageLPA": 15.5,
-      "averagePackageLPA": 17,
-      "highestPackageLPA": 60.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 936,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -790,16 +785,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 913,
-      "medianPackageLPA": 5.6,
-      "averagePackageLPA": 6.2,
-      "highestPackageLPA": 46,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1440,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -941,16 +935,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1300,
-      "medianPackageLPA": 6.6,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 63,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1950,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -1076,16 +1069,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 438,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.5,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 630,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -1211,16 +1203,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 700,
-      "medianPackageLPA": 6.8,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 35,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1020,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -1346,16 +1337,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1713,
-      "medianPackageLPA": 5.9,
-      "averagePackageLPA": 6.9,
-      "highestPackageLPA": 54.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 2737,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -1481,16 +1471,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1550,
-      "medianPackageLPA": 5.6,
-      "averagePackageLPA": 6.5,
-      "highestPackageLPA": 64,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 2520,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -1615,16 +1604,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 775,
-      "medianPackageLPA": 5.9,
-      "averagePackageLPA": 6.6,
-      "highestPackageLPA": 58,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1260,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -1751,16 +1739,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 9.6,
-      "averagePackageLPA": 11.1,
-      "highestPackageLPA": 54.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 576,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -1889,16 +1876,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 303,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 9,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 462,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2025,16 +2011,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1200,
-      "medianPackageLPA": 5.5,
-      "averagePackageLPA": 6.3,
-      "highestPackageLPA": 61.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1830,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2161,16 +2146,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 223,
-      "medianPackageLPA": 9,
-      "averagePackageLPA": 10.2,
-      "highestPackageLPA": 51,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 312,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2296,16 +2280,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 110,
-      "medianPackageLPA": 9.3,
-      "averagePackageLPA": 11.3,
-      "highestPackageLPA": 58.09,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 154,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2431,16 +2414,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 538,
-      "medianPackageLPA": 6.2,
-      "averagePackageLPA": 7.6,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 795,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2565,16 +2547,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 288,
-      "medianPackageLPA": 7.8,
-      "averagePackageLPA": 9.7,
-      "highestPackageLPA": 60.7,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 426,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2700,16 +2681,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 345,
-      "medianPackageLPA": 8.9,
-      "averagePackageLPA": 11.3,
-      "highestPackageLPA": 65,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 525,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2835,16 +2815,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 248,
-      "medianPackageLPA": 10.2,
-      "averagePackageLPA": 12.8,
-      "highestPackageLPA": 62,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 375,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -2970,16 +2949,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 280,
-      "medianPackageLPA": 7.3,
-      "averagePackageLPA": 8.6,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 444,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -3105,16 +3083,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 270,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 9.2,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 405,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -3242,16 +3219,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 613,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.8,
-      "highestPackageLPA": 53,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 930,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -3378,16 +3354,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 430,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.9,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 645,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -3513,16 +3488,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 275,
-      "medianPackageLPA": 4.7,
-      "averagePackageLPA": 5.5,
-      "highestPackageLPA": 31,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 426,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -3650,16 +3624,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 245,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 9.2,
-      "highestPackageLPA": 64,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 384,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -3784,16 +3757,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 463,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.8,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 720,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -3919,16 +3891,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 600,
-      "medianPackageLPA": 6.2,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 930,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -4054,16 +4025,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 355,
-      "medianPackageLPA": 4.7,
-      "averagePackageLPA": 5.5,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 555,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -4189,16 +4159,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 513,
-      "medianPackageLPA": 5.6,
-      "averagePackageLPA": 6.6,
-      "highestPackageLPA": 54.03,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 780,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -4325,16 +4294,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 330,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 495,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -4461,16 +4429,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 420,
-      "medianPackageLPA": 6.2,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 51.36,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 630,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -4597,16 +4564,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 263,
-      "medianPackageLPA": 7.1,
-      "averagePackageLPA": 8.2,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 414,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -4731,16 +4697,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 173,
-      "medianPackageLPA": 7.3,
-      "averagePackageLPA": 8.6,
-      "highestPackageLPA": 58,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 252,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -4867,16 +4832,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 195,
-      "medianPackageLPA": 7.5,
-      "averagePackageLPA": 8.9,
-      "highestPackageLPA": 53.5,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 282,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5002,16 +4966,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 105,
-      "medianPackageLPA": 12.3,
-      "averagePackageLPA": 14.1,
-      "highestPackageLPA": 53,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 144,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5137,16 +5100,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 230,
-      "medianPackageLPA": 6.6,
-      "averagePackageLPA": 7.7,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 330,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5273,16 +5235,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 203,
-      "medianPackageLPA": 6.4,
-      "averagePackageLPA": 7.2,
-      "highestPackageLPA": 50.15,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 288,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5408,16 +5369,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 135,
-      "medianPackageLPA": 7.5,
-      "averagePackageLPA": 8.7,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 204,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5542,16 +5502,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 190,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 34,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 276,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5677,16 +5636,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 223,
-      "medianPackageLPA": 5.5,
-      "averagePackageLPA": 6.3,
-      "highestPackageLPA": 41.5,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 330,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5812,16 +5770,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 275,
-      "medianPackageLPA": 5.3,
-      "averagePackageLPA": 6,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 420,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -5947,16 +5904,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 105,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 54,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 156,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6082,16 +6038,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 263,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 5.1,
-      "highestPackageLPA": 36,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 405,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6217,16 +6172,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 380,
-      "medianPackageLPA": 4.1,
-      "averagePackageLPA": 4.8,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 585,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6351,16 +6305,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 280,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 6.2,
-      "highestPackageLPA": 58,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 435,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6486,16 +6439,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 725,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.9,
-      "highestPackageLPA": 45,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1140,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6621,16 +6573,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 245,
-      "medianPackageLPA": 5.3,
-      "averagePackageLPA": 6.1,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 375,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6756,16 +6707,15 @@ export const FALLBACK_TOP_50_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 145,
-      "medianPackageLPA": 4.7,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 38,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 216,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6877,16 +6827,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.020Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 578,
-      "medianPackageLPA": 18.8,
-      "averagePackageLPA": 21.1,
-      "highestPackageLPA": 198,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 840,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -6995,16 +6944,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 490,
-      "medianPackageLPA": 19.7,
-      "averagePackageLPA": 24.3,
-      "highestPackageLPA": 205,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 720,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7113,16 +7061,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 530,
-      "medianPackageLPA": 17.3,
-      "averagePackageLPA": 22.1,
-      "highestPackageLPA": 367,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 756,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7230,16 +7177,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 18.2,
-      "averagePackageLPA": 24.6,
-      "highestPackageLPA": 190,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 580,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7347,16 +7293,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 560,
-      "medianPackageLPA": 16.8,
-      "averagePackageLPA": 20.5,
-      "highestPackageLPA": 260,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 860,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7464,16 +7409,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 420,
-      "medianPackageLPA": 15.4,
-      "averagePackageLPA": 17.2,
-      "highestPackageLPA": 215,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 600,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7581,16 +7525,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 368,
-      "medianPackageLPA": 15.8,
-      "averagePackageLPA": 20.3,
-      "highestPackageLPA": 240,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 520,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7698,16 +7641,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 238,
-      "medianPackageLPA": 15.4,
-      "averagePackageLPA": 18.8,
-      "highestPackageLPA": 90,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 328,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7815,16 +7757,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 403,
-      "medianPackageLPA": 16.3,
-      "averagePackageLPA": 20.6,
-      "highestPackageLPA": 168,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 560,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -7932,16 +7873,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 158,
-      "medianPackageLPA": 14.4,
-      "averagePackageLPA": 17.4,
-      "highestPackageLPA": 68,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 220,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8049,16 +7989,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 438,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 14.8,
-      "highestPackageLPA": 52.8,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 632,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8166,16 +8105,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 455,
-      "medianPackageLPA": 12,
-      "averagePackageLPA": 14.9,
-      "highestPackageLPA": 54,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 648,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8283,16 +8221,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 472,
-      "medianPackageLPA": 10.1,
-      "averagePackageLPA": 12.1,
-      "highestPackageLPA": 83.6,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 620,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8400,16 +8337,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 413,
-      "medianPackageLPA": 12.5,
-      "averagePackageLPA": 16.3,
-      "highestPackageLPA": 88,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 580,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8516,16 +8452,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 9.6,
-      "averagePackageLPA": 13,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 552,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8633,16 +8568,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 343,
-      "medianPackageLPA": 9.1,
-      "averagePackageLPA": 11.7,
-      "highestPackageLPA": 64.2,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 448,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8749,16 +8683,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 333,
-      "medianPackageLPA": 9.8,
-      "averagePackageLPA": 12.4,
-      "highestPackageLPA": 64,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 460,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8866,16 +8799,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 420,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 15.5,
-      "highestPackageLPA": 135,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 580,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -8984,16 +8916,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 133,
-      "medianPackageLPA": 28.8,
-      "averagePackageLPA": 30.1,
-      "highestPackageLPA": 102,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 192,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9101,16 +9032,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 112,
-      "medianPackageLPA": 21.1,
-      "averagePackageLPA": 23,
-      "highestPackageLPA": 65,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 164,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9218,16 +9148,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 203,
-      "medianPackageLPA": 17.3,
-      "averagePackageLPA": 19.2,
-      "highestPackageLPA": 51.3,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 288,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9335,16 +9264,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 168,
-      "medianPackageLPA": 21.1,
-      "averagePackageLPA": 24.3,
-      "highestPackageLPA": 125,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 236,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9452,16 +9380,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 102,
-      "medianPackageLPA": 15.8,
-      "averagePackageLPA": 18.3,
-      "highestPackageLPA": 65,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 144,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9571,16 +9498,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 322,
-      "medianPackageLPA": 11,
-      "averagePackageLPA": 13.9,
-      "highestPackageLPA": 85,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 480,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9689,16 +9615,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 735,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 14.4,
-      "highestPackageLPA": 82,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 1040,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9806,16 +9731,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 12.5,
-      "averagePackageLPA": 15,
-      "highestPackageLPA": 106,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 552,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -9923,16 +9847,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 298,
-      "medianPackageLPA": 9.1,
-      "averagePackageLPA": 10.5,
-      "highestPackageLPA": 50.5,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 420,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10040,16 +9963,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 238,
-      "medianPackageLPA": 10.1,
-      "averagePackageLPA": 12,
-      "highestPackageLPA": 57,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 328,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10157,16 +10079,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 217,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 14.9,
-      "highestPackageLPA": 83,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 312,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10274,16 +10195,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 490,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 8.9,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 700,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10391,16 +10311,15 @@ export const FALLBACK_CORE_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 168,
-      "medianPackageLPA": 8.2,
-      "averagePackageLPA": 9.9,
-      "highestPackageLPA": 38,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 220,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10512,16 +10431,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.020Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 578,
-      "medianPackageLPA": 18.8,
-      "averagePackageLPA": 21.1,
-      "highestPackageLPA": 198,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 840,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10630,16 +10548,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 490,
-      "medianPackageLPA": 19.7,
-      "averagePackageLPA": 24.3,
-      "highestPackageLPA": 205,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 720,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10748,16 +10665,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 530,
-      "medianPackageLPA": 17.3,
-      "averagePackageLPA": 22.1,
-      "highestPackageLPA": 367,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 756,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10865,16 +10781,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 18.2,
-      "averagePackageLPA": 24.6,
-      "highestPackageLPA": 190,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 580,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -10982,16 +10897,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 560,
-      "medianPackageLPA": 16.8,
-      "averagePackageLPA": 20.5,
-      "highestPackageLPA": 260,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 860,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11099,16 +11013,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 420,
-      "medianPackageLPA": 15.4,
-      "averagePackageLPA": 17.2,
-      "highestPackageLPA": 215,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 600,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11216,16 +11129,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 368,
-      "medianPackageLPA": 15.8,
-      "averagePackageLPA": 20.3,
-      "highestPackageLPA": 240,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 520,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11333,16 +11245,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 238,
-      "medianPackageLPA": 15.4,
-      "averagePackageLPA": 18.8,
-      "highestPackageLPA": 90,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 328,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11450,16 +11361,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.028Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 403,
-      "medianPackageLPA": 16.3,
-      "averagePackageLPA": 20.6,
-      "highestPackageLPA": 168,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 560,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11567,16 +11477,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 158,
-      "medianPackageLPA": 14.4,
-      "averagePackageLPA": 17.4,
-      "highestPackageLPA": 68,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 220,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11684,16 +11593,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 438,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 14.8,
-      "highestPackageLPA": 52.8,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 632,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11801,16 +11709,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 455,
-      "medianPackageLPA": 12,
-      "averagePackageLPA": 14.9,
-      "highestPackageLPA": 54,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 648,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -11918,16 +11825,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 472,
-      "medianPackageLPA": 10.1,
-      "averagePackageLPA": 12.1,
-      "highestPackageLPA": 83.6,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 620,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12035,16 +11941,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 413,
-      "medianPackageLPA": 12.5,
-      "averagePackageLPA": 16.3,
-      "highestPackageLPA": 88,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 580,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12151,16 +12056,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 9.6,
-      "averagePackageLPA": 13,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 552,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12268,16 +12172,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 343,
-      "medianPackageLPA": 9.1,
-      "averagePackageLPA": 11.7,
-      "highestPackageLPA": 64.2,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 448,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12384,16 +12287,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 333,
-      "medianPackageLPA": 9.8,
-      "averagePackageLPA": 12.4,
-      "highestPackageLPA": 64,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 460,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12501,16 +12403,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 420,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 15.5,
-      "highestPackageLPA": 135,
-      "actualPlacementRate": 90.5,
-      "totalVerifiedOffers": 580,
-      "dreamOffersPercent": 58,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12619,16 +12520,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 133,
-      "medianPackageLPA": 28.8,
-      "averagePackageLPA": 30.1,
-      "highestPackageLPA": 102,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 192,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12736,16 +12636,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 112,
-      "medianPackageLPA": 21.1,
-      "averagePackageLPA": 23,
-      "highestPackageLPA": 65,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 164,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12853,16 +12752,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 203,
-      "medianPackageLPA": 17.3,
-      "averagePackageLPA": 19.2,
-      "highestPackageLPA": 51.3,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 288,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -12970,16 +12868,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 168,
-      "medianPackageLPA": 21.1,
-      "averagePackageLPA": 24.3,
-      "highestPackageLPA": 125,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 236,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13087,16 +12984,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 102,
-      "medianPackageLPA": 15.8,
-      "averagePackageLPA": 18.3,
-      "highestPackageLPA": 65,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 144,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13206,16 +13102,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 322,
-      "medianPackageLPA": 11,
-      "averagePackageLPA": 13.9,
-      "highestPackageLPA": 85,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 480,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13324,16 +13219,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 735,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 14.4,
-      "highestPackageLPA": 82,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 1040,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13441,16 +13335,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 12.5,
-      "averagePackageLPA": 15,
-      "highestPackageLPA": 106,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 552,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13558,16 +13451,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 298,
-      "medianPackageLPA": 9.1,
-      "averagePackageLPA": 10.5,
-      "highestPackageLPA": 50.5,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 420,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13675,16 +13567,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 238,
-      "medianPackageLPA": 10.1,
-      "averagePackageLPA": 12,
-      "highestPackageLPA": 57,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 328,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13792,16 +13683,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 217,
-      "medianPackageLPA": 11.5,
-      "averagePackageLPA": 14.9,
-      "highestPackageLPA": 83,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 312,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -13909,16 +13799,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 490,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 8.9,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 700,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -14026,16 +13915,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 168,
-      "medianPackageLPA": 8.2,
-      "averagePackageLPA": 9.9,
-      "highestPackageLPA": 38,
-      "actualPlacementRate": 86,
-      "totalVerifiedOffers": 220,
-      "dreamOffersPercent": 34,
-      "confidenceScore": 96,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -14178,16 +14066,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 2310,
-      "medianPackageLPA": 7.5,
-      "averagePackageLPA": 8.7,
-      "highestPackageLPA": 88,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 4304,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -14315,16 +14202,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 2100,
-      "medianPackageLPA": 5.9,
-      "averagePackageLPA": 6.8,
-      "highestPackageLPA": 52,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 3630,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -14452,16 +14338,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 455,
-      "medianPackageLPA": 8.6,
-      "averagePackageLPA": 10.5,
-      "highestPackageLPA": 55.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 645,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -14587,16 +14472,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 585,
-      "medianPackageLPA": 6.9,
-      "averagePackageLPA": 8.1,
-      "highestPackageLPA": 75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 855,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -14724,16 +14608,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 688,
-      "medianPackageLPA": 15.5,
-      "averagePackageLPA": 17,
-      "highestPackageLPA": 60.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 936,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -14858,16 +14741,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 913,
-      "medianPackageLPA": 5.6,
-      "averagePackageLPA": 6.2,
-      "highestPackageLPA": 46,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1440,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15009,16 +14891,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1300,
-      "medianPackageLPA": 6.6,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 63,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1950,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15144,16 +15025,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 438,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.5,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 630,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15279,16 +15159,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.029Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 700,
-      "medianPackageLPA": 6.8,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 35,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1020,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15414,16 +15293,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1713,
-      "medianPackageLPA": 5.9,
-      "averagePackageLPA": 6.9,
-      "highestPackageLPA": 54.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 2737,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15549,16 +15427,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1550,
-      "medianPackageLPA": 5.6,
-      "averagePackageLPA": 6.5,
-      "highestPackageLPA": 64,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 2520,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15683,16 +15560,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 775,
-      "medianPackageLPA": 5.9,
-      "averagePackageLPA": 6.6,
-      "highestPackageLPA": 58,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1260,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15819,16 +15695,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 385,
-      "medianPackageLPA": 9.6,
-      "averagePackageLPA": 11.1,
-      "highestPackageLPA": 54.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 576,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -15957,16 +15832,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 303,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 9,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 462,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -16093,16 +15967,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 1200,
-      "medianPackageLPA": 5.5,
-      "averagePackageLPA": 6.3,
-      "highestPackageLPA": 61.75,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1830,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -16229,16 +16102,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 223,
-      "medianPackageLPA": 9,
-      "averagePackageLPA": 10.2,
-      "highestPackageLPA": 51,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 312,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -16364,16 +16236,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 110,
-      "medianPackageLPA": 9.3,
-      "averagePackageLPA": 11.3,
-      "highestPackageLPA": 58.09,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 154,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -16499,16 +16370,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 538,
-      "medianPackageLPA": 6.2,
-      "averagePackageLPA": 7.6,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 795,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -16633,16 +16503,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 288,
-      "medianPackageLPA": 7.8,
-      "averagePackageLPA": 9.7,
-      "highestPackageLPA": 60.7,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 426,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -16768,16 +16637,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 345,
-      "medianPackageLPA": 8.9,
-      "averagePackageLPA": 11.3,
-      "highestPackageLPA": 65,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 525,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -16903,16 +16771,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 248,
-      "medianPackageLPA": 10.2,
-      "averagePackageLPA": 12.8,
-      "highestPackageLPA": 62,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 375,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17038,16 +16905,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 280,
-      "medianPackageLPA": 7.3,
-      "averagePackageLPA": 8.6,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 444,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17173,16 +17039,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 270,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 9.2,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 405,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17310,16 +17175,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 613,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.8,
-      "highestPackageLPA": 53,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 930,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17446,16 +17310,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 430,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.9,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 645,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17581,16 +17444,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 275,
-      "medianPackageLPA": 4.7,
-      "averagePackageLPA": 5.5,
-      "highestPackageLPA": 31,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 426,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17718,16 +17580,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 245,
-      "medianPackageLPA": 7.7,
-      "averagePackageLPA": 9.2,
-      "highestPackageLPA": 64,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 384,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17852,16 +17713,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 463,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.8,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 720,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -17987,16 +17847,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 600,
-      "medianPackageLPA": 6.2,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 930,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -18122,16 +17981,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 355,
-      "medianPackageLPA": 4.7,
-      "averagePackageLPA": 5.5,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 555,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -18257,16 +18115,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 513,
-      "medianPackageLPA": 5.6,
-      "averagePackageLPA": 6.6,
-      "highestPackageLPA": 54.03,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 780,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -18393,16 +18250,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 330,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 495,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -18529,16 +18385,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 420,
-      "medianPackageLPA": 6.2,
-      "averagePackageLPA": 7.5,
-      "highestPackageLPA": 51.36,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 630,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -18665,16 +18520,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 263,
-      "medianPackageLPA": 7.1,
-      "averagePackageLPA": 8.2,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 414,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -18799,16 +18653,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 173,
-      "medianPackageLPA": 7.3,
-      "averagePackageLPA": 8.6,
-      "highestPackageLPA": 58,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 252,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -18935,16 +18788,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 195,
-      "medianPackageLPA": 7.5,
-      "averagePackageLPA": 8.9,
-      "highestPackageLPA": 53.5,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 282,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -19070,16 +18922,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 105,
-      "medianPackageLPA": 12.3,
-      "averagePackageLPA": 14.1,
-      "highestPackageLPA": 53,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 144,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -19205,16 +19056,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 230,
-      "medianPackageLPA": 6.6,
-      "averagePackageLPA": 7.7,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 330,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -19341,16 +19191,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 203,
-      "medianPackageLPA": 6.4,
-      "averagePackageLPA": 7.2,
-      "highestPackageLPA": 50.15,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 288,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -19476,16 +19325,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 135,
-      "medianPackageLPA": 7.5,
-      "averagePackageLPA": 8.7,
-      "highestPackageLPA": 50,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 204,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -19610,16 +19458,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 190,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 34,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 276,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -19745,16 +19592,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 223,
-      "medianPackageLPA": 5.5,
-      "averagePackageLPA": 6.3,
-      "highestPackageLPA": 41.5,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 330,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -19880,16 +19726,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 275,
-      "medianPackageLPA": 5.3,
-      "averagePackageLPA": 6,
-      "highestPackageLPA": 40,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 420,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -20015,16 +19860,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 105,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 54,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 156,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -20150,16 +19994,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 263,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 5.1,
-      "highestPackageLPA": 36,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 405,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -20285,16 +20128,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 380,
-      "medianPackageLPA": 4.1,
-      "averagePackageLPA": 4.8,
-      "highestPackageLPA": 44,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 585,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -20419,16 +20261,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 280,
-      "medianPackageLPA": 5,
-      "averagePackageLPA": 6.2,
-      "highestPackageLPA": 58,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 435,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -20554,16 +20395,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 725,
-      "medianPackageLPA": 4.4,
-      "averagePackageLPA": 4.9,
-      "highestPackageLPA": 45,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 1140,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -20689,16 +20529,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 245,
-      "medianPackageLPA": 5.3,
-      "averagePackageLPA": 6.1,
-      "highestPackageLPA": 42,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 375,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {
@@ -20824,16 +20663,15 @@ export const FALLBACK_ALL_COLLEGES = [
       "lastRunAt": "2026-10-05T19:04:53.030Z"
     },
     "studentVerifiedStats": {
-      "sampleSize": 145,
-      "medianPackageLPA": 4.7,
-      "averagePackageLPA": 5.7,
-      "highestPackageLPA": 38,
-      "actualPlacementRate": 74,
-      "totalVerifiedOffers": 216,
-      "dreamOffersPercent": 16.5,
-      "confidenceScore": 91,
-      "verifiedReviewsCount": 3,
-      "lastUpdated": "2026-08-25T00:00:00.000Z"
+      "hasEnoughData": false,
+      "verifiedStudentOutcomes": 0,
+      "verifiedPackageRecords": 0,
+      "observedPlacementRate": null,
+      "medianPackageLPA": null,
+      "averagePackageLPA": null,
+      "highestPackageLPA": null,
+      "confidenceScore": 0,
+      "verifiedReviewsCount": 0
     },
     "verifiedStudentComments": [
       {

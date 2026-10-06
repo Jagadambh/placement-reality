@@ -5,6 +5,7 @@ const Notification = require('../models/Notification');
 const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { checkOfferDuplicate } = require('../services/duplicateDetectionService');
 const { recordAuditLog } = require('../services/auditService');
+const { syncCollegeStudentVerifiedStats } = require('../services/studentVerifiedAggregationService');
 
 // @desc Submit placement offer
 // @route POST /api/offers
@@ -185,6 +186,13 @@ const verifyOffer = async (req, res, next) => {
       }
     }
     await offer.save();
+
+    // Real-Time Institutional Aggregation Update (Requirement 11)
+    if (offer.collegeId) {
+      syncCollegeStudentVerifiedStats(offer.collegeId).catch((err) =>
+        console.error('[Offer Verification] Background stats sync notice:', err.message)
+      );
+    }
 
     // Update attached document status if applicable
     if (offer.supportingDocument) {

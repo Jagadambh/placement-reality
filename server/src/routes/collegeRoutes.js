@@ -12,6 +12,7 @@ const {
   classifyInstitution,
   getCollegeDiscoveryStatus,
   triggerCollegeDiscovery,
+  getStudentVerifiedIntelligence,
 } = require('../controllers/collegeController');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roles');
@@ -20,6 +21,7 @@ router.get('/', getColleges);
 router.get('/top-50-private', getTop50PrivateColleges);
 router.get('/:id/discovery-status', getCollegeDiscoveryStatus);
 router.post('/:id/discover-placements', triggerCollegeDiscovery);
+router.get('/:id/student-verified-intelligence', getStudentVerifiedIntelligence);
 router.get('/:slugOrId', getCollegeBySlug);
 router.get('/:id/departments', getCollegeDepartments);
 router.get('/:id/seasons', getCollegeSeasons);

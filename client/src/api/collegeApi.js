@@ -12,4 +12,5 @@ export const collegeApi = {
   classifyInstitution: (id, data) => api.put(`/colleges/${id}/classify`, data),
   getDiscoveryStatus: (collegeId) => api.get(`/colleges/${collegeId}/discovery-status`),
   triggerDiscovery: (collegeId) => api.post(`/colleges/${collegeId}/discover-placements`),
+  getStudentVerifiedIntelligence: (id, params) => api.get(`/colleges/${id}/student-verified-intelligence`, { params }),
 };

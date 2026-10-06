@@ -6,7 +6,9 @@ const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { recordAuditLog } = require('../services/auditService');
 const { ensureCollegeSessions } = require('../utils/academicSessionHelper');
 const { validateUrlForCrawling } = require('../utils/urlValidator');
+const mongoose = require('mongoose');
 const { queueBackgroundPlacementDiscovery } = require('../services/placementDiscoveryJobService');
+const { aggregateStudentVerifiedIntelligence } = require('../services/studentVerifiedAggregationService');
 const OfficialPlacementReport = require('../models/OfficialPlacementReport');
 
 // @desc Get colleges directory with search and filter
@@ -835,6 +837,36 @@ const getTop50PrivateColleges = async (req, res, next) => {
   }
 };
 
+// @desc Get live student-verified placement intelligence (Requirement 4 & 11)
+// @route GET /api/colleges/:id/student-verified-intelligence
+const getStudentVerifiedIntelligence = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { seasonId, academicSession, departmentId } = req.query;
+
+    let college = null;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      college = await College.findById(id);
+    }
+    if (!college) {
+      college = await College.findOne({ slug: id.toLowerCase() });
+    }
+    if (!college) {
+      return sendError(res, 'College not found', 404);
+    }
+
+    const summary = await aggregateStudentVerifiedIntelligence(college._id, {
+      seasonId,
+      academicSession,
+      departmentId,
+    });
+
+    return sendSuccess(res, summary, 'Student-verified intelligence aggregated successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getColleges,
   getTop50PrivateColleges,
@@ -847,4 +879,5 @@ module.exports = {
   classifyInstitution,
   getCollegeDiscoveryStatus,
   triggerCollegeDiscovery,
+  getStudentVerifiedIntelligence,
 };

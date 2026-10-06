@@ -494,7 +494,7 @@ async function seedVerifiedStudentReportsAndReviews() {
       console.log(`  ✓ Updated ${college.name}: ${item.reviews.length} verified reviews & stats (Median: ₹${item.studentStats.medianPackageLPA} LPA)`);
     }
 
-    // Also populate baseline studentVerifiedStats for any colleges that don't have it yet
+    // Clean unverified baseline: Colleges without verified records remain unpopulated (Empty State: 'Not enough verified student data yet.')
     const allCollegesWithoutStats = await College.find({
       $or: [
         { 'studentVerifiedStats.medianPackageLPA': null },
@@ -503,29 +503,20 @@ async function seedVerifiedStudentReportsAndReviews() {
     });
 
     for (const c of allCollegesWithoutStats) {
-      const pRecord = await PlacementRecord.findOne({ collegeId: c._id }).sort({ academicSession: -1 });
-      const officialMedian = pRecord?.medianPackageLPA || (c.tierClassification?.tier === 'Tier 1' ? 14.0 : 7.0);
-      const officialAvg = pRecord?.averagePackageLPA || (officialMedian * 1.2);
-      const officialHigh = pRecord?.highestPackageLPA || 45.0;
-
-      // Realistic student-verified reality: median is usually 8-15% lower than marketing brochure
-      const studentMedian = Number((officialMedian * 0.92).toFixed(1));
-      const studentAvg = Number((officialAvg * 0.88).toFixed(1));
-      const placementRate = c.tierClassification?.tier === 'Tier 1' ? 88.5 : 74.0;
-
       c.studentVerifiedStats = {
-        sampleSize: Math.floor(Math.random() * 200) + 150,
-        medianPackageLPA: studentMedian,
-        averagePackageLPA: studentAvg,
-        highestPackageLPA: Number((officialHigh * 0.95).toFixed(1)),
-        actualPlacementRate: placementRate,
-        totalVerifiedOffers: Math.floor(Math.random() * 300) + 220,
-        dreamOffersPercent: c.tierClassification?.tier === 'Tier 1' ? 45.0 : 18.0,
-        confidenceScore: 88,
-        verifiedReviewsCount: 3,
+        sampleSize: 0,
+        totalVerifiedOffers: 0,
+        medianPackageLPA: null,
+        averagePackageLPA: null,
+        highestPackageLPA: null,
+        actualPlacementRate: null,
+        confidenceScore: 0,
+        verifiedReviewsCount: 0,
+        hasEnoughData: false,
         lastUpdated: new Date(),
       };
       await c.save();
+    }
 
       // Also create a sample verified review for this college
       const sampleReview = await CollegeReview.findOne({ collegeId: c._id });

@@ -857,13 +857,19 @@ export const Top50PrivateCollegesPage = () => {
                     {/* KEY PLACEMENT METRICS BOX - ADAPTS TO OFFICIAL OR STUDENT-VERIFIED */}
                     {(() => {
                       const isStudentMode = statsSourceMode === 'student_verified';
-                      const vStats = college.studentVerifiedStats || {
-                        medianPackageLPA: pRecord?.medianPackageLPA ? Number((pRecord.medianPackageLPA * 0.92).toFixed(1)) : 7.2,
-                        averagePackageLPA: pRecord?.averagePackageLPA ? Number((pRecord.averagePackageLPA * 0.88).toFixed(1)) : 8.4,
-                        highestPackageLPA: pRecord?.highestPackageLPA || 55.0,
-                        actualPlacementRate: college.tierClassification?.tier === 'Tier 1' ? 90.0 : 74.5,
-                        sampleSize: 350,
-                        dreamOffersPercent: college.tierClassification?.tier === 'Tier 1' ? 52.0 : 18.5,
+                      const rawStats = college.studentVerifiedStats || {};
+                      const outcomesCount = rawStats.verifiedStudentOutcomes ?? rawStats.sampleSize ?? 0;
+                      const hasData = Boolean(rawStats.hasEnoughData && outcomesCount > 0);
+
+                      const vStats = {
+                        hasEnoughData: hasData,
+                        medianPackageLPA: hasData ? (rawStats.verifiedMedianPackageLPA ?? rawStats.medianPackageLPA ?? null) : null,
+                        averagePackageLPA: hasData ? (rawStats.averagePackageLPA ?? null) : null,
+                        highestPackageLPA: hasData ? (rawStats.highestPackageLPA ?? null) : null,
+                        observedPlacementRate: hasData ? (rawStats.observedPlacementRate ?? rawStats.actualPlacementRate ?? null) : null,
+                        sampleSize: outcomesCount,
+                        verifiedStudentOutcomes: outcomesCount,
+                        verifiedPackageRecords: rawStats.verifiedPackageRecords ?? rawStats.totalVerifiedOffers ?? 0,
                       };
 
                       return (
@@ -903,7 +909,7 @@ export const Top50PrivateCollegesPage = () => {
                               </span>
                               <span className="text-base font-extrabold text-emerald-600">
                                 {isStudentMode
-                                  ? `₹${vStats.highestPackageLPA || '—'} LPA`
+                                  ? (vStats.hasEnoughData && vStats.highestPackageLPA ? `₹${vStats.highestPackageLPA} LPA` : 'Not available')
                                   : (pRecord?.highestPackageLPA ? `₹${pRecord.highestPackageLPA} LPA` : 'Not Disclosed')}
                               </span>
                             </div>
@@ -914,18 +920,18 @@ export const Top50PrivateCollegesPage = () => {
                               </span>
                               <span className="text-base font-extrabold text-indigo-600">
                                 {isStudentMode
-                                  ? `₹${vStats.averagePackageLPA || '—'} LPA`
+                                  ? (vStats.hasEnoughData && vStats.averagePackageLPA ? `₹${vStats.averagePackageLPA} LPA` : 'Not available')
                                   : (pRecord?.averagePackageLPA ? `₹${pRecord.averagePackageLPA} LPA` : 'Not Disclosed')}
                               </span>
                             </div>
 
                             <div className="p-2.5 rounded-xl bg-white border border-blue-100 shadow-2xs">
                               <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                                {isStudentMode ? 'Student Median CTC' : 'Median CTC'}
+                                {isStudentMode ? 'Verified Median' : 'Median CTC'}
                               </span>
                               <span className="text-base font-extrabold text-blue-600">
                                 {isStudentMode
-                                  ? `₹${vStats.medianPackageLPA || '—'} LPA`
+                                  ? (vStats.hasEnoughData && vStats.medianPackageLPA ? `₹${vStats.medianPackageLPA} LPA` : 'Not available')
                                   : (pRecord?.medianPackageLPA ? `₹${pRecord.medianPackageLPA} LPA` : 'Not Disclosed')}
                               </span>
                             </div>
@@ -935,11 +941,13 @@ export const Top50PrivateCollegesPage = () => {
                           <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-slate-200/60 text-slate-600">
                             <div>
                               <span className="font-medium text-slate-500">
-                                {isStudentMode ? 'Actual Placed Rate:' : 'Students Placed / Offers:'}
+                                {isStudentMode ? 'Observed Placed Rate:' : 'Students Placed / Offers:'}
                               </span>{' '}
                               <span className="font-bold text-slate-800">
                                 {isStudentMode ? (
-                                  `${vStats.actualPlacementRate || '74.5'}% placed`
+                                  vStats.hasEnoughData && vStats.observedPlacementRate != null
+                                    ? `${vStats.observedPlacementRate}% placed`
+                                    : 'Not available'
                                 ) : (
                                   <>
                                     {pRecord?.uniqueStudentsPlaced
@@ -953,11 +961,11 @@ export const Top50PrivateCollegesPage = () => {
 
                             <div>
                               <span className="font-medium text-slate-500">
-                                {isStudentMode ? 'Verified Sample Submissions:' : 'Recruiters Visiting:'}
+                                {isStudentMode ? 'Verified Outcomes:' : 'Recruiters Visiting:'}
                               </span>{' '}
                               <span className="font-bold text-slate-800">
                                 {isStudentMode ? (
-                                  `${vStats.sampleSize || 350}+ verified offers`
+                                  `${vStats.verifiedStudentOutcomes || 0} verified records`
                                 ) : (
                                   (pRecord?.uniqueRecruitersCount ? `${pRecord.uniqueRecruitersCount}+ Companies` : 'Official Drive')
                                 )}
@@ -1098,13 +1106,17 @@ export const Top50PrivateCollegesPage = () => {
                     const rank = getDisplayRank(college, index);
                     const isComparing = selectedForCompare.some((c) => c._id === college._id);
                     const isStudentMode = statsSourceMode === 'student_verified';
-                    const vStats = college.studentVerifiedStats || {
-                      medianPackageLPA: p?.medianPackageLPA ? Number((p.medianPackageLPA * 0.92).toFixed(1)) : 7.2,
-                      averagePackageLPA: p?.averagePackageLPA ? Number((p.averagePackageLPA * 0.88).toFixed(1)) : 8.4,
-                      highestPackageLPA: p?.highestPackageLPA || 55.0,
-                      actualPlacementRate: college.tierClassification?.tier === 'Tier 1' ? 90.0 : 74.5,
-                      sampleSize: 350,
-                      dreamOffersPercent: college.tierClassification?.tier === 'Tier 1' ? 52.0 : 18.5,
+                    const rawStats = college.studentVerifiedStats || {};
+                    const outcomesCount = rawStats.verifiedStudentOutcomes ?? rawStats.sampleSize ?? 0;
+                    const hasData = Boolean(rawStats.hasEnoughData && outcomesCount > 0);
+
+                    const vStats = {
+                      hasEnoughData: hasData,
+                      medianPackageLPA: hasData ? (rawStats.verifiedMedianPackageLPA ?? rawStats.medianPackageLPA ?? null) : null,
+                      averagePackageLPA: hasData ? (rawStats.averagePackageLPA ?? null) : null,
+                      highestPackageLPA: hasData ? (rawStats.highestPackageLPA ?? null) : null,
+                      observedPlacementRate: hasData ? (rawStats.observedPlacementRate ?? rawStats.actualPlacementRate ?? null) : null,
+                      sampleSize: outcomesCount,
                     };
 
                     return (
@@ -1138,24 +1150,28 @@ export const Top50PrivateCollegesPage = () => {
                         </td>
                         <td className="py-3 px-4 text-right font-extrabold text-emerald-600">
                           {isStudentMode
-                            ? (vStats.highestPackageLPA ? `₹${vStats.highestPackageLPA} L` : '—')
+                            ? (vStats.hasEnoughData && vStats.highestPackageLPA ? `₹${vStats.highestPackageLPA} L` : <span className="text-slate-400 font-normal">—</span>)
                             : (p?.highestPackageLPA ? `₹${p.highestPackageLPA} L` : '—')}
                         </td>
                         <td className="py-3 px-4 text-right font-extrabold text-indigo-600">
                           {isStudentMode
-                            ? (vStats.averagePackageLPA ? `₹${vStats.averagePackageLPA} L` : '—')
+                            ? (vStats.hasEnoughData && vStats.averagePackageLPA ? `₹${vStats.averagePackageLPA} L` : <span className="text-slate-400 font-normal">—</span>)
                             : (p?.averagePackageLPA ? `₹${p.averagePackageLPA} L` : '—')}
                         </td>
                         <td className="py-3 px-4 text-right font-extrabold text-blue-600">
                           {isStudentMode
-                            ? (vStats.medianPackageLPA ? `₹${vStats.medianPackageLPA} L` : '—')
+                            ? (vStats.hasEnoughData && vStats.medianPackageLPA ? `₹${vStats.medianPackageLPA} L` : <span className="text-slate-400 font-normal">—</span>)
                             : (p?.medianPackageLPA ? `₹${p.medianPackageLPA} L` : '—')}
                         </td>
                         <td className="py-3 px-4 text-center font-medium">
                           {isStudentMode ? (
-                            <span className="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 font-bold text-[11px]">
-                              {vStats.actualPlacementRate || '74.5'}%
-                            </span>
+                            vStats.hasEnoughData && vStats.observedPlacementRate != null ? (
+                              <span className="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 font-bold text-[11px]">
+                                {vStats.observedPlacementRate}%
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 text-[11px]">Awaiting Data</span>
+                            )
                           ) : (
                             <span className="text-slate-600">
                               {p?.academicSession || college.latestPlacementRecord?.academicSession || '2026–27'}
