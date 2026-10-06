@@ -174,6 +174,20 @@ app.all(['/api/init-verifier', '/api/auth/init-verifier'], async (req, res) => {
   }
 });
 
+// Sync verified student intelligence & consensus metrics endpoint
+app.all('/api/sync-verified-data', async (req, res) => {
+  try {
+    const { seedVerifiedStudentReportsAndReviews } = require('./seeds/seedVerifiedStudentReportsAndReviews');
+    await seedVerifiedStudentReportsAndReviews();
+    return res.json({
+      success: true,
+      message: 'Verified student consensus metrics, reviews, and offer evidence successfully synchronized.',
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Database diagnostics endpoint
 app.get('/api/db-status', async (req, res) => {
   try {

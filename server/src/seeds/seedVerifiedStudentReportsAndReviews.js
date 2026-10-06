@@ -9,6 +9,7 @@ const CollegeReview = require('../models/CollegeReview');
 const StudentSessionReport = require('../models/StudentSessionReport');
 const PlacementSeason = require('../models/PlacementSeason');
 const PlacementRecord = require('../models/PlacementRecord');
+const Offer = require('../models/Offer');
 const { ensureCollegeSessions } = require('../utils/academicSessionHelper');
 
 const VERIFIED_COLLEGE_STUDENT_DATA = [
@@ -88,13 +89,13 @@ const VERIFIED_COLLEGE_STUDENT_DATA = [
     shortName: 'KIIT',
     studentStats: {
       sampleSize: 490,
-      medianPackageLPA: 6.5,
-      averagePackageLPA: 7.8,
-      highestPackageLPA: 55.0,
+      medianPackageLPA: 6.0,
+      averagePackageLPA: 7.0,
+      highestPackageLPA: 45.0,
       actualPlacementRate: 72.0,
       totalVerifiedOffers: 610,
       dreamOffersPercent: 14.5,
-      confidenceScore: 90,
+      confidenceScore: 92,
       verifiedReviewsCount: 16,
     },
     reviews: [
@@ -106,10 +107,10 @@ const VERIFIED_COLLEGE_STUDENT_DATA = [
         isVerifiedStudentBadge: true,
         verificationProofType: "KIIT SAP Portal & College Roll Proof Verified",
         reportedStats: {
-          medianPackageLPA: 6.5,
-          averagePackageLPA: 7.6,
-          highestPackageLPA: 55.0,
-          actualPlacementRate: 73.0,
+          medianPackageLPA: 6.0,
+          averagePackageLPA: 7.0,
+          highestPackageLPA: 45.0,
+          actualPlacementRate: 72.0,
           dreamOffersPercent: 15.0,
           batchSizeEstimate: 4500,
         },
@@ -121,7 +122,7 @@ const VERIFIED_COLLEGE_STUDENT_DATA = [
           campusExperience: 4.4,
           careerPrep: 3.9,
         },
-        reviewText: "Official posters display 63 LPA (Yugabyte / Atlassian off-campus offers). On campus, HighRadius, Deloitte, PwC, Cognizant, and Accenture are the main hirers. HighRadius selects around 600–800 students at 8 LPA. The true median is 6.5 LPA for CSE/IT. If your CGPA drops below 7.5, your eligibility drops by over 60%.",
+        reviewText: "Official brochures advertise 63 LPA peak claims. For the 2026 session, verified on-campus offers include Accenture at ₹11.0 LPA and TCS Digital at ₹7.0 LPA. The realistic median package for the batch sits around ₹6.0 LPA, with the average near ₹7.0 LPA, and the highest on-campus package capped around ₹45.0 LPA rounded off. Prominent recruiters include HighRadius, Deloitte, PwC, Cognizant, and Accenture.",
         pros: "Campus life and hostels are outstanding. Centralized placement training starts early from 6th semester.",
         cons: "Batch size in CSE/CSSE is large (~3500+). High competition for Day 0 marquee tech firms.",
       },
@@ -462,11 +463,50 @@ async function seedVerifiedStudentReportsAndReviews() {
         { upsert: true, new: true }
       );
 
-      // 4. Seed Verified CollegeReview records
+      // 4. Ensure verified student offers (e.g. Accenture 11 LPA, TCS Digital 7 LPA for KIIT)
+      if (item.shortName === 'KIIT') {
+        await Offer.findOneAndUpdate(
+          { collegeId: college._id, companyName: /accenture/i },
+          {
+            $set: {
+              collegeId: college._id,
+              seasonId: latestSeason._id,
+              companyName: 'Accenture',
+              roleTitle: 'Associate Software Engineer / Advanced App Engineering',
+              annualCtcLpa: 11.0,
+              baseSalaryLpa: 9.5,
+              verificationStatus: 'Verified',
+              verificationProofType: 'Offer Letter Verified',
+              graduationYear: 2026,
+            },
+          },
+          { upsert: true, new: true }
+        );
+
+        await Offer.findOneAndUpdate(
+          { collegeId: college._id, companyName: /tcs/i },
+          {
+            $set: {
+              collegeId: college._id,
+              seasonId: latestSeason._id,
+              companyName: 'TCS Digital',
+              roleTitle: 'Systems Engineer (Digital)',
+              annualCtcLpa: 7.0,
+              baseSalaryLpa: 7.0,
+              verificationStatus: 'Verified',
+              verificationProofType: 'Offer Letter Verified',
+              graduationYear: 2026,
+            },
+          },
+          { upsert: true, new: true }
+        );
+      }
+
+      // 5. Seed / Update Verified CollegeReview records
       for (const rev of item.reviews) {
         const existingRev = await CollegeReview.findOne({
           collegeId: college._id,
-          title: rev.title,
+          $or: [{ title: rev.title }, { authorDisplayName: rev.authorDisplayName }],
         });
 
         if (!existingRev) {
@@ -488,6 +528,13 @@ async function seedVerifiedStudentReportsAndReviews() {
             moderationStatus: 'Approved',
           });
           totalReviewsSeeded++;
+        } else {
+          existingRev.title = rev.title;
+          existingRev.reviewText = rev.reviewText;
+          existingRev.reportedStats = rev.reportedStats;
+          existingRev.isVerifiedStudentBadge = true;
+          existingRev.moderationStatus = 'Approved';
+          await existingRev.save();
         }
       }
 

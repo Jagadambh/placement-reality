@@ -384,7 +384,7 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
       const gradYear = parseInt(gradYearMatch[0].length === 2 ? `20${gradYearMatch[0]}` : gradYearMatch[0], 10);
       const fallbackOffers = await Offer.find({
         collegeId,
-        graduationYear: gradYear,
+        graduationYear: { $in: [gradYear, gradYear - 1] },
         verificationStatus: 'Verified',
         ...(selectedDepartment ? { departmentId: selectedDepartment._id } : {}),
       }).populate('departmentId', 'name code');
@@ -863,6 +863,15 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
       advertisedStatus: advertisedData.provenance?.verificationStatus || 'Official Website Publication',
       verifiedStatus: 'Student Given Verified Reality',
     },
+    sampleVerifiedOffers: verifiedOffers.map(o => ({
+      id: o._id,
+      companyName: o.companyName,
+      annualCtcLpa: o.annualCtcLpa,
+      roleTitle: o.roleTitle,
+      graduationYear: o.graduationYear,
+      verificationProofType: o.verificationProofType || 'Offer Letter Verified',
+      verificationStatus: o.verificationStatus,
+    })),
     dataCoverageAndLimitations: {
       sampleCoveragePercentage: coverage?.coveragePercentage,
       verifiedUniqueStudents: coverage?.verifiedUniqueStudents,
