@@ -35,15 +35,47 @@ async function autoBootstrapDatabase(force = false) {
 
     console.log(`[AutoBootstrap] Checking database: ${collegeCount} colleges (${top50Count} Top 50 Private), ${recordCount} placement records, ${postCount} community posts, ${reviewCount} verified reviews.`);
 
+    // 0. Ensure Lead Verifier account unconditionally exists on EVERY startup
+    const verifierEmail = (process.env.VERIFIER_EMAIL || 'placement.reality1@gmail.com').trim().toLowerCase();
+    const existingVerifier = await User.findOne({ email: verifierEmail });
+    if (!existingVerifier) {
+      console.log(`[AutoBootstrap] Provisioning Lead Verifier account (${verifierEmail})...`);
+      const defaultPass = process.env.VERIFIER_INITIAL_PASSWORD || 'PlacementVerifier@2026!';
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(defaultPass, salt);
+      await User.create({
+        name: 'Lead Placement Verifier',
+        email: verifierEmail,
+        passwordHash: hash,
+        role: 'moderator',
+        mustChangePassword: true,
+        isEmailVerified: true,
+        isCollegeVerified: true,
+        isActive: true,
+        pseudonym: 'Verifier_Lead',
+      });
+      console.log(`[AutoBootstrap] Lead Verifier account provisioned.`);
+    } else {
+      if (existingVerifier.role !== 'moderator' || !existingVerifier.isActive) {
+        existingVerifier.role = 'moderator';
+        existingVerifier.isActive = true;
+        existingVerifier.isEmailVerified = true;
+        existingVerifier.isCollegeVerified = true;
+        await existingVerifier.save();
+        console.log(`[AutoBootstrap] Lead Verifier account verified & role confirmed.`);
+      }
+    }
+
     const needsColleges = force || collegeCount < 80 || top50Count < 50;
     const needsPosts = force || postCount === 0;
     const needsReviews = force || reviewCount < 30;
 
     if (!needsColleges && !needsPosts && !needsReviews) {
-      console.log(`[AutoBootstrap] Database fully populated. Skipping bootstrap.`);
+      console.log(`[AutoBootstrap] Database fully populated. Lead Verifier confirmed. Skipping content re-seeding.`);
       return {
         success: true,
         alreadyPopulated: true,
+        leadVerifier: verifierEmail,
         colleges: collegeCount,
         top50Private: top50Count,
         communityPosts: postCount,
@@ -121,28 +153,6 @@ async function autoBootstrapDatabase(force = false) {
         };
         await c.save();
       }
-    }
-
-    // 6. Ensure Lead Verifier account exists
-    const verifierEmail = (process.env.VERIFIER_EMAIL || 'placement.reality1@gmail.com').trim().toLowerCase();
-    const existingVerifier = await User.findOne({ email: verifierEmail });
-    if (!existingVerifier) {
-      console.log(`[AutoBootstrap] Provisioning Lead Verifier account (${verifierEmail})...`);
-      const defaultPass = process.env.VERIFIER_INITIAL_PASSWORD || 'PlacementVerifier@2026!';
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(defaultPass, salt);
-      await User.create({
-        name: 'Lead Placement Verifier',
-        email: verifierEmail,
-        passwordHash: hash,
-        role: 'moderator',
-        mustChangePassword: true,
-        isEmailVerified: true,
-        isCollegeVerified: true,
-        isActive: true,
-        pseudonym: 'Verifier_Lead',
-      });
-      console.log(`[AutoBootstrap] Lead Verifier account provisioned.`);
     }
 
     const finalColleges = await College.countDocuments();

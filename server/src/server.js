@@ -120,6 +120,60 @@ app.get(['/api/bootstrap', '/api/admin/bootstrap'], async (req, res) => {
   }
 });
 
+// Direct Lead Verifier provisioning endpoint (ensures placement.reality1@gmail.com exists on production)
+app.all(['/api/init-verifier', '/api/auth/init-verifier'], async (req, res) => {
+  try {
+    const bcrypt = require('bcryptjs');
+    const User = require('./models/User');
+    const email = 'placement.reality1@gmail.com';
+    const password = 'PlacementVerifier@2026!';
+
+    let user = await User.findOne({ email });
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    if (user) {
+      user.role = 'moderator';
+      user.passwordHash = passwordHash;
+      user.mustChangePassword = true;
+      user.isActive = true;
+      user.isEmailVerified = true;
+      user.isCollegeVerified = true;
+      await user.save();
+      return res.json({
+        success: true,
+        message: 'Lead verifier account refreshed in database',
+        email,
+        initialPassword: password,
+        mustChangePassword: true,
+        role: user.role,
+      });
+    } else {
+      user = await User.create({
+        name: 'Lead Placement Verifier',
+        email,
+        passwordHash,
+        role: 'moderator',
+        mustChangePassword: true,
+        isEmailVerified: true,
+        isCollegeVerified: true,
+        isActive: true,
+        pseudonym: 'Verifier_Lead',
+      });
+      return res.json({
+        success: true,
+        message: 'Lead verifier account created in database',
+        email,
+        initialPassword: password,
+        mustChangePassword: true,
+        role: user.role,
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Database diagnostics endpoint
 app.get('/api/db-status', async (req, res) => {
   try {

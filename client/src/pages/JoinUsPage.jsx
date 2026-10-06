@@ -273,7 +273,7 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
               }`}
             >
               <GraduationCap className="w-4 h-4" />
-              <span>Join Us (Student Verification)</span>
+              <span>Join Us — Student Sign Up &amp; Verification</span>
             </button>
             <button
               type="button"

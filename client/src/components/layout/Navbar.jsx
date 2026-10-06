@@ -180,36 +180,18 @@ export const Navbar = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                {/* Join Us circular box / button for students */}
+              <div className="flex items-center">
+                {/* Join Us circular box / button for students & access */}
                 <Link
                   to="/join-us"
-                  className="flex items-center gap-2 pl-2 pr-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs shadow-md shadow-blue-500/20 hover:from-blue-700 hover:to-indigo-700 transition hover:scale-105 border border-blue-400/40 group"
-                  title="Join Us - Only Students Can Submit College ID & Offer Letter for Verification"
+                  className="flex items-center gap-2 pl-2.5 pr-4 py-2 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/25 hover:from-blue-700 hover:to-indigo-800 transition-all hover:scale-105 border border-blue-400/40 group"
+                  title="Join Us — Student Verification & Sign In"
                 >
-                  <div className="w-6 h-6 rounded-full bg-white/20 border border-white/40 flex items-center justify-center text-white shrink-0 group-hover:rotate-12 transition-transform shadow-xs">
+                  <div className="w-6 h-6 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white shrink-0 group-hover:rotate-12 transition-transform shadow-xs">
                     <Sparkles className="w-3.5 h-3.5 text-white" />
                   </div>
-                  <span className="tracking-tight">Join Us</span>
+                  <span className="tracking-tight text-xs font-bold">Join Us</span>
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                </Link>
-
-                {/* Sign In link */}
-                <Link
-                  to="/login"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 text-xs font-semibold transition"
-                >
-                  <Lock className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Sign In</span>
-                </Link>
-
-                {/* Verified stats badge */}
-                <Link
-                  to="/student-verified"
-                  className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-full transition border border-emerald-200"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Verified Stats</span>
                 </Link>
               </div>
             )}
@@ -281,30 +263,14 @@ export const Navbar = () => {
                 </button>
               </>
             ) : (
-              <div className="flex flex-col gap-2 pt-2">
+              <div className="flex flex-col pt-2">
                 <Link
                   to="/join-us"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 px-3 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center gap-2 shadow-sm text-center"
+                  className="w-full py-2.5 px-3 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center gap-2 shadow-sm text-center"
                 >
                   <Sparkles className="w-4 h-4 text-white" />
-                  <span>Join Us (Student Verification Submission)</span>
-                </Link>
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 px-3 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center gap-2 text-center"
-                >
-                  <Lock className="w-4 h-4 text-slate-500" />
-                  <span>Sign In (Students &amp; Lead Verifier)</span>
-                </Link>
-                <Link
-                  to="/student-verified"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 px-3 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-center gap-2 text-center"
-                >
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>🎓 Student Verified Comments &amp; Stats</span>
+                  <span>Join Us (Student Verification &amp; Sign In)</span>
                 </Link>
               </div>
             )}
