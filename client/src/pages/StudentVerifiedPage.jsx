@@ -54,9 +54,11 @@ export const StudentVerifiedPage = () => {
   const [formAvgLPA, setFormAvgLPA] = useState('');
   const [formHighestLPA, setFormHighestLPA] = useState('');
   const [formPlacementRate, setFormPlacementRate] = useState('');
-  const [formRatingPlacement, setFormRatingPlacement] = useState(4);
-  const [formRatingInternship, setFormRatingInternship] = useState(4);
-  const [formRatingAcademics, setFormRatingAcademics] = useState(4);
+  const [formOverallRating, setFormOverallRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [formRatingPlacement, setFormRatingPlacement] = useState(5);
+  const [formRatingInternship, setFormRatingInternship] = useState(5);
+  const [formRatingAcademics, setFormRatingAcademics] = useState(5);
 
   // Load colleges and extract verified comments
   useEffect(() => {
@@ -195,15 +197,16 @@ export const StudentVerifiedPage = () => {
         reviewText: formReviewText,
         pros: formPros,
         cons: formCons,
+        overallRating: formOverallRating,
         isPseudonymous: true,
         verificationProofType: 'Student Roll ID & Institutional Email Verified',
         ratings: {
-          placementSupport: formRatingPlacement,
-          internshipSupport: formRatingInternship,
-          teachingAcademics: formRatingAcademics,
-          infrastructure: 4,
-          campusExperience: 4,
-          careerPrep: formRatingPlacement,
+          placementSupport: formRatingPlacement || formOverallRating,
+          internshipSupport: formRatingInternship || formOverallRating,
+          teachingAcademics: formRatingAcademics || formOverallRating,
+          infrastructure: formOverallRating,
+          campusExperience: formOverallRating,
+          careerPrep: formRatingPlacement || formOverallRating,
         },
         reportedStats: {
           medianPackageLPA: formMedianLPA ? parseFloat(formMedianLPA) : undefined,
@@ -228,10 +231,11 @@ export const StudentVerifiedPage = () => {
         graduationYear: parseInt(formYear, 10),
         verificationProofType: 'Student Roll ID & Institutional Email Verified',
         isVerifiedStudent: true,
+        overallRating: formOverallRating,
         ratings: {
-          placementSupport: formRatingPlacement,
-          internshipSupport: formRatingInternship,
-          teachingAcademics: formRatingAcademics,
+          placementSupport: formRatingPlacement || formOverallRating,
+          internshipSupport: formRatingInternship || formOverallRating,
+          teachingAcademics: formRatingAcademics || formOverallRating,
         },
         reportedStats: payload.reportedStats,
         collegeName: targetCol?.name || 'Verified Institution',
@@ -517,7 +521,50 @@ export const StudentVerifiedPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+                {/* Overall Star Rating (Provided by Student) */}
+                <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200/90 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-slate-800">
+                      Overall Placement &amp; Campus Star Rating (Provided by You) *
+                    </label>
+                    <span className="text-xs font-black text-amber-700 bg-white px-2.5 py-0.5 rounded-md border border-amber-200 shadow-2xs">
+                      ⭐ {formOverallRating} of 5 Stars
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => {
+                            setFormOverallRating(star);
+                            setFormRatingPlacement(star);
+                            setFormRatingInternship(star);
+                            setFormRatingAcademics(star);
+                          }}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          className="p-1 hover:scale-125 transition-transform cursor-pointer focus:outline-hidden"
+                          title={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                        >
+                          <Star
+                            className={`w-7 h-7 ${(hoverRating || formOverallRating) >= star ? 'fill-amber-400 text-amber-500 drop-shadow-xs' : 'text-slate-300'}`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    <span className="text-[11px] text-slate-600 font-medium ml-1">
+                      {formOverallRating === 5 && '🌟 Outstanding Reality'}
+                      {formOverallRating === 4 && '👍 Very Good Experience'}
+                      {formOverallRating === 3 && '😐 Average / Mixed Reality'}
+                      {formOverallRating === 2 && '⚠️ Disappointing Placement'}
+                      {formOverallRating === 1 && '⛔ Critical Reality / Warning'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                     Placement Support (1-5)
@@ -907,38 +954,52 @@ export const StudentVerifiedPage = () => {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <h3 className="font-bold text-slate-900 text-base">{rev.title}</h3>
-                      {rev.ratings?.placementSupport && (
-                        <div className="flex items-center gap-1 text-amber-500 text-xs font-bold">
-                          <Star className="w-3.5 h-3.5 fill-amber-400" />
-                          <span>{rev.ratings.placementSupport}.0/5</span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1.5 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 text-amber-800 text-xs font-black shadow-2xs">
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                        <span>{Number(rev.overallRating || rev.ratings?.placementSupport || 5).toFixed(1)} / 5</span>
+                      </div>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{rev.reviewText}</p>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">{rev.reviewText}</p>
                   </div>
 
-                  {/* Student Reported Batch Reality Pill */}
-                  {rev.reportedStats && (rev.reportedStats.medianPackageLPA || rev.reportedStats.actualPlacementRate) && (
-                    <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex flex-wrap items-center gap-4 text-xs">
-                      <span className="font-bold text-emerald-900 flex items-center gap-1">
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-                        <span>Student Observed Batch Reality:</span>
+                  {/* Student Reported Batch Reality Card - Exact Image 2 4-Metric Grid */}
+                  {rev.reportedStats && (
+                    rev.reportedStats.medianPackageLPA != null ||
+                    rev.reportedStats.averagePackageLPA != null ||
+                    rev.reportedStats.highestPackageLPA != null ||
+                    rev.reportedStats.actualPlacementRate != null
+                  ) && (
+                    <div className="bg-slate-50/90 rounded-2xl border border-slate-200 p-3 sm:p-3.5 my-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Student-Reported Batch Reality:</span>
                       </span>
-                      {rev.reportedStats.medianPackageLPA && (
-                        <span className="text-slate-700">
-                          Median: <strong>₹{rev.reportedStats.medianPackageLPA} LPA</strong>
-                        </span>
-                      )}
-                      {rev.reportedStats.averagePackageLPA && (
-                        <span className="text-slate-700">
-                          Average: <strong>₹{rev.reportedStats.averagePackageLPA} LPA</strong>
-                        </span>
-                      )}
-                      {rev.reportedStats.actualPlacementRate && (
-                        <span className="text-slate-700">
-                          Placed Rate: <strong>{rev.reportedStats.actualPlacementRate}%</strong>
-                        </span>
-                      )}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                          <span className="text-[10px] font-semibold text-slate-500 block">Real Median</span>
+                          <span className="text-sm sm:text-base font-extrabold text-emerald-700">
+                            {rev.reportedStats.medianPackageLPA != null ? `₹${rev.reportedStats.medianPackageLPA} LPA` : '—'}
+                          </span>
+                        </div>
+                        <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                          <span className="text-[10px] font-semibold text-slate-500 block">Real Average</span>
+                          <span className="text-sm sm:text-base font-extrabold text-blue-700">
+                            {rev.reportedStats.averagePackageLPA != null ? `₹${rev.reportedStats.averagePackageLPA} LPA` : '—'}
+                          </span>
+                        </div>
+                        <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                          <span className="text-[10px] font-semibold text-slate-500 block">Highest Offer</span>
+                          <span className="text-sm sm:text-base font-extrabold text-purple-700">
+                            {rev.reportedStats.highestPackageLPA != null ? `₹${rev.reportedStats.highestPackageLPA} LPA` : '—'}
+                          </span>
+                        </div>
+                        <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                          <span className="text-[10px] font-semibold text-slate-500 block">Placed Rate</span>
+                          <span className="text-sm sm:text-base font-extrabold text-slate-900">
+                            {rev.reportedStats.actualPlacementRate != null ? `${rev.reportedStats.actualPlacementRate}%` : '—'}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   )}
 

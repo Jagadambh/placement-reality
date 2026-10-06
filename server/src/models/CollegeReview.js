@@ -111,7 +111,7 @@ const collegeReviewSchema = new mongoose.Schema(
 );
 
 collegeReviewSchema.pre('save', function (next) {
-  if (this.ratings) {
+  if (this.overallRating == null && this.ratings) {
     const scores = [
       this.ratings.placementSupport,
       this.ratings.internshipSupport,
@@ -119,9 +119,11 @@ collegeReviewSchema.pre('save', function (next) {
       this.ratings.infrastructure,
       this.ratings.campusExperience,
       this.ratings.careerPrep,
-    ];
-    const sum = scores.reduce((a, b) => a + b, 0);
-    this.overallRating = Number((sum / scores.length).toFixed(1));
+    ].filter((s) => typeof s === 'number' && !isNaN(s));
+    if (scores.length > 0) {
+      const sum = scores.reduce((a, b) => a + b, 0);
+      this.overallRating = Number((sum / scores.length).toFixed(1));
+    }
   }
   next();
 });

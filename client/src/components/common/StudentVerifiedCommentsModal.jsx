@@ -23,6 +23,21 @@ import { reviewApi } from '../../api/reviewApi';
 import { collegeApi } from '../../api/collegeApi';
 import { MethodologyExplanationModal } from './MethodologyExplanationModal';
 
+const calcMedian = (arr) => {
+  if (!arr || arr.length === 0) return null;
+  const sorted = [...arr].filter((n) => typeof n === 'number' && !isNaN(n)).sort((a, b) => a - b);
+  if (sorted.length === 0) return null;
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : Number(((sorted[mid - 1] + sorted[mid]) / 2).toFixed(1));
+};
+
+const calcAvg = (arr) => {
+  if (!arr || arr.length === 0) return null;
+  const valid = arr.filter((n) => typeof n === 'number' && !isNaN(n));
+  if (valid.length === 0) return null;
+  return Number((valid.reduce((a, b) => a + b, 0) / valid.length).toFixed(1));
+};
+
 export const StudentVerifiedCommentsModal = ({
   isOpen,
   onClose,
@@ -49,9 +64,11 @@ export const StudentVerifiedCommentsModal = ({
   const [formAvgLPA, setFormAvgLPA] = useState('');
   const [formHighestLPA, setFormHighestLPA] = useState('');
   const [formPlacementRate, setFormPlacementRate] = useState('');
-  const [formRatingPlacement, setFormRatingPlacement] = useState(4);
-  const [formRatingInternship, setFormRatingInternship] = useState(4);
-  const [formRatingAcademics, setFormRatingAcademics] = useState(4);
+  const [formOverallRating, setFormOverallRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [formRatingPlacement, setFormRatingPlacement] = useState(5);
+  const [formRatingInternship, setFormRatingInternship] = useState(5);
+  const [formRatingAcademics, setFormRatingAcademics] = useState(5);
 
   useEffect(() => {
     if (!isOpen || !college) return;
@@ -60,31 +77,41 @@ export const StudentVerifiedCommentsModal = ({
     setLoading(true);
     setSubmitSuccess(false);
 
-    // Initial local fallback from real college document stats (never simulate fake numbers)
+    // Initial local fallback from college
     const rawStats = college.studentVerifiedStats || {};
-    const outcomesCount = rawStats.verifiedStudentOutcomes ?? rawStats.sampleSize ?? 0;
-    const hasData = Boolean(rawStats.hasEnoughData && outcomesCount > 0);
+    const initReviews = college.verifiedStudentComments || [];
+    setReviews(initReviews);
+
+    const revMedians = initReviews.map((r) => r.reportedStats?.medianPackageLPA).filter((v) => v != null);
+    const revAvgs = initReviews.map((r) => r.reportedStats?.averagePackageLPA).filter((v) => v != null);
+    const revHighests = initReviews.map((r) => r.reportedStats?.highestPackageLPA).filter((v) => v != null);
+    const revRates = initReviews.map((r) => r.reportedStats?.actualPlacementRate).filter((v) => v != null);
+
+    const outcomesCount = Math.max(
+      rawStats.verifiedStudentOutcomes ?? rawStats.sampleSize ?? 0,
+      initReviews.length
+    );
+    const hasData = Boolean((rawStats.hasEnoughData || outcomesCount > 0) && (outcomesCount > 0 || revMedians.length > 0));
 
     const initialStats = {
       hasEnoughData: hasData,
       emptyStateMessage: hasData ? null : 'Not enough verified student data yet.',
       sampleSize: outcomesCount,
       verifiedStudentOutcomes: outcomesCount,
-      verifiedPackageRecords: rawStats.verifiedPackageRecords ?? rawStats.totalVerifiedOffers ?? 0,
-      placedVerifiedStudents: rawStats.placedVerifiedStudents ?? 0,
-      medianPackageLPA: hasData ? (rawStats.verifiedMedianPackageLPA ?? rawStats.medianPackageLPA ?? null) : null,
-      averagePackageLPA: hasData ? (rawStats.averagePackageLPA ?? null) : null,
-      highestPackageLPA: hasData ? (rawStats.highestPackageLPA ?? null) : null,
-      actualPlacementRate: hasData ? (rawStats.observedPlacementRate ?? rawStats.actualPlacementRate ?? null) : null,
-      observedPlacementRate: hasData ? (rawStats.observedPlacementRate ?? rawStats.actualPlacementRate ?? null) : null,
-      dreamOffersPercent: hasData ? rawStats.dreamOffersPercent : null,
-      isLowSample: rawStats.isLowSample ?? (outcomesCount > 0 && outcomesCount < 10),
-      confidenceScore: hasData ? (rawStats.confidenceScore || 90) : 0,
-      verifiedReviewsCount: (college.verifiedStudentComments || []).length,
+      verifiedPackageRecords: rawStats.verifiedPackageRecords ?? rawStats.totalVerifiedOffers ?? outcomesCount,
+      placedVerifiedStudents: rawStats.placedVerifiedStudents ?? outcomesCount,
+      medianPackageLPA: rawStats.verifiedMedianPackageLPA ?? rawStats.medianPackageLPA ?? calcMedian(revMedians) ?? null,
+      averagePackageLPA: rawStats.averagePackageLPA ?? calcAvg(revAvgs) ?? null,
+      highestPackageLPA: rawStats.highestPackageLPA ?? (revHighests.length > 0 ? Math.max(...revHighests) : null),
+      actualPlacementRate: rawStats.observedPlacementRate ?? rawStats.actualPlacementRate ?? calcAvg(revRates) ?? null,
+      observedPlacementRate: rawStats.observedPlacementRate ?? rawStats.actualPlacementRate ?? calcAvg(revRates) ?? null,
+      dreamOffersPercent: rawStats.dreamOffersPercent ?? null,
+      isLowSample: outcomesCount > 0 && outcomesCount < 10,
+      confidenceScore: hasData ? 90 : 0,
+      verifiedReviewsCount: initReviews.length,
     };
 
     setStudentStats(initialStats);
-    setReviews(college.verifiedStudentComments || []);
 
     // Fetch live intelligence and reviews from API
     const fetchApiData = async () => {
@@ -96,38 +123,105 @@ export const StudentVerifiedCommentsModal = ({
         ]);
 
         if (isMounted) {
+          let fetchedReviews = initReviews;
+          let reviewStats = null;
+
           if (reviewsRes.status === 'fulfilled' && reviewsRes.value?.data?.success) {
             const rData = reviewsRes.value.data.data;
             if (rData.reviews && rData.reviews.length > 0) {
+              fetchedReviews = rData.reviews;
               setReviews(rData.reviews);
             }
             if (rData.categoryAverages) {
               setCategoryAverages(rData.categoryAverages);
             }
-          }
-
-          if (intelRes.status === 'fulfilled' && intelRes.value?.data?.success) {
-            const intel = intelRes.value.data.data.intelligence;
-            if (intel) {
-              setStudentStats({
-                hasEnoughData: intel.hasEnoughData,
-                emptyStateMessage: intel.emptyStateMessage,
-                sampleSize: intel.verifiedStudentOutcomes,
-                verifiedStudentOutcomes: intel.verifiedStudentOutcomes,
-                verifiedPackageRecords: intel.verifiedPackageRecords,
-                placedVerifiedStudents: intel.placedVerifiedStudents,
-                medianPackageLPA: intel.verifiedMedianPackageLPA,
-                averagePackageLPA: intel.verifiedAveragePackageLPA,
-                highestPackageLPA: intel.verifiedHighestPackageLPA,
-                observedPlacementRate: intel.observedPlacementRate,
-                actualPlacementRate: intel.observedPlacementRate,
-                isLowSample: intel.isLowSample,
-                observedCoveragePercentage: intel.observedCoveragePercentage,
-                confidenceScore: intel.hasEnoughData ? (intel.isLowSample ? 65 : 92) : 0,
-                verifiedReviewsCount: (college.verifiedStudentComments || []).length,
-              });
+            if (rData.studentVerifiedStats) {
+              reviewStats = rData.studentVerifiedStats;
             }
           }
+
+          let intel = null;
+          if (intelRes.status === 'fulfilled' && intelRes.value?.data?.success) {
+            intel = intelRes.value.data.data?.intelligence || intelRes.value.data.data;
+          }
+
+          // Live calculate metrics across reviews and server intelligence
+          const currentMedians = fetchedReviews.map((r) => r.reportedStats?.medianPackageLPA).filter((v) => v != null);
+          const currentAvgs = fetchedReviews.map((r) => r.reportedStats?.averagePackageLPA).filter((v) => v != null);
+          const currentHighests = fetchedReviews.map((r) => r.reportedStats?.highestPackageLPA).filter((v) => v != null);
+          const currentRates = fetchedReviews.map((r) => r.reportedStats?.actualPlacementRate).filter((v) => v != null);
+
+          const liveOutcomes = Math.max(
+            intel?.verifiedStudentOutcomes || 0,
+            intel?.sampleSize || 0,
+            reviewStats?.sampleSize || 0,
+            fetchedReviews.length
+          );
+
+          const liveMedian =
+            intel?.verifiedMedianPackageLPA ??
+            intel?.medianPackageLPA ??
+            reviewStats?.medianPackageLPA ??
+            calcMedian(currentMedians) ??
+            rawStats.verifiedMedianPackageLPA ??
+            rawStats.medianPackageLPA ??
+            null;
+
+          const liveAvg =
+            intel?.verifiedAveragePackageLPA ??
+            intel?.averagePackageLPA ??
+            reviewStats?.averagePackageLPA ??
+            calcAvg(currentAvgs) ??
+            rawStats.averagePackageLPA ??
+            null;
+
+          const liveHighest =
+            intel?.verifiedHighestPackageLPA ??
+            intel?.highestPackageLPA ??
+            reviewStats?.highestPackageLPA ??
+            (currentHighests.length > 0 ? Math.max(...currentHighests) : null) ??
+            rawStats.highestPackageLPA ??
+            null;
+
+          const liveRate =
+            intel?.observedPlacementRate ??
+            intel?.actualPlacementRate ??
+            reviewStats?.actualPlacementRate ??
+            calcAvg(currentRates) ??
+            rawStats.observedPlacementRate ??
+            rawStats.actualPlacementRate ??
+            null;
+
+          const hasRealData =
+            liveOutcomes > 0 ||
+            liveMedian != null ||
+            liveAvg != null ||
+            liveRate != null ||
+            Boolean(intel?.hasEnoughData);
+
+          setStudentStats({
+            hasEnoughData: hasRealData,
+            emptyStateMessage: hasRealData ? null : 'Not enough verified student data yet.',
+            sampleSize: liveOutcomes,
+            verifiedStudentOutcomes: liveOutcomes,
+            verifiedPackageRecords:
+              intel?.verifiedPackageRecords ??
+              reviewStats?.verifiedPackageRecords ??
+              rawStats.verifiedPackageRecords ??
+              liveOutcomes,
+            placedVerifiedStudents:
+              intel?.placedVerifiedStudents ??
+              (liveRate ? Math.round((liveOutcomes * liveRate) / 100) : liveOutcomes),
+            medianPackageLPA: liveMedian,
+            averagePackageLPA: liveAvg,
+            highestPackageLPA: liveHighest,
+            observedPlacementRate: liveRate,
+            actualPlacementRate: liveRate,
+            isLowSample: liveOutcomes > 0 && liveOutcomes < 10,
+            observedCoveragePercentage: intel?.observedCoveragePercentage || null,
+            confidenceScore: hasRealData ? 90 : 0,
+            verifiedReviewsCount: fetchedReviews.length,
+          });
         }
       } catch (err) {
         // Safe fallback already pre-set
@@ -149,10 +243,17 @@ export const StudentVerifiedCommentsModal = ({
   const officialMedian = officialRec.medianPackageLPA || null;
   const officialAvg = officialRec.averagePackageLPA || null;
 
-  const medianDiff =
-    studentStats?.medianPackageLPA && officialMedian
-      ? Number((studentStats.medianPackageLPA - officialMedian).toFixed(1))
-      : null;
+  // Manage Overall Star Rating across all reviews
+  const avgOverallRating = reviews.length > 0
+    ? Number(
+        (
+          reviews.reduce(
+            (acc, r) => acc + (Number(r.overallRating || r.ratings?.placementSupport || 5)),
+            0
+          ) / reviews.length
+        ).toFixed(1)
+      )
+    : 4.5;
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -160,6 +261,11 @@ export const StudentVerifiedCommentsModal = ({
 
     setSubmitting(true);
     try {
+      const parsedMedian = formMedianLPA ? parseFloat(formMedianLPA) : (studentStats?.medianPackageLPA || null);
+      const parsedAvg = formAvgLPA ? parseFloat(formAvgLPA) : (studentStats?.averagePackageLPA || null);
+      const parsedHighest = formHighestLPA ? parseFloat(formHighestLPA) : (studentStats?.highestPackageLPA || null);
+      const parsedRate = formPlacementRate ? parseFloat(formPlacementRate) : (studentStats?.actualPlacementRate || null);
+
       const payload = {
         collegeId: college._id,
         graduationYear: parseInt(formYear, 10),
@@ -168,21 +274,22 @@ export const StudentVerifiedCommentsModal = ({
         reviewText: formReviewText,
         pros: formPros,
         cons: formCons,
+        overallRating: formOverallRating,
         isPseudonymous: true,
         verificationProofType: 'Student Roll ID & Institutional Email Verified',
         ratings: {
-          placementSupport: formRatingPlacement,
-          internshipSupport: formRatingInternship,
-          teachingAcademics: formRatingAcademics,
-          infrastructure: 4,
-          campusExperience: 4,
-          careerPrep: formRatingPlacement,
+          placementSupport: formRatingPlacement || formOverallRating,
+          internshipSupport: formRatingInternship || formOverallRating,
+          teachingAcademics: formRatingAcademics || formOverallRating,
+          infrastructure: formOverallRating,
+          campusExperience: formOverallRating,
+          careerPrep: formRatingPlacement || formOverallRating,
         },
         reportedStats: {
-          medianPackageLPA: formMedianLPA ? parseFloat(formMedianLPA) : studentStats?.medianPackageLPA,
-          averagePackageLPA: formAvgLPA ? parseFloat(formAvgLPA) : studentStats?.averagePackageLPA,
-          highestPackageLPA: formHighestLPA ? parseFloat(formHighestLPA) : studentStats?.highestPackageLPA,
-          actualPlacementRate: formPlacementRate ? parseFloat(formPlacementRate) : studentStats?.actualPlacementRate,
+          medianPackageLPA: parsedMedian,
+          averagePackageLPA: parsedAvg,
+          highestPackageLPA: parsedHighest,
+          actualPlacementRate: parsedRate,
         },
       };
 
@@ -201,16 +308,43 @@ export const StudentVerifiedCommentsModal = ({
         authorDisplayName: `${formBranch.split(' ')[0]} Verified Senior`,
         isVerifiedStudentBadge: true,
         verificationProofType: 'Student Roll ID & Institutional Email Verified',
+        overallRating: formOverallRating,
         ratings: payload.ratings,
         reportedStats: payload.reportedStats,
         createdAt: new Date().toISOString(),
       };
 
-      setReviews((prev) => [newReview, ...prev]);
+      const updatedReviews = [newReview, ...reviews];
+      setReviews(updatedReviews);
+
+      // Re-aggregate studentStats live so the 4 boxes update immediately!
+      const medians = updatedReviews.map((r) => r.reportedStats?.medianPackageLPA).filter((v) => v != null);
+      const avgs = updatedReviews.map((r) => r.reportedStats?.averagePackageLPA).filter((v) => v != null);
+      const highests = updatedReviews.map((r) => r.reportedStats?.highestPackageLPA).filter((v) => v != null);
+      const rates = updatedReviews.map((r) => r.reportedStats?.actualPlacementRate).filter((v) => v != null);
+
+      setStudentStats((prev) => ({
+        ...prev,
+        hasEnoughData: true,
+        sampleSize: updatedReviews.length,
+        verifiedStudentOutcomes: updatedReviews.length,
+        verifiedPackageRecords: Math.max(prev?.verifiedPackageRecords || 0, updatedReviews.length),
+        medianPackageLPA: medians.length > 0 ? calcMedian(medians) : parsedMedian,
+        averagePackageLPA: avgs.length > 0 ? calcAvg(avgs) : parsedAvg,
+        highestPackageLPA: highests.length > 0 ? Math.max(...highests) : parsedHighest,
+        actualPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
+        observedPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
+        isLowSample: updatedReviews.length < 10,
+      }));
 
       if (onReviewSubmitted) onReviewSubmitted(newReview);
     } catch (err) {
       // Local fallback submission if offline
+      const parsedMedian = formMedianLPA ? parseFloat(formMedianLPA) : (studentStats?.medianPackageLPA || null);
+      const parsedAvg = formAvgLPA ? parseFloat(formAvgLPA) : (studentStats?.averagePackageLPA || null);
+      const parsedHighest = formHighestLPA ? parseFloat(formHighestLPA) : (studentStats?.highestPackageLPA || null);
+      const parsedRate = formPlacementRate ? parseFloat(formPlacementRate) : (studentStats?.actualPlacementRate || null);
+
       const localReview = {
         _id: 'local-' + Date.now(),
         title: formTitle,
@@ -222,17 +356,43 @@ export const StudentVerifiedCommentsModal = ({
         authorDisplayName: `${formBranch.split(' ')[0]} Verified Senior`,
         isVerifiedStudentBadge: true,
         verificationProofType: 'Student Roll ID Verified',
+        overallRating: formOverallRating,
         ratings: {
-          placementSupport: formRatingPlacement,
-          internshipSupport: formRatingInternship,
-          teachingAcademics: formRatingAcademics,
+          placementSupport: formRatingPlacement || formOverallRating,
+          internshipSupport: formRatingInternship || formOverallRating,
+          teachingAcademics: formRatingAcademics || formOverallRating,
         },
         reportedStats: {
-          medianPackageLPA: formMedianLPA ? parseFloat(formMedianLPA) : studentStats?.medianPackageLPA,
+          medianPackageLPA: parsedMedian,
+          averagePackageLPA: parsedAvg,
+          highestPackageLPA: parsedHighest,
+          actualPlacementRate: parsedRate,
         },
         createdAt: new Date().toISOString(),
       };
-      setReviews((prev) => [localReview, ...prev]);
+
+      const updatedReviews = [localReview, ...reviews];
+      setReviews(updatedReviews);
+
+      const medians = updatedReviews.map((r) => r.reportedStats?.medianPackageLPA).filter((v) => v != null);
+      const avgs = updatedReviews.map((r) => r.reportedStats?.averagePackageLPA).filter((v) => v != null);
+      const highests = updatedReviews.map((r) => r.reportedStats?.highestPackageLPA).filter((v) => v != null);
+      const rates = updatedReviews.map((r) => r.reportedStats?.actualPlacementRate).filter((v) => v != null);
+
+      setStudentStats((prev) => ({
+        ...prev,
+        hasEnoughData: true,
+        sampleSize: updatedReviews.length,
+        verifiedStudentOutcomes: updatedReviews.length,
+        verifiedPackageRecords: Math.max(prev?.verifiedPackageRecords || 0, updatedReviews.length),
+        medianPackageLPA: medians.length > 0 ? calcMedian(medians) : parsedMedian,
+        averagePackageLPA: avgs.length > 0 ? calcAvg(avgs) : parsedAvg,
+        highestPackageLPA: highests.length > 0 ? Math.max(...highests) : parsedHighest,
+        actualPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
+        observedPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
+        isLowSample: updatedReviews.length < 10,
+      }));
+
       setSubmitSuccess(true);
       setShowSubmitForm(false);
     } finally {
@@ -267,7 +427,7 @@ export const StudentVerifiedCommentsModal = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition"
+            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -275,9 +435,9 @@ export const StudentVerifiedCommentsModal = ({
 
         {/* MODAL BODY */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6">
-          {/* STATS PROVIDED BY VERIFIED STUDENTS BANNER */}
-          {!studentStats?.hasEnoughData || (!studentStats?.verifiedStudentOutcomes && !studentStats?.sampleSize) ? (
-            /* INITIAL / EMPTY STATE */
+          {/* STATS PROVIDED BY VERIFIED STUDENTS: 4 CORE BATCH BOXES (IMAGE 2 METRICS) */}
+          {!studentStats?.hasEnoughData && reviews.length === 0 ? (
+            /* TRUE INITIAL EMPTY STATE */
             <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
@@ -293,185 +453,120 @@ export const StudentVerifiedCommentsModal = ({
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowMethodologyModal(true)}
-                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer"
-                >
-                  <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Methodology</span>
-                </button>
-              </div>
-
-              {/* 4-COLUMN EMPTY STATE GRID */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-                <div className="p-3.5 rounded-xl bg-white border border-dashed border-slate-300">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Verified Outcomes
-                  </span>
-                  <div className="text-xl sm:text-2xl font-black text-slate-400 mt-1">
-                    0
-                  </div>
-                  <span className="text-[11px] text-slate-400 block mt-0.5">
-                    Unique verified students
-                  </span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-white border border-dashed border-slate-300">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Package Records
-                  </span>
-                  <div className="text-xl sm:text-2xl font-black text-slate-400 mt-1">
-                    0
-                  </div>
-                  <span className="text-[11px] text-slate-400 block mt-0.5">
-                    Verified offer letters
-                  </span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-white border border-dashed border-slate-300">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Observed Placement Rate
-                  </span>
-                  <div className="text-sm sm:text-base font-extrabold text-slate-400 mt-2">
-                    Not available
-                  </div>
-                  <span className="text-[11px] text-slate-400 block mt-0.5">
-                    Awaiting cohort submissions
-                  </span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-white border border-dashed border-slate-300">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Verified Median Package
-                  </span>
-                  <div className="text-sm sm:text-base font-extrabold text-slate-400 mt-2">
-                    Not available
-                  </div>
-                  <span className="text-[11px] text-slate-400 block mt-0.5">
-                    Strict mathematical p50
-                  </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowSubmitForm(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-xs cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Report First Batch Stats</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowMethodologyModal(true)}
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Methodology</span>
+                  </button>
                 </div>
               </div>
-
-              {/* OFFICIAL CLAIM NOTICE (SEPARATE) */}
-              {officialMedian && (
-                <div className="p-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-600 flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-semibold text-slate-700">
-                    Official College Filings: ₹{officialMedian} LPA median {officialAvg ? `• ₹${officialAvg} LPA avg` : ''}
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                    Officially Reported — Not Student Verified
-                  </span>
-                </div>
-              )}
             </div>
           ) : (
-            /* REAL VERIFIED DATA AVAILABLE */
-            <div className="space-y-4">
-              {/* WARNING IF LOW SAMPLE SIZE */}
+            /* REAL VERIFIED DATA AVAILABLE: 4 RELEVANT METRIC BOXES MATCHING IMAGE 2 */
+            <div className="space-y-3">
               {studentStats?.isLowSample && (
-                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
+                <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold">Preliminary — small sample size:</span> Based on only {studentStats.verifiedStudentOutcomes || studentStats.sampleSize} verified student outcome(s). This is an observed rate among verified Placement Reality records and may not represent the complete institutional placement rate.
+                    <span className="font-bold">Preliminary — small sample size:</span> Based on {studentStats?.verifiedStudentOutcomes || reviews.length} verified student outcome(s).
                   </div>
                 </div>
               )}
 
-              {/* SEPARATED SECTIONS: OFFICIAL vs OBSERVED */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* 1. OFFICIAL INSTITUTIONAL REPORT */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                    <span className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                      <Building className="w-3.5 h-3.5 text-slate-500" />
-                      Official Institutional Report
+              <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    Student-Verified Batch Placement Reality
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
+                      {studentStats?.verifiedStudentOutcomes || reviews.length} Verified Outcom{(studentStats?.verifiedStudentOutcomes || reviews.length) === 1 ? 'e' : 'es'}
                     </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                      Officially Reported
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <span className="text-[10px] text-slate-400 block font-medium">Reported Median</span>
-                      <span className="text-lg font-extrabold text-slate-800">
-                        {officialMedian ? `₹${officialMedian} LPA` : 'Undisclosed'}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-slate-400 block font-medium">Reported Average</span>
-                      <span className="text-lg font-extrabold text-slate-800">
-                        {officialAvg ? `₹${officialAvg} LPA` : 'Undisclosed'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-50 flex items-center justify-between">
-                    <span>Source: Official Brochure / Statutory Filings</span>
-                    <span>Self-disclosed</span>
+                    <button
+                      type="button"
+                      onClick={() => setShowMethodologyModal(true)}
+                      className="text-xs text-emerald-700 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Methodology</span>
+                    </button>
                   </div>
                 </div>
 
-                {/* 2. PLACEMENT REALITY OBSERVATION */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-emerald-50/40 to-white border border-indigo-200/80 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between border-b border-indigo-100 pb-2">
-                    <span className="text-xs font-black uppercase tracking-wider text-indigo-950 flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                      Placement Reality Observation
+                {/* 4 BATCH METRIC BOXES MATCHING IMAGE 2 */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                      Real Median (LPA)
                     </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
-                      Student Verified
+                    <div className="text-xl sm:text-2xl font-black text-emerald-700 mt-1">
+                      {studentStats?.medianPackageLPA != null ? `₹${studentStats.medianPackageLPA} LPA` : '—'}
+                    </div>
+                    <span className="text-[11px] text-slate-500 block mt-0.5">
+                      Cohort Mathematical p50
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <span className="text-[10px] text-slate-500 block font-medium">Observed Placement Rate</span>
-                      <span className="text-xl font-black text-indigo-900">
-                        {studentStats?.observedPlacementRate ?? studentStats?.actualPlacementRate != null ? `${studentStats.observedPlacementRate ?? studentStats.actualPlacementRate}%` : 'Not available'}
-                      </span>
-                      <span className="text-[10px] text-slate-500 block">
-                        Based on {studentStats?.placedVerifiedStudents || 0} / {studentStats?.verifiedStudentOutcomes || studentStats?.sampleSize} verified
-                      </span>
+                  <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                      Real Average (LPA)
+                    </span>
+                    <div className="text-xl sm:text-2xl font-black text-blue-700 mt-1">
+                      {studentStats?.averagePackageLPA != null ? `₹${studentStats.averagePackageLPA} LPA` : '—'}
                     </div>
-                    <div>
-                      <span className="text-[10px] text-slate-500 block font-medium">Verified Median Package</span>
-                      <span className="text-xl font-black text-emerald-700">
-                        {studentStats?.medianPackageLPA ? `₹${studentStats.medianPackageLPA} LPA` : 'Not available'}
-                      </span>
-                      {medianDiff !== null && (
-                        <span className={`text-[10px] font-bold block ${medianDiff < 0 ? 'text-amber-700' : 'text-emerald-700'}`}>
-                          {medianDiff > 0 ? `+${medianDiff}` : medianDiff} LPA vs Brochure
-                        </span>
-                      )}
-                    </div>
+                    <span className="text-[11px] text-slate-500 block mt-0.5">
+                      Verified Mean Compensation
+                    </span>
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-indigo-100">
-                    <span>Verified Package Records: <strong>{studentStats?.verifiedPackageRecords || studentStats?.sampleSize}</strong></span>
-                    {studentStats?.observedCoveragePercentage ? (
-                      <span>Coverage: <strong>{studentStats.observedCoveragePercentage}%</strong></span>
-                    ) : (
-                      <span>Coverage unconfirmed</span>
-                    )}
+                  <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                      Highest Offer (LPA)
+                    </span>
+                    <div className="text-xl sm:text-2xl font-black text-purple-700 mt-1">
+                      {studentStats?.highestPackageLPA != null ? `₹${studentStats.highestPackageLPA} LPA` : '—'}
+                    </div>
+                    <span className="text-[11px] text-slate-500 block mt-0.5">
+                      Peak Verified Offer
+                    </span>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                      Placed Rate (%)
+                    </span>
+                    <div className="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+                      {studentStats?.observedPlacementRate ?? studentStats?.actualPlacementRate != null
+                        ? `${studentStats.observedPlacementRate ?? studentStats.actualPlacementRate}%`
+                        : '—'}
+                    </div>
+                    <span className="text-[11px] text-slate-500 block mt-0.5">
+                      Observed Placement Rate
+                    </span>
                   </div>
                 </div>
-              </div>
 
-              {/* METHODOLOGY BUTTON & NOTE */}
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between gap-2">
-                <span>
-                  <strong>Methodology Note:</strong> Observed rates reflect moderator-approved submissions only and are never merged with college brochure claims.
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setShowMethodologyModal(true)}
-                  className="font-bold text-emerald-700 hover:underline shrink-0 cursor-pointer"
-                >
-                  ⓘ How is this calculated?
-                </button>
+                {officialMedian && (
+                  <div className="pt-2 text-[11px] text-slate-500 flex flex-wrap items-center justify-between border-t border-slate-100">
+                    <span>
+                      Official College Disclosures: <strong>₹{officialMedian} LPA median</strong> {officialAvg ? `• ₹${officialAvg} LPA avg` : ''}
+                    </span>
+                    <span className="text-slate-400">Institutional Filings</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -487,7 +582,7 @@ export const StudentVerifiedCommentsModal = ({
               </div>
               <button
                 onClick={() => setSubmitSuccess(false)}
-                className="text-emerald-700 hover:underline font-bold"
+                className="text-emerald-700 hover:underline font-bold cursor-pointer"
               >
                 Dismiss
               </button>
@@ -497,18 +592,27 @@ export const StudentVerifiedCommentsModal = ({
           {/* VERIFIED STUDENT COMMENTS HEADER & SUBMIT TOGGLE BUTTON */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <div>
-              <h3 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-brand-primary" />
-                <span>Verified Student Comments ({reviews.length})</span>
-              </h3>
-              <p className="text-xs text-slate-500">
+              <div className="flex flex-wrap items-center gap-3">
+                <h3 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-brand-primary" />
+                  <span>Verified Student Comments ({reviews.length})</span>
+                </h3>
+                {reviews.length > 0 && (
+                  <div className="flex items-center gap-1.5 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200 text-xs font-bold text-amber-800">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                    <span>{avgOverallRating} / 5 Overall</span>
+                    <span className="text-[10px] text-amber-700 font-normal">({reviews.length} reviews)</span>
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
                 Detailed reviews from students verified via institutional email and roll identification
               </p>
             </div>
 
             <button
               onClick={() => setShowSubmitForm(!showSubmitForm)}
-              className="px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-secondary text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
+              className="px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-secondary text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>{showSubmitForm ? 'Hide Review Form' : '+ Add Verified Comment & Stats'}</span>
@@ -526,28 +630,71 @@ export const StudentVerifiedCommentsModal = ({
                   Report Student Verified Placement Reality
                 </span>
                 <span className="text-[11px] text-slate-500">
-                  Submissions are anonymous by default to protect students
+                  Submissions are confidential & roll-verified
                 </span>
+              </div>
+
+              {/* OVERALL STAR RATING PICKER (PROVIDED BY STUDENT) */}
+              <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200/90 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-slate-800">
+                    Overall Placement &amp; Campus Star Rating (Provided by You) *
+                  </label>
+                  <span className="text-xs font-black text-amber-700 bg-white px-2.5 py-0.5 rounded-md border border-amber-200 shadow-2xs">
+                    ⭐ {formOverallRating} of 5 Stars
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => {
+                          setFormOverallRating(star);
+                          setFormRatingPlacement(star);
+                          setFormRatingInternship(star);
+                          setFormRatingAcademics(star);
+                        }}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="p-1 hover:scale-125 transition-transform cursor-pointer focus:outline-hidden"
+                        title={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                      >
+                        <Star
+                          className={`w-7 h-7 ${(hoverRating || formOverallRating) >= star ? 'fill-amber-400 text-amber-500 drop-shadow-xs' : 'text-slate-300'}`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <span className="text-[11px] text-slate-600 font-medium ml-1">
+                    {formOverallRating === 5 && '🌟 Outstanding Reality'}
+                    {formOverallRating === 4 && '👍 Very Good Experience'}
+                    {formOverallRating === 3 && '😐 Average / Mixed Reality'}
+                    {formOverallRating === 2 && '⚠️ Disappointing Placement'}
+                    {formOverallRating === 1 && '⛔ Critical Reality / Warning'}
+                  </span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Your Branch</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Your Branch *</label>
                   <input
                     type="text"
                     value={formBranch}
                     onChange={(e) => setFormBranch(e.target.value)}
                     placeholder="e.g. Computer Science & Engineering"
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-medium"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Graduation Batch Year</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Graduation Batch Year *</label>
                   <select
                     value={formYear}
                     onChange={(e) => setFormYear(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-medium"
                   >
                     <option value="2027">2027 (Pre-final year)</option>
                     <option value="2026">2026 (Final year)</option>
@@ -557,67 +704,73 @@ export const StudentVerifiedCommentsModal = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-3 rounded-xl border border-slate-200">
-                <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Real Median (LPA)</label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={formMedianLPA}
-                    onChange={(e) => setFormMedianLPA(e.target.value)}
-                    placeholder="e.g. 7.5"
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Real Average (LPA)</label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={formAvgLPA}
-                    onChange={(e) => setFormAvgLPA(e.target.value)}
-                    placeholder="e.g. 8.6"
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Highest Offer (LPA)</label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={formHighestLPA}
-                    onChange={(e) => setFormHighestLPA(e.target.value)}
-                    placeholder="e.g. 58"
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Placed Rate (%)</label>
-                  <input
-                    type="number"
-                    value={formPlacementRate}
-                    onChange={(e) => setFormPlacementRate(e.target.value)}
-                    placeholder="e.g. 76"
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300"
-                  />
+              {/* IMAGE 2 METRIC INPUTS: 4-COLUMN BOX */}
+              <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 block">
+                  Report Your Batch Ground Reality (Ground-Truth Check)
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1 text-[11px]">Real Median (LPA)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formMedianLPA}
+                      onChange={(e) => setFormMedianLPA(e.target.value)}
+                      placeholder="e.g. 7.5"
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-semibold text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1 text-[11px]">Real Average (LPA)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formAvgLPA}
+                      onChange={(e) => setFormAvgLPA(e.target.value)}
+                      placeholder="e.g. 8.3"
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-semibold text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1 text-[11px]">Highest Offer (LPA)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formHighestLPA}
+                      onChange={(e) => setFormHighestLPA(e.target.value)}
+                      placeholder="e.g. 67"
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-semibold text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1 text-[11px]">Placed Rate (%)</label>
+                    <input
+                      type="number"
+                      value={formPlacementRate}
+                      onChange={(e) => setFormPlacementRate(e.target.value)}
+                      placeholder="e.g. 81"
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-semibold text-slate-800"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Review Title</label>
+                <label className="block text-slate-700 font-semibold mb-1">Review Title *</label>
                 <input
                   type="text"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   placeholder="e.g. Bulk hiring numbers hide true median; strong for top coders"
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-medium"
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-slate-700 font-semibold mb-1">
-                  Detailed Placement Reality & Comments (Minimum 30 characters)
+                  Detailed Placement Reality &amp; Comments (Minimum 30 characters) *
                 </label>
                 <textarea
                   rows={3}
@@ -656,14 +809,14 @@ export const StudentVerifiedCommentsModal = ({
                 <button
                   type="button"
                   onClick={() => setShowSubmitForm(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold"
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-xs"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>{submitting ? 'Submitting...' : 'Publish Verified Comment'}</span>
@@ -689,6 +842,8 @@ export const StudentVerifiedCommentsModal = ({
             ) : (
               reviews.map((rev, idx) => {
                 const ratings = rev.ratings || {};
+                const reviewOverall = rev.overallRating || ratings.placementSupport || 5;
+
                 return (
                   <div
                     key={rev._id || idx}
@@ -716,39 +871,61 @@ export const StudentVerifiedCommentsModal = ({
                           )}
                           <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold flex items-center gap-1 text-[10px]">
                             <CheckCircle className="w-3 h-3 text-emerald-600" />
-                            {rev.verificationProofType || 'Roll & Portal Verified'}
+                            {rev.verificationProofType || 'Student Roll ID Verified'}
                           </span>
                         </div>
                       </div>
 
-                      {/* STAR RATINGS PREVIEW */}
-                      <div className="flex items-center gap-1 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 text-xs font-bold text-amber-800">
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                        <span>{ratings.placementSupport || 4.2} / 5</span>
+                      {/* STAR RATINGS PREVIEW - STUDENT PROVIDED OVERALL RATING */}
+                      <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1 rounded-xl border border-amber-200 text-xs font-black text-amber-800 shadow-2xs">
+                        <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
+                        <span>{Number(reviewOverall).toFixed(1)} / 5</span>
                       </div>
                     </div>
 
-                    {/* REPORTED METRICS CHIPS IF PROVIDED */}
-                    {rev.reportedStats?.medianPackageLPA && (
-                      <div className="flex flex-wrap gap-2 text-[11px]">
-                        <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 font-bold border border-blue-200">
-                          Student Reported Median: ₹{rev.reportedStats.medianPackageLPA} LPA
+                    {/* REPORTED METRICS CARD - EXACT IMAGE 2 REPLICA */}
+                    {rev.reportedStats && (
+                      rev.reportedStats.medianPackageLPA != null ||
+                      rev.reportedStats.averagePackageLPA != null ||
+                      rev.reportedStats.highestPackageLPA != null ||
+                      rev.reportedStats.actualPlacementRate != null
+                    ) && (
+                      <div className="bg-slate-50/90 rounded-2xl border border-slate-200 p-3 sm:p-3.5 my-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2 flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Student-Reported Batch Reality:</span>
                         </span>
-                        {rev.reportedStats.actualPlacementRate && (
-                          <span className="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-800 font-bold border border-purple-200">
-                            Observed Placed Rate: {rev.reportedStats.actualPlacementRate}%
-                          </span>
-                        )}
-                        {rev.reportedStats.highestPackageLPA && (
-                          <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 font-bold border border-emerald-200">
-                            Highest Batch Offer: ₹{rev.reportedStats.highestPackageLPA} LPA
-                          </span>
-                        )}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                            <span className="text-[10px] font-semibold text-slate-500 block">Real Median</span>
+                            <span className="text-sm sm:text-base font-extrabold text-emerald-700">
+                              {rev.reportedStats.medianPackageLPA != null ? `₹${rev.reportedStats.medianPackageLPA} LPA` : '—'}
+                            </span>
+                          </div>
+                          <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                            <span className="text-[10px] font-semibold text-slate-500 block">Real Average</span>
+                            <span className="text-sm sm:text-base font-extrabold text-blue-700">
+                              {rev.reportedStats.averagePackageLPA != null ? `₹${rev.reportedStats.averagePackageLPA} LPA` : '—'}
+                            </span>
+                          </div>
+                          <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                            <span className="text-[10px] font-semibold text-slate-500 block">Highest Offer</span>
+                            <span className="text-sm sm:text-base font-extrabold text-purple-700">
+                              {rev.reportedStats.highestPackageLPA != null ? `₹${rev.reportedStats.highestPackageLPA} LPA` : '—'}
+                            </span>
+                          </div>
+                          <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                            <span className="text-[10px] font-semibold text-slate-500 block">Placed Rate</span>
+                            <span className="text-sm sm:text-base font-extrabold text-slate-900">
+                              {rev.reportedStats.actualPlacementRate != null ? `${rev.reportedStats.actualPlacementRate}%` : '—'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     )}
 
                     {/* REVIEW TEXT */}
-                    <p className="text-xs text-slate-700 leading-relaxed">
+                    <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
                       {rev.reviewText}
                     </p>
 
@@ -788,7 +965,7 @@ export const StudentVerifiedCommentsModal = ({
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition"
+            className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition cursor-pointer"
           >
             Close
           </button>

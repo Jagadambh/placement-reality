@@ -178,6 +178,12 @@ const submitReview = async (req, res, next) => {
       batchSizeEstimate: reportedStats?.batchSizeEstimate ? parseInt(reportedStats.batchSizeEstimate, 10) : null,
     };
 
+    const overallRatingNum = req.body.overallRating
+      ? Number(req.body.overallRating)
+      : (ratings?.overall
+        ? Number(ratings.overall)
+        : (ratings?.placementSupport ? Number(ratings.placementSupport) : 5));
+
     const review = await CollegeReview.create({
       collegeId: targetCollegeId,
       studentId: req.user?._id || null,
@@ -189,13 +195,14 @@ const submitReview = async (req, res, next) => {
       verificationProofType,
       reportedStats: cleanReportedStats,
       ratings: {
-        placementSupport: Number(ratings?.placementSupport || 4),
-        internshipSupport: Number(ratings?.internshipSupport || 3.5),
-        teachingAcademics: Number(ratings?.teachingAcademics || 4),
-        infrastructure: Number(ratings?.infrastructure || 4),
-        campusExperience: Number(ratings?.campusExperience || 4),
-        careerPrep: Number(ratings?.careerPrep || 3.5),
+        placementSupport: Number(ratings?.placementSupport || overallRatingNum),
+        internshipSupport: Number(ratings?.internshipSupport || overallRatingNum),
+        teachingAcademics: Number(ratings?.teachingAcademics || overallRatingNum),
+        infrastructure: Number(ratings?.infrastructure || overallRatingNum),
+        campusExperience: Number(ratings?.campusExperience || overallRatingNum),
+        careerPrep: Number(ratings?.careerPrep || overallRatingNum),
       },
+      overallRating: overallRatingNum,
       title,
       reviewText,
       pros,
@@ -210,19 +217,20 @@ const submitReview = async (req, res, next) => {
       const allApproved = await CollegeReview.find({ collegeId: targetCollegeId, moderationStatus: 'Approved', isDeleted: false });
       const medians = allApproved.map(r => r.reportedStats?.medianPackageLPA).filter(Boolean);
       const avgs = allApproved.map(r => r.reportedStats?.averagePackageLPA).filter(Boolean);
+      const highests = allApproved.map(r => r.reportedStats?.highestPackageLPA).filter(Boolean);
       const rates = allApproved.map(r => r.reportedStats?.actualPlacementRate).filter(Boolean);
 
-      if (medians.length > 0 || avgs.length > 0) {
+      if (medians.length > 0 || avgs.length > 0 || allApproved.length > 0) {
         college.studentVerifiedStats = {
           sampleSize: allApproved.length,
           verifiedStudentOutcomes: allApproved.length,
           verifiedPackageRecords: allApproved.length,
           hasEnoughData: true,
-          medianPackageLPA: medians.length > 0 ? calculateMedian(medians) : college.studentVerifiedStats?.medianPackageLPA,
-          averagePackageLPA: avgs.length > 0 ? calculateAverage(avgs) : college.studentVerifiedStats?.averagePackageLPA,
-          highestPackageLPA: cleanReportedStats.highestPackageLPA || college.studentVerifiedStats?.highestPackageLPA,
-          actualPlacementRate: rates.length > 0 ? calculateAverage(rates) : college.studentVerifiedStats?.actualPlacementRate,
-          observedPlacementRate: rates.length > 0 ? calculateAverage(rates) : college.studentVerifiedStats?.observedPlacementRate,
+          medianPackageLPA: medians.length > 0 ? calculateMedian(medians) : (college.studentVerifiedStats?.medianPackageLPA || null),
+          averagePackageLPA: avgs.length > 0 ? calculateAverage(avgs) : (college.studentVerifiedStats?.averagePackageLPA || null),
+          highestPackageLPA: highests.length > 0 ? Math.max(...highests) : (cleanReportedStats.highestPackageLPA || college.studentVerifiedStats?.highestPackageLPA || null),
+          actualPlacementRate: rates.length > 0 ? calculateAverage(rates) : (college.studentVerifiedStats?.actualPlacementRate || null),
+          observedPlacementRate: rates.length > 0 ? calculateAverage(rates) : (college.studentVerifiedStats?.observedPlacementRate || null),
           totalVerifiedOffers: college.studentVerifiedStats?.totalVerifiedOffers || null,
           confidenceScore: 90,
           verifiedReviewsCount: allApproved.length,
