@@ -388,11 +388,12 @@ export const CollegeDetailPage = () => {
 
   const loadSeasonData = async (collegeId, seasonId) => {
     try {
-      const [analyticsRes, historyRes, internRes, advRealityRes] = await Promise.all([
+      const [analyticsRes, historyRes, internRes, advRealityRes, intelRes] = await Promise.all([
         placementApi.getPlacementDashboard(collegeId, seasonId),
         placementApi.getHistoricalTrends(collegeId),
         internshipApi.getInternshipAnalytics(collegeId),
         placementApi.getAdvertisedVsReality(collegeId, { seasonId }).catch(() => null),
+        collegeApi.getStudentVerifiedIntelligence(collegeId, { seasonId }).catch(() => null),
       ]);
 
       if (analyticsRes.data?.success) setAnalytics(analyticsRes.data.data);
@@ -408,6 +409,29 @@ export const CollegeDetailPage = () => {
       }
       if (internRes.data?.success) setInternshipData(internRes.data.data);
       if (advRealityRes?.data?.success) setAdvRealityData(advRealityRes.data.data);
+      if (intelRes?.data?.success) {
+        const intel = intelRes.data.data?.intelligence || intelRes.data.data;
+        if (intel) {
+          setStudentStats({
+            hasEnoughData: intel.hasEnoughData,
+            emptyStateMessage: intel.emptyStateMessage,
+            sampleSize: intel.verifiedStudentOutcomes,
+            verifiedStudentOutcomes: intel.verifiedStudentOutcomes,
+            verifiedPackageRecords: intel.verifiedPackageRecords,
+            placedVerifiedStudents: intel.placedVerifiedStudents,
+            medianPackageLPA: intel.verifiedMedianPackageLPA,
+            averagePackageLPA: intel.verifiedAveragePackageLPA,
+            highestPackageLPA: intel.verifiedHighestPackageLPA,
+            lowestPackageLPA: intel.verifiedLowestPackageLPA,
+            observedPlacementRate: intel.observedPlacementRate,
+            actualPlacementRate: intel.observedPlacementRate,
+            isLowSample: intel.isLowSample,
+            observedCoveragePercentage: intel.observedCoveragePercentage,
+            confidenceScore: intel.hasEnoughData ? (intel.isLowSample ? 65 : 92) : 0,
+            packageDistribution: intel.packageDistribution,
+          });
+        }
+      }
     } catch (err) {
       console.error('[Load Season Data Error]', err);
     }
@@ -1495,79 +1519,101 @@ export const CollegeDetailPage = () => {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4">
                 {/* Student Verified Median */}
-                <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1 relative overflow-hidden">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1 relative overflow-hidden">
                   <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span className="font-semibold text-slate-700">Verified Median CTC</span>
-                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-                      Student Reality
+                    <span className="font-semibold text-slate-700">Verified Median</span>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full">
+                      p50
                     </span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600">
+                  <div className="text-xl sm:text-2xl font-extrabold text-emerald-600">
                     {studentStats?.medianPackageLPA ? `₹${studentStats.medianPackageLPA} LPA` : 'Not available'}
                   </div>
-                  <div className="text-[11px] text-slate-500 flex items-center gap-1">
-                    {headline?.medianPackageLPA && studentStats?.medianPackageLPA && (
+                  <div className="text-[10px] sm:text-[11px] text-slate-500 flex items-center gap-1">
+                    {headline?.medianPackageLPA && studentStats?.medianPackageLPA ? (
                       studentStats.medianPackageLPA < headline.medianPackageLPA ? (
                         <span className="text-amber-700 font-semibold flex items-center gap-0.5">
                           <TrendingDown className="w-3 h-3" />
-                          -{(headline.medianPackageLPA - studentStats.medianPackageLPA).toFixed(1)} LPA vs Brochure
+                          -{(headline.medianPackageLPA - studentStats.medianPackageLPA).toFixed(1)} LPA vs Claim
                         </span>
                       ) : (
                         <span className="text-emerald-700 font-semibold">
-                          Matches Official Filings
+                          Matches Filings
                         </span>
                       )
+                    ) : (
+                      <span>Calculated cohort p50</span>
                     )}
                   </div>
                 </div>
 
                 {/* Student Verified Average */}
-                <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
                   <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span className="font-semibold text-slate-700">Verified Average CTC</span>
-                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-                      Audited Mean
+                    <span className="font-semibold text-slate-700">Verified Average</span>
+                    <span className="text-[10px] bg-blue-100 text-blue-800 font-bold px-1.5 py-0.5 rounded-full">
+                      Mean
                     </span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-brand-primary">
+                  <div className="text-xl sm:text-2xl font-extrabold text-brand-primary">
                     {studentStats?.averagePackageLPA ? `₹${studentStats.averagePackageLPA} LPA` : 'Not available'}
                   </div>
-                  <div className="text-[11px] text-slate-500">
-                    Official brochure: {headline?.averagePackageLPA ? `₹${headline.averagePackageLPA} LPA` : 'Undisclosed'}
+                  <div className="text-[10px] sm:text-[11px] text-slate-500">
+                    Official: {headline?.averagePackageLPA ? `₹${headline.averagePackageLPA} LPA` : 'Undisclosed'}
                   </div>
                 </div>
 
                 {/* Observed Placement Rate */}
-                <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
                   <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span className="font-semibold text-slate-700">Observed Placement Rate</span>
-                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-                      Batch Observed
+                    <span className="font-semibold text-slate-700">Placement Rate</span>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full">
+                      Observed
                     </span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-emerald-700">
+                  <div className="text-xl sm:text-2xl font-extrabold text-emerald-700">
                     {studentStats?.observedPlacementRate ?? studentStats?.actualPlacementRate != null ? `${studentStats.observedPlacementRate ?? studentStats.actualPlacementRate}%` : 'Not available'}
                   </div>
-                  <div className="text-[11px] text-slate-500">
-                    {studentStats?.placedVerifiedStudents ? `${studentStats.placedVerifiedStudents} placed of ${studentStats?.verifiedStudentOutcomes || studentStats?.sampleSize}` : 'Verified outcome records'}
+                  <div className="text-[10px] sm:text-[11px] text-slate-500">
+                    {studentStats?.placedVerifiedStudents ? `${studentStats.placedVerifiedStudents} placed of ${studentStats?.verifiedStudentOutcomes || studentStats?.sampleSize}` : 'Verified outcomes'}
+                  </div>
+                </div>
+
+                {/* Package Range: Lowest & Highest */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                  <div className="flex items-center justify-between text-xs text-slate-500">
+                    <span className="font-semibold text-slate-700">Package Range</span>
+                    <span className="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-1.5 py-0.5 rounded-full">
+                      Min – Max
+                    </span>
+                  </div>
+                  <div className="text-sm sm:text-base font-extrabold text-slate-900 mt-1">
+                    {studentStats?.lowestPackageLPA != null && studentStats?.highestPackageLPA != null
+                      ? `₹${studentStats.lowestPackageLPA} – ₹${studentStats.highestPackageLPA} LPA`
+                      : studentStats?.highestPackageLPA != null
+                      ? `₹${studentStats.highestPackageLPA} LPA (Peak)`
+                      : 'Not available'}
+                  </div>
+                  <div className="text-[10px] sm:text-[11px] text-slate-500">
+                    Lowest: {studentStats?.lowestPackageLPA != null ? `₹${studentStats.lowestPackageLPA} LPA` : '—'} • Peak: {studentStats?.highestPackageLPA != null ? `₹${studentStats.highestPackageLPA} LPA` : '—'}
                   </div>
                 </div>
 
                 {/* Verified Outcomes Count */}
-                <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1 col-span-2 lg:col-span-1">
                   <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span className="font-semibold text-slate-700">Verified Outcomes</span>
-                    <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-                      Audited Cohort
+                    <span className="font-semibold text-slate-700">Audited Evidence</span>
+                    <span className="text-[10px] bg-purple-100 text-purple-800 font-bold px-1.5 py-0.5 rounded-full">
+                      Records
                     </span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-purple-700">
+                  <div className="text-xl sm:text-2xl font-extrabold text-purple-700">
                     {studentStats?.verifiedStudentOutcomes || studentStats?.sampleSize}
                   </div>
-                  <div className="text-[11px] text-slate-500">
-                    {studentStats?.verifiedPackageRecords ? `${studentStats.verifiedPackageRecords} package records` : `Highest verified: ₹${studentStats?.highestPackageLPA || '—'} LPA`}
+                  <div className="text-[10px] sm:text-[11px] text-slate-500">
+                    {studentStats?.verifiedPackageRecords ? `${studentStats.verifiedPackageRecords} package records` : 'Approved offers'}
                   </div>
                 </div>
               </div>
@@ -1643,6 +1689,50 @@ export const CollegeDetailPage = () => {
                       {studentStats?.hasEnoughData && studentStats?.averagePackageLPA ? (
                         <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-medium">
                           Skewed upward by top 5% domestic product offers
+                        </span>
+                      ) : (
+                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-50 text-slate-500 font-medium">
+                          Awaiting verified cohort audits
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-3.5 px-4 font-semibold text-slate-900">Highest Package (Peak CTC)</td>
+                    <td className="py-3.5 px-4 font-medium text-slate-600">
+                      {headline?.highestPackageLPA ? `₹${headline.highestPackageLPA} LPA` : 'Undisclosed'}
+                    </td>
+                    <td className="py-3.5 px-4 font-bold text-purple-700">
+                      {studentStats?.hasEnoughData && studentStats?.highestPackageLPA
+                        ? `₹${studentStats.highestPackageLPA} LPA`
+                        : <span className="text-slate-400 font-normal">Not enough verified data yet</span>}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      {studentStats?.hasEnoughData && studentStats?.highestPackageLPA ? (
+                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-purple-50 text-purple-800 border border-purple-200 font-medium">
+                          Highest independently verified offer in approved cohort
+                        </span>
+                      ) : (
+                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-50 text-slate-500 font-medium">
+                          Awaiting verified cohort audits
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-3.5 px-4 font-semibold text-slate-900">Lowest Package (Floor CTC)</td>
+                    <td className="py-3.5 px-4 font-medium text-slate-600">
+                      {headline?.lowestPackageLPA ? `₹${headline.lowestPackageLPA} LPA` : 'Not Disclosed'}
+                    </td>
+                    <td className="py-3.5 px-4 font-bold text-slate-700">
+                      {studentStats?.hasEnoughData && studentStats?.lowestPackageLPA != null
+                        ? `₹${studentStats.lowestPackageLPA} LPA`
+                        : <span className="text-slate-400 font-normal">Not enough verified data yet</span>}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      {studentStats?.hasEnoughData && studentStats?.lowestPackageLPA != null ? (
+                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-medium">
+                          Actual floor compensation observed across verified offers
                         </span>
                       ) : (
                         <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-50 text-slate-500 font-medium">

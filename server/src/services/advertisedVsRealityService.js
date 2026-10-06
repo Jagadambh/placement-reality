@@ -14,6 +14,7 @@ const {
   calculatePlacementRate,
 } = require('../utils/calculateMetrics');
 const { formatSessionLabel, ensureCollegeSessions } = require('../utils/academicSessionHelper');
+const { calculatePlacementStatistics } = require('./studentVerifiedAggregationService');
 
 /**
  * Helper to normalize academic session year string (e.g. "2023-2024" or "2023-24" -> "2023-24")
@@ -334,8 +335,15 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
     };
   }
 
-  // 6. FETCH INDEPENDENTLY VERIFIED REALITY DATA FROM STUDENT SUBMISSIONS
-  // First, check if students have submitted session-level verified reality figures
+  // 6. FETCH INDEPENDENTLY VERIFIED REALITY DATA USING CENTRALIZED LIVE AGGREGATION ENGINE
+  const liveStats = await calculatePlacementStatistics({
+    collegeId,
+    seasonId: targetSeason._id,
+    academicSession: targetSeason.academicYear,
+    departmentId: selectedDepartment ? selectedDepartment._id : null,
+  });
+
+  // Check if students have submitted session-level verified consensus figures (fallback for cohorts without individual offer letters)
   const studentSessionDoc = await StudentSessionReport.findOne({
     collegeId,
     $or: [
@@ -345,7 +353,6 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
     ...(selectedDepartment ? { departmentId: selectedDepartment._id } : {}),
   }).sort({ updatedAt: -1 });
 
-  // Also check if a PlacementRecord with Student-Verified Aggregation exists
   const studentPlacementRecord = await PlacementRecord.findOne({
     collegeId,
     seasonId: { $in: matchingSeasonIds },
@@ -357,6 +364,7 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
     highestPackageLPA: studentPlacementRecord.highestPackageLPA,
     averagePackageLPA: studentPlacementRecord.averagePackageLPA,
     medianPackageLPA: studentPlacementRecord.medianPackageLPA,
+    lowestPackageLPA: studentPlacementRecord.lowestPackageLPA ?? null,
     totalStudentsPlaced: studentPlacementRecord.uniqueStudentsPlaced,
     totalRecruitingCompanies: studentPlacementRecord.uniqueRecruitersCount,
     totalJobOffers: studentPlacementRecord.totalJobOffers,
@@ -365,35 +373,6 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
     updatedAt: studentPlacementRecord.updatedAt,
   } : null);
 
-  // Also query individual verified offers
-  const offerQuery = {
-    collegeId,
-    seasonId: { $in: matchingSeasonIds },
-    verificationStatus: 'Verified',
-  };
-  if (selectedDepartment) {
-    offerQuery.departmentId = selectedDepartment._id;
-  }
-
-  let verifiedOffers = await Offer.find(offerQuery).populate('departmentId', 'name code');
-
-  // Fallback by graduationYear if seasonId differed in legacy records
-  if (verifiedOffers.length === 0) {
-    const gradYearMatch = targetSeason.academicYear.match(/\d{4}$|(\d{2})$/);
-    if (gradYearMatch) {
-      const gradYear = parseInt(gradYearMatch[0].length === 2 ? `20${gradYearMatch[0]}` : gradYearMatch[0], 10);
-      const fallbackOffers = await Offer.find({
-        collegeId,
-        graduationYear: { $in: [gradYear, gradYear - 1] },
-        verificationStatus: 'Verified',
-        ...(selectedDepartment ? { departmentId: selectedDepartment._id } : {}),
-      }).populate('departmentId', 'name code');
-      if (fallbackOffers.length > 0) {
-        verifiedOffers = fallbackOffers;
-      }
-    }
-  }
-
   let verifiedData = {
     available: false,
     message: 'Data not available. No verified student submissions found for this academic session.',
@@ -401,11 +380,45 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
     metrics: null,
   };
 
-  const hasStudentSessionStats = Boolean(activeStudentSession);
-  const hasIndividualOffers = verifiedOffers.length > 0;
-  const hasVerifiedRecords = hasStudentSessionStats || hasIndividualOffers;
+  let verifiedOffers = liveStats?.sampleVerifiedOffers || [];
 
-  if (hasStudentSessionStats) {
+  if (liveStats && liveStats.hasEnoughData && liveStats.verifiedPackageRecords > 0) {
+    const uniqueCompaniesSet = new Set((liveStats.sampleVerifiedOffers || []).map(o => o.companyName.trim().toLowerCase()));
+
+    verifiedData = {
+      available: true,
+      message: null,
+      provenance: {
+        source: liveStats.isLowSample
+          ? `Individual Student Sample (${liveStats.verifiedPackageRecords} Verified Record${liveStats.verifiedPackageRecords > 1 ? 's' : ''})`
+          : 'Student Given Verified Offers (Audited Offer Letters & Pay Slips)',
+        reportingYear: targetSeason.academicYear,
+        verificationStatus: 'Independently Verified by Student Evidence',
+        lastVerificationDate: new Date(),
+        isStudentVerifiedReality: true,
+        isSmallSample: liveStats.isLowSample,
+        evidenceBreakdown: {
+          verifiedOfferLettersCount: liveStats.verifiedPackageRecords,
+          uniquePlacedStudentsCount: liveStats.verifiedStudentOutcomes,
+          auditedBy: 'Platform Moderation Team',
+        },
+      },
+      metrics: {
+        highestPackageLPA: liveStats.verifiedHighestPackageLPA,
+        averagePackageLPA: liveStats.verifiedAveragePackageLPA,
+        medianPackageLPA: liveStats.verifiedMedianPackageLPA,
+        lowestPackageLPA: liveStats.verifiedLowestPackageLPA,
+        totalEligibleStudents: liveStats.institutionEligiblePopulation,
+        uniqueStudentsPlaced: liveStats.placedVerifiedStudents,
+        totalJobOffers: liveStats.verifiedPackageRecords,
+        placementPercentage: liveStats.observedPlacementRate,
+        placementPercentageNote: liveStats.observedPlacementRateLabel,
+        totalRecruitingCompanies: uniqueCompaniesSet.size > 0 ? uniqueCompaniesSet.size : 1,
+        isSmallSample: liveStats.isLowSample,
+        packageDistribution: liveStats.packageDistribution,
+      },
+    };
+  } else if (activeStudentSession) {
     verifiedData = {
       available: true,
       message: null,
@@ -419,7 +432,7 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         evidenceNotes: activeStudentSession.evidenceNotes,
         studentContributor: activeStudentSession.studentName,
         evidenceBreakdown: {
-          verifiedOfferLettersCount: verifiedOffers.length,
+          verifiedOfferLettersCount: activeStudentSession.totalJobOffers || activeStudentSession.totalStudentsPlaced,
           uniquePlacedStudentsCount: activeStudentSession.totalStudentsPlaced,
           auditedBy: 'Platform Student Community & Moderation Team',
         },
@@ -428,54 +441,14 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         highestPackageLPA: activeStudentSession.highestPackageLPA,
         averagePackageLPA: activeStudentSession.averagePackageLPA,
         medianPackageLPA: activeStudentSession.medianPackageLPA,
-        totalEligibleStudents: null, // Voluntary platform does not enumerate total eligible
+        lowestPackageLPA: activeStudentSession.lowestPackageLPA ?? null,
+        totalEligibleStudents: null,
         uniqueStudentsPlaced: activeStudentSession.totalStudentsPlaced,
         totalJobOffers: activeStudentSession.totalJobOffers || activeStudentSession.totalStudentsPlaced,
-        placementPercentage: null, // Zero Assumption Rule
+        placementPercentage: null,
         placementPercentageNote: 'Missing student records reflect unsubmitted voluntary documentation, NOT unplaced students.',
         totalRecruitingCompanies: activeStudentSession.totalRecruitingCompanies,
         isSessionLevel: true,
-      },
-    };
-  } else if (hasIndividualOffers) {
-    const salaries = verifiedOffers.map(o => o.annualCtcLpa).filter(s => typeof s === 'number' && !isNaN(s));
-    const uniqueStudentsSet = new Set(verifiedOffers.map(o => o.studentId.toString()));
-    const uniqueCompaniesSet = new Set(verifiedOffers.map(o => o.companyName.trim().toLowerCase()));
-
-    const isSmallSample = verifiedOffers.length <= 2;
-
-    const latestOfferDate = verifiedOffers.reduce((latest, o) => (!latest || o.updatedAt > latest ? o.updatedAt : latest), null);
-    const lastVerificationDate = latestOfferDate || new Date();
-
-    verifiedData = {
-      available: true,
-      message: null,
-      provenance: {
-        source: isSmallSample
-          ? `Individual Student Sample (${verifiedOffers.length} Member Submission)`
-          : 'Student Given Verified Offers (Audited Offer Letters & Pay Slips)',
-        reportingYear: targetSeason.academicYear,
-        verificationStatus: 'Independently Verified by Student Evidence',
-        lastVerificationDate,
-        isStudentVerifiedReality: true,
-        isSmallSample,
-        evidenceBreakdown: {
-          verifiedOfferLettersCount: verifiedOffers.length,
-          uniquePlacedStudentsCount: uniqueStudentsSet.size,
-          auditedBy: 'Platform Moderation Team',
-        },
-      },
-      metrics: {
-        highestPackageLPA: salaries.length > 0 ? Math.max(...salaries) : null,
-        averagePackageLPA: calculateAverage(salaries),
-        medianPackageLPA: calculateMedian(salaries),
-        totalEligibleStudents: null,
-        uniqueStudentsPlaced: uniqueStudentsSet.size,
-        totalJobOffers: verifiedOffers.length,
-        placementPercentage: null,
-        placementPercentageNote: 'Placement rate cannot be calculated from a voluntary sample without manufacturing unverified assumptions. Missing student records reflect unsubmitted voluntary documentation, NOT unplaced students.',
-        totalRecruitingCompanies: uniqueCompaniesSet.size,
-        isSmallSample,
       },
     };
   }
@@ -845,6 +818,7 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
       highestPackageLPA: verM?.highestPackageLPA ?? null,
       averagePackageLPA: verM?.averagePackageLPA ?? null,
       medianPackageLPA: verM?.medianPackageLPA ?? null,
+      lowestPackageLPA: verM?.lowestPackageLPA ?? null,
       totalEligibleStudents: verM?.totalEligibleStudents ?? null,
       uniqueStudentsPlaced: verM?.uniqueStudentsPlaced ?? null,
       placementPercentage: verM?.placementPercentage ?? null,
@@ -864,10 +838,10 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
       verifiedStatus: 'Student Given Verified Reality',
     },
     sampleVerifiedOffers: verifiedOffers.map(o => ({
-      id: o._id,
+      id: o._id || o.id,
       companyName: o.companyName,
       annualCtcLpa: o.annualCtcLpa,
-      roleTitle: o.roleTitle,
+      roleTitle: o.roleTitle || o.jobRole,
       graduationYear: o.graduationYear,
       verificationProofType: o.verificationProofType || 'Offer Letter Verified',
       verificationStatus: o.verificationStatus,
@@ -942,6 +916,27 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         canCompare: typeof advM?.highestPackageLPA === 'number' && typeof verM?.highestPackageLPA === 'number',
         mismatchReason: !(typeof advM?.highestPackageLPA === 'number' && typeof verM?.highestPackageLPA === 'number')
           ? 'Cannot compare: Missing highest package record in one or both datasets.'
+          : null,
+      },
+      {
+        metricKey: 'lowestPackageLPA',
+        metric: 'Lowest Package (Floor CTC)',
+        advertised: advM?.lowestPackageLPA ?? null,
+        verified: verM?.lowestPackageLPA ?? null,
+        unit: 'LPA',
+        difference: (typeof advM?.lowestPackageLPA === 'number' && typeof verM?.lowestPackageLPA === 'number')
+          ? Number((verM.lowestPackageLPA - advM.lowestPackageLPA).toFixed(2))
+          : null,
+        differenceLPA: (typeof advM?.lowestPackageLPA === 'number' && typeof verM?.lowestPackageLPA === 'number')
+          ? Number((verM.lowestPackageLPA - advM.lowestPackageLPA).toFixed(2))
+          : null,
+        percentDifference: (typeof advM?.lowestPackageLPA === 'number' && typeof verM?.lowestPackageLPA === 'number' && advM.lowestPackageLPA > 0)
+          ? Number((((verM.lowestPackageLPA - advM.lowestPackageLPA) / advM.lowestPackageLPA) * 100).toFixed(1))
+          : null,
+        isComparable: typeof advM?.lowestPackageLPA === 'number' && typeof verM?.lowestPackageLPA === 'number',
+        canCompare: typeof advM?.lowestPackageLPA === 'number' && typeof verM?.lowestPackageLPA === 'number',
+        mismatchReason: !(typeof advM?.lowestPackageLPA === 'number' && typeof verM?.lowestPackageLPA === 'number')
+          ? 'Cannot compare: One or both datasets lack lowest package figure.'
           : null,
       },
       {

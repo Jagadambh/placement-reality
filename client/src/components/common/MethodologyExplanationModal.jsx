@@ -37,92 +37,101 @@ export const MethodologyExplanationModal = ({ isOpen, onClose }) => {
 
         {/* Explanation Sections */}
         <div className="space-y-4 text-xs text-slate-600 leading-relaxed">
-          {/* Section 1 */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+          {/* Section 1: Core Mathematical Definitions */}
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
             <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
               <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold">1</span>
-              <span>Observed Placement Rate vs. Official College Rate</span>
+              <span>Mathematical Metric Definitions</span>
             </h4>
-            <p>
-              We label student statistics as <strong className="text-slate-900">"Observed Placement Rate"</strong>, never as the absolute "College Placement Rate" unless our dataset represents the entire verified student body:
-            </p>
-            <div className="p-2.5 bg-white rounded-xl border border-slate-200 font-mono text-[11px] text-slate-800">
-              Observed Placement Rate = (Placed Verified Students / Verified Students with Known Outcome) × 100
+            <div className="space-y-2 text-[11px]">
+              <div className="p-2.5 bg-white rounded-xl border border-slate-200 space-y-1">
+                <span className="font-bold text-slate-900 block">📐 Arithmetic Mean (Average Package)</span>
+                <p className="text-slate-600">
+                  Calculated as: <code>Sum of package values ÷ total verified package records</code>. Computed with full floating-point precision without premature rounding or truncation.
+                </p>
+              </div>
+
+              <div className="p-2.5 bg-white rounded-xl border border-slate-200 space-y-1">
+                <span className="font-bold text-slate-900 block">⚖️ Median Package (p50)</span>
+                <p className="text-slate-600">
+                  The exact middle package value (or arithmetic mean of the two middle values) when all verified package records are sorted in ascending order. Never estimated or assumed from brochure averages.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="p-2.5 bg-white rounded-xl border border-slate-200 space-y-0.5">
+                  <span className="font-bold text-slate-900 block">🚀 Highest Package</span>
+                  <p className="text-slate-600">Maximum verified annual CTC value in the approved session cohort.</p>
+                </div>
+                <div className="p-2.5 bg-white rounded-xl border border-slate-200 space-y-0.5">
+                  <span className="font-bold text-slate-900 block">⚓ Lowest Package (Floor CTC)</span>
+                  <p className="text-slate-600">Minimum verified compensation observed across valid accepted offers.</p>
+                </div>
+              </div>
             </div>
-            <p className="text-slate-500 text-[11px]">
-              Each enrolled student is de-duplicated and counted exactly once, regardless of how many job offers they received.
-            </p>
           </div>
 
-          {/* Section 2 */}
+          {/* Section 2: Student Deduplication & Offer Accounting */}
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
             <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
               <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xs font-bold">2</span>
-              <span>Verified Median Package Calculation</span>
+              <span>Unique Students vs. Package Records (De-duplication)</span>
             </h4>
             <p>
-              The median package is computed mathematically from <strong className="text-slate-900">verified package records only</strong> (sorted middle value of approved offer salaries).
+              When an individual student receives multiple job offers (e.g. TCS 7 LPA, Accenture 11 LPA, Microsoft 20 LPA), the platform protects against double counting:
             </p>
-            <p className="text-slate-500 text-[11px]">
-              We never estimate the median, never extrapolate it from marketing brochures, and never assume it from a college's advertised average package.
-            </p>
+            <ul className="list-disc pl-5 space-y-1 text-[11px] text-slate-700">
+              <li><strong className="text-slate-900">Unique Placed Students:</strong> Distinct count of students with an approved placed outcome (counted as 1 placed student).</li>
+              <li><strong className="text-slate-900">Total Package Records:</strong> Count of all approved package values contributing to the distribution and mathematical metrics.</li>
+            </ul>
           </div>
 
-          {/* Section 3 */}
+          {/* Section 3: Observed Placement Rate & Denominator Integrity */}
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
             <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
               <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-xs font-bold">3</span>
-              <span>Strict Separation: Official Report vs. Student Reality</span>
+              <span>Observed Placement Rate &amp; Denominator Integrity</span>
             </h4>
             <p>
-              Colleges publish what their placement cell claims in brochures. Students submit independent evidence (offer letters, compensation slips, and roll numbers). These two streams are <strong className="text-slate-900">never combined into a hybrid number</strong>. They are displayed side by side so discrepancies are immediately visible.
+              We label student statistics as <strong className="text-slate-900">"Observed Placement Rate"</strong>, calculated only when an independently verified cohort denominator is known:
             </p>
-          </div>
-
-          {/* Section 4 */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
-            <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-xs font-bold">4</span>
-              <span>Coverage &amp; Small Sample Size Warnings</span>
-            </h4>
-            <p>
-              Small student sample sizes are never disguised as whole-batch reality. When verified submissions represent a small cohort (&lt;10 students), the platform attaches an explicit warning:
-            </p>
-            <div className="p-2.5 bg-amber-50 text-amber-900 rounded-xl border border-amber-200 text-[11px] font-medium flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <span>
-                "Low sample size: This is an observed rate among verified Placement Reality records and may not represent the complete institutional placement rate."
-              </span>
+            <div className="p-2.5 bg-white rounded-xl border border-slate-200 font-mono text-[11px] text-slate-800">
+              Observed Placement Rate = (Placed Verified Students ÷ Verified Students with Known Outcome) × 100
             </div>
+            <p className="text-slate-500 text-[11px]">
+              If the total eligible denominator is undisclosed, the platform explicitly renders "Undisclosed Denominator" rather than guessing.
+            </p>
           </div>
 
-          {/* Section 5 */}
+          {/* Section 4: Strict Submission Lifecycle & Exclusions */}
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
             <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-800 flex items-center justify-center text-xs font-bold">5</span>
-              <span>Zero Fabrication &amp; Demo Data Isolation</span>
+              <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-800 flex items-center justify-center text-xs font-bold">4</span>
+              <span>Strict Lifecycle &amp; Exclusion Policy</span>
             </h4>
             <p>
-              Missing data is displayed as <strong className="text-slate-900">"Not available"</strong>, never as 0% or an arbitrary placeholder. Any simulated test data created during local development is strictly segregated and permanently excluded from public production statistics.
+              All statistics are computed live from active database records. Submissions are strictly filtered:
             </p>
+            <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
+              <div className="p-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-900">
+                <span className="font-bold block text-rose-950">🚫 Permanently Excluded</span>
+                <span>DRAFT, PENDING, REJECTED, DELETED, UNPUBLISHED, and duplicate submissions.</span>
+              </div>
+              <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900">
+                <span className="font-bold block text-emerald-950">✅ Included in Live Stats</span>
+                <span>Moderator-approved, document-verified, and published records only.</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <Link
-            to="/methodology"
-            onClick={onClose}
-            className="text-xs font-bold text-brand-primary hover:underline flex items-center gap-1"
-          >
-            <span>Read full 10-principle methodology guide</span>
-            <span>→</span>
-          </Link>
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-end">
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition cursor-pointer shadow-xs"
           >
-            Understood
+            I Understand &amp; Agree
           </button>
         </div>
       </div>

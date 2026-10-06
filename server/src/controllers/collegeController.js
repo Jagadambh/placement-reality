@@ -842,7 +842,7 @@ const getTop50PrivateColleges = async (req, res, next) => {
 const getStudentVerifiedIntelligence = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { seasonId, academicSession, departmentId } = req.query;
+    const { seasonId, academicSession, departmentId, categoryId } = req.query;
 
     let college = null;
     if (mongoose.Types.ObjectId.isValid(id)) {
@@ -859,6 +859,7 @@ const getStudentVerifiedIntelligence = async (req, res, next) => {
       seasonId,
       academicSession,
       departmentId,
+      categoryId,
     });
 
     return sendSuccess(res, summary, 'Student-verified intelligence aggregated successfully');

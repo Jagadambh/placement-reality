@@ -32,13 +32,18 @@ const submitOffer = async (req, res, next) => {
       return sendError(res, 'Consent to use submission in statistical models is required for transparency.', 400);
     }
 
+    const parsedCtc = parseFloat(annualCtcLpa);
+    if (isNaN(parsedCtc) || parsedCtc <= 0 || parsedCtc > 300) {
+      return sendError(res, 'Annual CTC must be a valid positive number up to 300 LPA.', 400);
+    }
+
     // 1. Run Duplicate Detection Service
     const duplicateCheck = await checkOfferDuplicate({
       studentId: req.user._id,
       companyName,
       jobRole,
       seasonId,
-      annualCtcLpa: parseFloat(annualCtcLpa),
+      annualCtcLpa: parsedCtc,
     });
 
     if (duplicateCheck.isDuplicate) {
@@ -69,7 +74,7 @@ const submitOffer = async (req, res, next) => {
       companyName: companyName.trim(),
       jobRole: jobRole.trim(),
       offerDate: new Date(offerDate),
-      annualCtcLpa: parseFloat(annualCtcLpa),
+      annualCtcLpa: parsedCtc,
       fixedCompensationLpa: fixedCompensationLpa ? parseFloat(fixedCompensationLpa) : null,
       variableCompensationLpa: variableCompensationLpa ? parseFloat(variableCompensationLpa) : null,
       offerType: offerType || 'On-Campus Full-Time',
@@ -78,6 +83,8 @@ const submitOffer = async (req, res, next) => {
       supportingDocument: evidenceRecord ? evidenceRecord._id : null,
       consentToAggregate: true,
       verificationStatus: evidenceRecord ? 'Under review' : 'Pending',
+      submissionStage: 'SUBMITTED',
+      isPublished: false,
       isDuplicateFlag: duplicateCheck.isFlagged,
       duplicateReason: duplicateCheck.reason || '',
     });
@@ -178,20 +185,31 @@ const verifyOffer = async (req, res, next) => {
     if (status === 'Verified') {
       offer.verifiedBy = req.user._id;
       offer.verifiedAt = new Date();
+      offer.submissionStage = 'VERIFIED';
+      offer.isPublished = true;
+      offer.publishedAt = offer.publishedAt || new Date();
       if (offer.studentId && offer.studentId._id) {
         await User.findByIdAndUpdate(offer.studentId._id, {
           isCollegeVerified: true,
           collegeVerificationStatus: 'verified',
         });
       }
+    } else if (status === 'Rejected') {
+      offer.submissionStage = 'REJECTED';
+      offer.isPublished = false;
+    } else {
+      offer.submissionStage = 'PENDING_VERIFICATION';
+      offer.isPublished = false;
     }
     await offer.save();
 
     // Real-Time Institutional Aggregation Update (Requirement 11)
     if (offer.collegeId) {
-      syncCollegeStudentVerifiedStats(offer.collegeId).catch((err) =>
-        console.error('[Offer Verification] Background stats sync notice:', err.message)
-      );
+      try {
+        await syncCollegeStudentVerifiedStats(offer.collegeId, offer.seasonId);
+      } catch (syncErr) {
+        console.error('[Offer Verification] Background stats sync notice:', syncErr.message);
+      }
     }
 
     // Update attached document status if applicable
@@ -205,12 +223,14 @@ const verifyOffer = async (req, res, next) => {
     }
 
     // Send user notification
-    await Notification.create({
-      userId: offer.studentId._id,
-      title: `Offer Verification: ${status}`,
-      message: `Your submission for ${offer.companyName} has been marked as ${status}.${rejectionReason ? ` Reason: ${rejectionReason}` : ''}`,
-      type: 'Verification Update',
-    });
+    if (offer.studentId?._id) {
+      await Notification.create({
+        userId: offer.studentId._id,
+        title: `Offer Verification: ${status}`,
+        message: `Your submission for ${offer.companyName} has been marked as ${status}.${rejectionReason ? ` Reason: ${rejectionReason}` : ''}`,
+        type: 'Verification Update',
+      });
+    }
 
     // Mandatory Audit Trail
     await recordAuditLog({
@@ -231,9 +251,112 @@ const verifyOffer = async (req, res, next) => {
   }
 };
 
+// @desc Unpublish offer from public aggregation (Moderator / Admin or submitting Student)
+// @route PUT /api/offers/:id/unpublish
+const unpublishOffer = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body || {};
+
+    const offer = await Offer.findById(id);
+    if (!offer) {
+      return sendError(res, 'Offer not found', 404);
+    }
+
+    const isOwner = req.user._id.toString() === offer.studentId?.toString();
+    const isPrivileged = ['moderator', 'admin'].includes(req.user.role);
+    if (!isOwner && !isPrivileged) {
+      return sendError(res, 'Not authorized to unpublish this offer', 403);
+    }
+
+    const oldState = offer.toObject();
+    offer.isPublished = false;
+    offer.verificationStatus = 'Unpublished';
+    offer.moderatorNotes = reason || 'Unpublished by user or moderator';
+    await offer.save();
+
+    if (offer.collegeId) {
+      try {
+        await syncCollegeStudentVerifiedStats(offer.collegeId, offer.seasonId);
+      } catch (syncErr) {
+        console.error('[Offer Unpublish] Stats sync notice:', syncErr.message);
+      }
+    }
+
+    await recordAuditLog({
+      actionType: 'UNPUBLISH_OFFER',
+      entityType: 'Offer',
+      entityId: offer._id,
+      performedBy: req.user._id,
+      performedByEmail: req.user.email,
+      performedByRole: req.user.role,
+      changeReason: `Offer unpublished: ${reason || 'Removed from public calculations'}`,
+      oldValues: oldState,
+      newValues: offer.toObject(),
+    });
+
+    return sendSuccess(res, { offer }, 'Offer successfully unpublished and removed from public aggregation');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc Delete offer (Soft delete & remove from aggregation)
+// @route DELETE /api/offers/:id
+const deleteOffer = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body || {};
+
+    const offer = await Offer.findById(id);
+    if (!offer) {
+      return sendError(res, 'Offer not found', 404);
+    }
+
+    const isOwner = req.user._id.toString() === offer.studentId?.toString();
+    const isPrivileged = ['moderator', 'admin'].includes(req.user.role);
+    if (!isOwner && !isPrivileged) {
+      return sendError(res, 'Not authorized to delete this offer', 403);
+    }
+
+    const oldState = offer.toObject();
+    offer.isDeleted = true;
+    offer.deletedAt = new Date();
+    offer.isPublished = false;
+    offer.verificationStatus = 'Rejected';
+    await offer.save();
+
+    if (offer.collegeId) {
+      try {
+        await syncCollegeStudentVerifiedStats(offer.collegeId, offer.seasonId);
+      } catch (syncErr) {
+        console.error('[Offer Deletion] Stats sync notice:', syncErr.message);
+      }
+    }
+
+    await recordAuditLog({
+      actionType: 'DELETE_OFFER',
+      entityType: 'Offer',
+      entityId: offer._id,
+      performedBy: req.user._id,
+      performedByEmail: req.user.email,
+      performedByRole: req.user.role,
+      changeReason: `Offer soft deleted: ${reason || 'Record deleted'}`,
+      oldValues: oldState,
+      newValues: offer.toObject(),
+    });
+
+    return sendSuccess(res, { offerId: offer._id }, 'Offer deleted and excluded from aggregation');
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   submitOffer,
   getMyOffers,
   getCollegePublicOffers,
   verifyOffer,
+  unpublishOffer,
+  deleteOffer,
 };

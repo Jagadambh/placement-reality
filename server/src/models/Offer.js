@@ -89,9 +89,33 @@ const offerSchema = new mongoose.Schema(
     },
     verificationStatus: {
       type: String,
-      enum: ['Pending', 'Under review', 'Verified', 'Rejected', 'More information required'],
+      enum: ['Pending', 'Under review', 'Verified', 'Rejected', 'More information required', 'Unpublished', 'Draft'],
       default: 'Pending',
       index: true,
+    },
+    submissionStage: {
+      type: String,
+      enum: ['DRAFT', 'SUBMITTED', 'PENDING_VERIFICATION', 'VERIFIED', 'PUBLISHED', 'REJECTED'],
+      default: 'SUBMITTED',
+      index: true,
+    },
+    isPublished: {
+      type: Boolean,
+      default: true,
+      index: true,
+    },
+    publishedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
     },
     rejectionReason: {
       type: String,
