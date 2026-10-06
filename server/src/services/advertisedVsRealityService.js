@@ -1125,7 +1125,15 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         brochure: brochureMedian ? `${brochureMedian} LPA` : (brochureAverage ? `~${brochureAverage} LPA (Omitted in ads)` : 'Not Disclosed'),
         nirf: nirfData.medianPackageLPA ? `${nirfData.medianPackageLPA} LPA` : 'Not Disclosed',
         verified: verifiedMedian ? `${verifiedMedian} LPA` : 'Pending Proofs',
-        deltaLabel: brochureMedian && verifiedMedian ? `+${(brochureMedian - verifiedMedian).toFixed(1)} LPA Overstated` : (brochureAverage && nirfData.medianPackageLPA ? `+${(brochureAverage - nirfData.medianPackageLPA).toFixed(1)} LPA Overstated` : 'N/A'),
+        deltaLabel: brochureMedian && verifiedMedian
+          ? (brochureMedian > verifiedMedian
+              ? `+${(brochureMedian - verifiedMedian).toFixed(1)} LPA Overstated`
+              : (brochureMedian < verifiedMedian
+                  ? `Brochure conceals higher sample (+${(verifiedMedian - brochureMedian).toFixed(1)} LPA)`
+                  : 'Aligned with Ground Truth'))
+          : (brochureAverage && nirfData.medianPackageLPA
+              ? `+${(brochureAverage - nirfData.medianPackageLPA).toFixed(1)} LPA Overstated`
+              : 'N/A'),
         insight: 'The median represents what the middle 50% of students actually get. Brochures regularly omit this number to hide mass-recruitment packages.',
       },
       {
@@ -1135,7 +1143,13 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         brochure: brochureAverage ? `${brochureAverage} LPA` : 'Claimed 10-15 LPA',
         nirf: nirfData.averagePackageLPA ? `${nirfData.averagePackageLPA} LPA` : 'Statutory Benchmark',
         verified: verifiedAverage ? `${verifiedAverage} LPA` : 'Pending Proofs',
-        deltaLabel: brochureAverage && verifiedAverage ? `+${(brochureAverage - verifiedAverage).toFixed(1)} LPA Gap` : 'Inflated by Outliers',
+        deltaLabel: brochureAverage && verifiedAverage
+          ? (brochureAverage > verifiedAverage
+              ? `+${(brochureAverage - verifiedAverage).toFixed(1)} LPA Gap`
+              : (brochureAverage < verifiedAverage
+                  ? `Verified sample is +${(verifiedAverage - brochureAverage).toFixed(1)} LPA above brochure`
+                  : 'Aligned with Verified Ground Truth'))
+          : 'Inflated by Outliers',
         insight: 'Average CTC is statistically distorted by 1–2 international or off-campus packages (e.g. 50+ LPA) which pull up the mathematical mean for thousands of students.',
       },
       {
