@@ -103,59 +103,61 @@ function wrapHtmlEmail({ title, preheader, bodyContent }) {
 /**
  * Send password reset email with clickable link & secure token
  */
-async function sendPasswordResetEmail({ to, name = 'Student', resetUrl, resetToken, expiresMinutes = 60 }) {
+async function sendPasswordResetEmail({ to, name = 'Student', resetUrl, resetToken, otp, expiresMinutes = 15 }) {
   const mailer = getTransporter();
   const from = process.env.SMTP_FROM || `"Placement Reality" <${process.env.SMTP_USER || 'placement.reality1@gmail.com'}>`;
 
   const bodyContent = `
     <p>Hello <strong>${name}</strong>,</p>
     <p>We received a request to reset your password for your <strong>Placement Reality</strong> account associated with <strong>${to}</strong>.</p>
-    <p>Click the button below to choose a new secure password:</p>
-    <div style="text-align: center; margin: 24px 0;">
+    
+    ${otp ? `
+    <div style="text-align: center; margin: 24px 0; background: #f8fafc; padding: 20px; border-radius: 12px; border: 2px dashed #93c5fd;">
+      <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #2563eb; font-weight: 800; display: block; margin-bottom: 8px;">Your 6-Digit Verification OTP</span>
+      <span style="font-size: 36px; font-weight: 900; letter-spacing: 8px; color: #0f172a; font-family: monospace;">${otp}</span>
+    </div>
+    ` : ''}
+
+    <p style="text-align: center; margin-top: 16px;">Or click the button below to set your new password directly:</p>
+    <div style="text-align: center; margin: 16px 0;">
       <a href="${resetUrl}" class="btn" target="_blank">Reset Your Password</a>
     </div>
-    <p style="font-size: 12px; color: #64748b;">Or copy and paste this link into your browser:</p>
-    <div class="token-box">${resetUrl}</div>
-    <p style="font-size: 12px; color: #64748b;">Manual Reset Token:</p>
-    <div class="token-box">${resetToken}</div>
     <div class="security-notice">
       <strong>Security Notice:</strong>
       <ul style="margin: 6px 0 0; padding-left: 18px;">
-        <li>This reset link is valid for <strong>${expiresMinutes} minutes</strong>.</li>
-        <li>If you did not request this password reset, please ignore this email. Your password will remain unchanged.</li>
-        <li>Never share your reset token or password with anyone.</li>
+        <li>This verification OTP / reset link is valid for <strong>${expiresMinutes} minutes</strong>.</li>
+        <li>If you did not request this password reset, please ignore this email. Your password remains safe.</li>
       </ul>
     </div>
   `;
 
   const html = wrapHtmlEmail({
     title: 'Reset Your Password',
-    preheader: 'Use this secure link to reset your Placement Reality account password.',
+    preheader: `Your Placement Reality password reset OTP is ${otp || ''}.`,
     bodyContent,
   });
 
   const text = `Hello ${name},
 
-We received a request to reset your Placement Reality password.
+Your Placement Reality password reset OTP is: ${otp || resetToken}
 
-Click or copy this link to set a new password:
+Or reset directly by visiting:
 ${resetUrl}
 
-Your reset token is: ${resetToken}
-This link expires in ${expiresMinutes} minutes.
-
-If you did not request this, you can safely ignore this email.
+This code expires in ${expiresMinutes} minutes.
+If you did not request this, please ignore this message.
 
 — Placement Reality Team`;
 
   return await mailer.sendMail({
     from,
     to,
-    subject: '🔐 Reset Your Password — Placement Reality',
+    subject: `🔐 ${otp ? `Your OTP: ${otp} — ` : ''}Reset Your Password (Placement Reality)`,
     text,
     html,
   });
 }
+
 
 /**
  * Send password change confirmation notification

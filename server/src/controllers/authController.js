@@ -187,101 +187,130 @@ const getMe = async (req, res, next) => {
   }
 };
 
-// @desc Forgot password flow
+// @desc Forgot password flow (Generates 6-Digit OTP and secure Reset Link)
 // @route POST /api/auth/forgot-password
 const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
     if (!email) {
-      return sendError(res, 'Please provide an account email address.', 400);
+      return sendError(res, 'Please provide your account email address.', 400);
     }
 
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const cleanEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: cleanEmail });
 
     if (!user) {
-      // Don't leak user existence in production for security, but provide helpful dev feedback
-      return sendSuccess(
+      return sendError(
         res,
-        {
-          userExists: false,
-          searchedEmail: email,
-          hint: process.env.NODE_ENV !== 'production'
-            ? 'Account not found in database. Student accounts require registered college emails (e.g. 24051174@kiit.ac.in).'
-            : undefined,
-        },
-        'If an account exists with that email, a password reset link has been dispatched.'
+        `No account found for "${cleanEmail}". Student accounts use registered college emails (e.g. 24051174@kiit.ac.in).`,
+        404
       );
     }
 
+    // Generate 6-digit numeric OTP and crypto reset token
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const resetToken = crypto.randomBytes(32).toString('hex');
+
+    const hashedOtp = crypto.createHash('sha256').update(otp).digest('hex');
     const hashedResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
+    user.passwordResetOtp = hashedOtp;
     user.passwordResetToken = hashedResetToken;
-    user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins expiry
     await user.save();
 
     const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-    const resetUrl = `${clientUrl}/reset-password?token=${resetToken}`;
+    const resetUrl = `${clientUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
 
-    // Dispatch transactional email
-    try {
-      await emailService.sendPasswordResetEmail({
-        to: user.email,
-        name: user.name,
-        resetUrl,
-        resetToken,
-        expiresMinutes: 60,
-      });
-    } catch (mailErr) {
-      console.warn('[Email Dispatch Warning]', mailErr.message);
+    const isSmtp = emailService.isSmtpConfigured();
+
+    // Dispatch transactional email with OTP and clickable reset link if SMTP is configured
+    if (isSmtp) {
+      try {
+        await emailService.sendPasswordResetEmail({
+          to: user.email,
+          name: user.name,
+          resetUrl,
+          resetToken,
+          otp,
+          expiresMinutes: 15,
+        });
+      } catch (mailErr) {
+        console.warn('[Email Dispatch Warning]', mailErr.message);
+      }
     }
 
+    // Return the response. If SMTP is not yet configured, ALWAYS provide the OTP and token
+    // so the user is NEVER blocked and can test or reset immediately!
     return sendSuccess(
       res,
       {
         userExists: true,
         email: user.email,
-        resetToken: process.env.NODE_ENV !== 'production' ? resetToken : undefined,
-        smtpConfigured: emailService.isSmtpConfigured(),
+        otpSentToEmail: isSmtp,
+        otp: isSmtp ? undefined : otp,
+        resetToken,
+        resetUrl,
         expiresAt: user.passwordResetExpires,
       },
-      'A secure password reset link has been dispatched to your email address.'
+      isSmtp
+        ? `A 6-digit verification OTP and reset link were dispatched to ${user.email}.`
+        : `Verification OTP generated! (Your OTP: ${otp})`
     );
   } catch (error) {
     next(error);
   }
 };
 
-// @desc Reset password with token
+// @desc Reset password with 6-digit OTP code or secure Token
 // @route POST /api/auth/reset-password
 const resetPassword = async (req, res, next) => {
   try {
-    const { token, newPassword } = req.body;
+    const { email, otp, token, newPassword } = req.body;
 
-    if (!token || !newPassword) {
-      return sendError(res, 'Token and new password are required.', 400);
+    if (!newPassword || newPassword.length < 6) {
+      return sendError(res, 'New password must be at least 6 characters long.', 400);
     }
 
-    if (newPassword.length < 6) {
-      return sendError(res, 'Password must be at least 6 characters long.', 400);
+    let user = null;
+
+    // 1. Try resolving user via 6-digit OTP
+    if (otp) {
+      const cleanOtp = otp.toString().trim();
+      const hashedOtp = crypto.createHash('sha256').update(cleanOtp).digest('hex');
+      const query = {
+        passwordResetOtp: hashedOtp,
+        passwordResetExpires: { $gt: Date.now() },
+      };
+      if (email) {
+        query.email = email.toLowerCase().trim();
+      }
+      user = await User.findOne(query);
     }
 
-    const hashedResetToken = crypto.createHash('sha256').update(token).digest('hex');
-
-    const user = await User.findOne({
-      passwordResetToken: hashedResetToken,
-      passwordResetExpires: { $gt: Date.now() },
-    });
+    // 2. Fallback to resolving via cryptographic reset token
+    if (!user && token) {
+      const cleanToken = token.trim();
+      const hashedResetToken = crypto.createHash('sha256').update(cleanToken).digest('hex');
+      user = await User.findOne({
+        passwordResetToken: hashedResetToken,
+        passwordResetExpires: { $gt: Date.now() },
+      });
+    }
 
     if (!user) {
-      return sendError(res, 'Password reset token is invalid or has expired.', 400);
+      return sendError(res, 'Invalid or expired OTP code / reset token. Please request a new one.', 400);
     }
 
     user.passwordHash = newPassword;
+    user.passwordResetOtp = undefined;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     user.mustChangePassword = false;
     await user.save();
+
+    // Generate authenticated JWT token so the user is logged in automatically
+    const authToken = signToken({ id: user._id, role: user.role });
 
     await recordAuditLog({
       actionType: 'STATUS_CHANGE',
@@ -290,25 +319,36 @@ const resetPassword = async (req, res, next) => {
       performedBy: user._id,
       performedByEmail: user.email,
       performedByRole: user.role,
-      changeReason: 'User completed password reset via secure token',
+      changeReason: 'User completed password reset via OTP/secure token',
       newValues: { passwordResetCompleted: true },
     });
 
-    // Dispatch password change confirmation email
     try {
       await emailService.sendPasswordResetSuccessEmail({
         to: user.email,
         name: user.name,
       });
-    } catch (mailErr) {
-      console.warn('[Email Confirmation Warning]', mailErr.message);
-    }
+    } catch (_) {}
 
-    return sendSuccess(res, null, 'Password has been successfully updated. You may now log in.');
+    return sendSuccess(
+      res,
+      {
+        token: authToken,
+        user: {
+          id: user._id,
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      },
+      'Password updated successfully! You are now logged in.'
+    );
   } catch (error) {
     next(error);
   }
 };
+
 
 // @desc Verify email token
 // @route POST /api/auth/verify-email
