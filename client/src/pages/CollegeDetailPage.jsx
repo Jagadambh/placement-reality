@@ -900,21 +900,26 @@ export const CollegeDetailPage = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
-              <button
-                onClick={() => setShowReviewForm(!showReviewForm)}
-                className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-slate-950" />
-                <span>{showReviewForm ? 'Close Form' : '+ Submit Your Verified Review & Stats'}</span>
-              </button>
-              <button
-                onClick={() => setIsVerifiedModalOpen(true)}
-                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl border border-white/20 transition flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Eye className="w-4 h-4 text-emerald-300" />
-                <span>Open Full-Screen View</span>
-              </button>
+            <div className="flex flex-col sm:items-end gap-1 shrink-0">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                <button
+                  onClick={() => setShowReviewForm(!showReviewForm)}
+                  className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4 text-slate-950" />
+                  <span>{showReviewForm ? 'Close Contribution Form' : '+ Report Batch Stats & Experience'}</span>
+                </button>
+                <button
+                  onClick={() => setIsVerifiedModalOpen(true)}
+                  className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl border border-white/20 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Eye className="w-4 h-4 text-emerald-300" />
+                  <span>Open Full-Screen View</span>
+                </button>
+              </div>
+              <span className="text-[10px] text-emerald-300 font-medium">
+                * Enrolled students &amp; seniors can report batch median, avg &amp; placement rates
+              </span>
             </div>
           </div>
 

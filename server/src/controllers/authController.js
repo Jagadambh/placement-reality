@@ -9,6 +9,7 @@ const Notification = require('../models/Notification');
 const { signToken } = require('../utils/jwt');
 const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { recordAuditLog } = require('../services/auditService');
+const { syncCollegeStudentVerifiedStats } = require('../services/studentVerifiedAggregationService');
 
 // @desc Register user
 // @route POST /api/auth/register
@@ -429,6 +430,10 @@ const studentJoinSubmit = async (req, res, next) => {
       offerType = 'On-Campus Full-Time',
       rating,
       comment,
+      batchMedianLPA,
+      batchAvgLPA,
+      batchHighestLPA,
+      batchPlacementRate,
     } = req.body;
 
     if (!name || !email || !collegeId) {
@@ -549,11 +554,19 @@ const studentJoinSubmit = async (req, res, next) => {
       }
     }
 
-    // 3. Handle Student Review / Transparent Comment if provided
+    // 3. Handle Student Review / Ground-Truth Batch Stats if provided
     let reviewRecord = null;
-    if (comment && comment.trim().length >= 10) {
+    const hasBatchStats = Boolean(batchMedianLPA || batchAvgLPA || batchHighestLPA || batchPlacementRate);
+    if ((comment && comment.trim().length >= 5) || hasBatchStats) {
       try {
         const ratingVal = Math.min(5, Math.max(1, parseInt(rating, 10) || 4));
+        const cleanReportedStats = {
+          medianPackageLPA: batchMedianLPA ? parseFloat(batchMedianLPA) : null,
+          averagePackageLPA: batchAvgLPA ? parseFloat(batchAvgLPA) : null,
+          highestPackageLPA: batchHighestLPA ? parseFloat(batchHighestLPA) : null,
+          actualPlacementRate: batchPlacementRate ? parseFloat(batchPlacementRate) : null,
+        };
+
         reviewRecord = await CollegeReview.create({
           collegeId,
           studentId: user._id,
@@ -563,8 +576,11 @@ const studentJoinSubmit = async (req, res, next) => {
           isPseudonymous: isPseudonymous === true || isPseudonymous === 'true',
           isVerifiedStudentBadge: true,
           verificationProofType: 'College ID Card & Offer Verified',
-          title: companyName ? `Placement Experience at ${companyName}` : 'Student Placement Reality Feedback',
-          reviewText: comment.trim(),
+          title: companyName ? `Placement Experience at ${companyName}` : 'Student Placement Ground-Truth Reality',
+          reviewText: (comment && comment.trim().length >= 5)
+            ? comment.trim()
+            : `Batch ground-reality metrics reported by student for ${academicSession}: Median ₹${cleanReportedStats.medianPackageLPA || 'N/A'} LPA, Avg ₹${cleanReportedStats.averagePackageLPA || 'N/A'} LPA.`,
+          reportedStats: cleanReportedStats,
           ratings: {
             placementSupport: ratingVal,
             internshipSupport: ratingVal,
@@ -576,6 +592,13 @@ const studentJoinSubmit = async (req, res, next) => {
           overallRating: ratingVal,
           moderationStatus: 'Approved',
         });
+
+        // Synchronize college ground-truth statistics immediately
+        try {
+          await syncCollegeStudentVerifiedStats(collegeId);
+        } catch (syncErr) {
+          console.warn('[Join Us] Stats sync warning:', syncErr.message);
+        }
       } catch (revErr) {
         console.warn('[Join Us] Review creation error (non-fatal):', revErr.message);
       }

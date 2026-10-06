@@ -81,6 +81,10 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
     offerType: 'On-Campus Full-Time',
     rating: 5,
     comment: '',
+    batchMedianLPA: '',
+    batchAvgLPA: '',
+    batchHighestLPA: '',
+    batchPlacementRate: '',
     isPseudonymous: true,
     privacyConsent: true,
   });
@@ -210,6 +214,11 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
         data.append('rating', formData.rating);
         data.append('comment', formData.comment);
       }
+
+      if (formData.batchMedianLPA) data.append('batchMedianLPA', formData.batchMedianLPA);
+      if (formData.batchAvgLPA) data.append('batchAvgLPA', formData.batchAvgLPA);
+      if (formData.batchHighestLPA) data.append('batchHighestLPA', formData.batchHighestLPA);
+      if (formData.batchPlacementRate) data.append('batchPlacementRate', formData.batchPlacementRate);
 
       const res = await submitStudentJoin(data);
       setSubmitSuccess(res);
@@ -740,6 +749,79 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
                       </div>
                     </div>
                   )}
+                </div>
+
+                {/* Section 4b: Known Batch Placement Metrics */}
+                <div className="space-y-3 bg-emerald-50/50 p-5 rounded-2xl border border-emerald-200">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-emerald-600" />
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">
+                        Known Batch Placement Reality (Optional — for enrolled students auditing batch trends)
+                      </h3>
+                      <p className="text-[11px] text-slate-600">
+                        If you are an enrolled student or senior who knows the real placement metrics of your college batch, report them below:
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                        Median CTC (LPA)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="e.g. 6.0"
+                        value={formData.batchMedianLPA}
+                        onChange={(e) => setFormData({ ...formData, batchMedianLPA: e.target.value })}
+                        className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white font-semibold text-slate-800"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                        Average CTC (LPA)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="e.g. 7.0"
+                        value={formData.batchAvgLPA}
+                        onChange={(e) => setFormData({ ...formData, batchAvgLPA: e.target.value })}
+                        className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white font-semibold text-slate-800"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                        Highest Package (LPA)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        placeholder="e.g. 45.0"
+                        value={formData.batchHighestLPA}
+                        onChange={(e) => setFormData({ ...formData, batchHighestLPA: e.target.value })}
+                        className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white font-semibold text-slate-800"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                        Placement Rate (%)
+                      </label>
+                      <input
+                        type="number"
+                        step="1"
+                        placeholder="e.g. 72"
+                        value={formData.batchPlacementRate}
+                        onChange={(e) => setFormData({ ...formData, batchPlacementRate: e.target.value })}
+                        className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white font-semibold text-slate-800"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Section 5: Student Ground-Truth Comment */}
