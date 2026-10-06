@@ -4,6 +4,7 @@ const College = require('../models/College');
 const User = require('../models/User');
 const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { recordAuditLog } = require('../services/auditService');
+const { syncCollegeStudentVerifiedStats } = require('../services/studentVerifiedAggregationService');
 
 // @desc Get approved reviews for a college
 // @route GET /api/reviews/college/:collegeId
@@ -213,16 +214,27 @@ const submitReview = async (req, res, next) => {
       if (medians.length > 0 || avgs.length > 0) {
         college.studentVerifiedStats = {
           sampleSize: allApproved.length,
+          verifiedStudentOutcomes: allApproved.length,
+          verifiedPackageRecords: allApproved.length,
+          hasEnoughData: true,
           medianPackageLPA: medians.length > 0 ? Number((medians.reduce((a, b) => a + b, 0) / medians.length).toFixed(1)) : college.studentVerifiedStats?.medianPackageLPA,
           averagePackageLPA: avgs.length > 0 ? Number((avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)) : college.studentVerifiedStats?.averagePackageLPA,
           highestPackageLPA: cleanReportedStats.highestPackageLPA || college.studentVerifiedStats?.highestPackageLPA,
           actualPlacementRate: rates.length > 0 ? Number((rates.reduce((a, b) => a + b, 0) / rates.length).toFixed(1)) : college.studentVerifiedStats?.actualPlacementRate,
+          observedPlacementRate: rates.length > 0 ? Number((rates.reduce((a, b) => a + b, 0) / rates.length).toFixed(1)) : college.studentVerifiedStats?.observedPlacementRate,
           totalVerifiedOffers: college.studentVerifiedStats?.totalVerifiedOffers || null,
           confidenceScore: 90,
           verifiedReviewsCount: allApproved.length,
           lastUpdated: new Date(),
         };
         await college.save();
+      }
+
+      // Synchronize with aggregation engine
+      try {
+        await syncCollegeStudentVerifiedStats(targetCollegeId);
+      } catch (syncErr) {
+        console.warn('[Review Sync Warning]', syncErr.message);
       }
     }
 

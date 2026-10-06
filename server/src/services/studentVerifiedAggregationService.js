@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Offer = require('../models/Offer');
 const College = require('../models/College');
 const CollegeReview = require('../models/CollegeReview');
+const Department = require('../models/Department');
 const PlacementRecord = require('../models/PlacementRecord');
 const PlacementSeason = require('../models/PlacementSeason');
 const StudentSessionReport = require('../models/StudentSessionReport');
@@ -208,8 +209,33 @@ async function calculatePlacementStatistics({
     }
   });
 
-  const verifiedStudentOutcomesCount = studentOutcomesMap.size;
-  const verifiedPackageRecordsCount = packageRecordsList.length;
+  // 5b. Fetch Approved Student Reviews reporting ground-truth batch metrics
+  const reviewQuery = {
+    collegeId: college._id,
+    moderationStatus: 'Approved',
+    isDeleted: { $ne: true },
+    $or: [
+      { graduationYear: gradYearNum },
+      { graduationYear: { $exists: false } },
+      { graduationYear: null },
+    ],
+  };
+  const approvedReviews = await CollegeReview.find(reviewQuery);
+
+  let verifiedStudentOutcomesCount = studentOutcomesMap.size;
+  let verifiedPackageRecordsCount = packageRecordsList.length;
+
+  if (packageRecordsList.length === 0 && approvedReviews.length > 0) {
+    approvedReviews.forEach((rev) => {
+      if (rev.reportedStats?.medianPackageLPA) {
+        packageRecordsList.push(rev.reportedStats.medianPackageLPA);
+      }
+    });
+    verifiedStudentOutcomesCount = approvedReviews.length;
+    verifiedPackageRecordsCount = packageRecordsList.length || approvedReviews.length;
+  } else if (approvedReviews.length > 0) {
+    verifiedStudentOutcomesCount = Math.max(studentOutcomesMap.size, approvedReviews.length);
+  }
 
   // 6. Retrieve Official Eligible Population for Placement Rate Denominator
   let eligibleDenominator = null;
@@ -225,7 +251,7 @@ async function calculatePlacementStatistics({
   }
 
   // 7. Initial / Empty State Check
-  if (verifiedStudentOutcomesCount === 0 || verifiedPackageRecordsCount === 0) {
+  if (verifiedStudentOutcomesCount === 0 || (packageRecordsList.length === 0 && approvedReviews.length === 0)) {
     return {
       collegeId: college._id,
       collegeName: college.name,
@@ -259,10 +285,29 @@ async function calculatePlacementStatistics({
   // 8. Mathematical Calculations from Database Records
   packageRecordsList.sort((a, b) => a - b);
 
-  const averagePackageLPA = calculateAverage(packageRecordsList);
-  const medianPackageLPA = calculateMedian(packageRecordsList);
-  const highestPackageLPA = Math.max(...packageRecordsList);
-  const lowestPackageLPA = Math.min(...packageRecordsList);
+  let averagePackageLPA = packageRecordsList.length > 0 ? calculateAverage(packageRecordsList) : null;
+  let medianPackageLPA = packageRecordsList.length > 0 ? calculateMedian(packageRecordsList) : null;
+  let highestPackageLPA = packageRecordsList.length > 0 ? Math.max(...packageRecordsList) : null;
+  let lowestPackageLPA = packageRecordsList.length > 0 ? Math.min(...packageRecordsList) : null;
+
+  // Corroborate / enhance from approved verified student reviews
+  if (approvedReviews.length > 0) {
+    const revMedians = approvedReviews.map(r => r.reportedStats?.medianPackageLPA).filter(Boolean);
+    const revAverages = approvedReviews.map(r => r.reportedStats?.averagePackageLPA).filter(Boolean);
+    const revHighests = approvedReviews.map(r => r.reportedStats?.highestPackageLPA).filter(Boolean);
+
+    if (revHighests.length > 0) {
+      const maxRev = Math.max(...revHighests);
+      highestPackageLPA = highestPackageLPA ? Math.max(highestPackageLPA, maxRev) : maxRev;
+    }
+    if (revAverages.length > 0 && (!averagePackageLPA || eligibleOffers.length === 0)) {
+      averagePackageLPA = calculateAverage(revAverages);
+    }
+    if (revMedians.length > 0 && (!medianPackageLPA || eligibleOffers.length === 0)) {
+      medianPackageLPA = calculateMedian(revMedians);
+    }
+  }
+
   const packageDistribution = calculateSalaryDistribution(packageRecordsList);
 
   // 9. Placement Rate with Strict Denominator Integrity
@@ -274,6 +319,9 @@ async function calculatePlacementStatistics({
     observedPlacementRate = Number(((verifiedStudentOutcomesCount / eligibleDenominator) * 100).toFixed(1));
     observedPlacementRateLabel = `${observedPlacementRate}%`;
     observedCoveragePercentage = Number(((verifiedStudentOutcomesCount / eligibleDenominator) * 100).toFixed(2));
+  } else if (approvedReviews.length > 0 && approvedReviews[0].reportedStats?.actualPlacementRate) {
+    observedPlacementRate = approvedReviews[0].reportedStats.actualPlacementRate;
+    observedPlacementRateLabel = `${observedPlacementRate}% (Observed)`;
   } else {
     // If eligible cohort size is not officially disclosed:
     observedPlacementRateLabel = `Observed verified outcomes: ${verifiedStudentOutcomesCount}`;

@@ -118,7 +118,7 @@ export const CollegeDetailPage = () => {
   const fetchStudentReviews = async (idOrSlug, collegeObj) => {
     const rawStats = collegeObj?.studentVerifiedStats || {};
     const outcomesCount = rawStats.verifiedStudentOutcomes ?? rawStats.sampleSize ?? 0;
-    const hasData = Boolean(rawStats.hasEnoughData && outcomesCount > 0);
+    const hasData = Boolean((rawStats.hasEnoughData ?? (outcomesCount > 0)) && outcomesCount > 0);
 
     const fbStats = {
       hasEnoughData: hasData,
@@ -158,23 +158,25 @@ export const CollegeDetailPage = () => {
       }
 
       if (intelRes.status === 'fulfilled' && intelRes.value?.data?.success) {
-        const intel = intelRes.value.data.data.intelligence;
-        if (intel) {
+        const intel = intelRes.value.data.data?.intelligence || intelRes.value.data.data;
+        if (intel && (intel.hasEnoughData || intel.verifiedStudentOutcomes > 0 || intel.verifiedPackageRecords > 0)) {
           setStudentStats({
-            hasEnoughData: intel.hasEnoughData,
+            hasEnoughData: Boolean(intel.hasEnoughData || intel.verifiedStudentOutcomes > 0),
             emptyStateMessage: intel.emptyStateMessage,
-            sampleSize: intel.verifiedStudentOutcomes,
+            sampleSize: intel.verifiedStudentOutcomes || intel.sampleSize,
             verifiedStudentOutcomes: intel.verifiedStudentOutcomes,
             verifiedPackageRecords: intel.verifiedPackageRecords,
             placedVerifiedStudents: intel.placedVerifiedStudents,
-            medianPackageLPA: intel.verifiedMedianPackageLPA,
-            averagePackageLPA: intel.verifiedAveragePackageLPA,
-            highestPackageLPA: intel.verifiedHighestPackageLPA,
-            observedPlacementRate: intel.observedPlacementRate,
-            actualPlacementRate: intel.observedPlacementRate,
+            medianPackageLPA: intel.verifiedMedianPackageLPA ?? intel.medianPackageLPA,
+            averagePackageLPA: intel.verifiedAveragePackageLPA ?? intel.averagePackageLPA,
+            highestPackageLPA: intel.verifiedHighestPackageLPA ?? intel.highestPackageLPA,
+            lowestPackageLPA: intel.verifiedLowestPackageLPA ?? intel.lowestPackageLPA,
+            observedPlacementRate: intel.observedPlacementRate ?? intel.actualPlacementRate,
+            actualPlacementRate: intel.observedPlacementRate ?? intel.actualPlacementRate,
             isLowSample: intel.isLowSample,
             observedCoveragePercentage: intel.observedCoveragePercentage,
             confidenceScore: intel.hasEnoughData ? (intel.isLowSample ? 65 : 92) : 0,
+            packageDistribution: intel.packageDistribution,
           });
         }
       }
@@ -241,14 +243,20 @@ export const CollegeDetailPage = () => {
 
       setVerifiedReviews((prev) => [newReview, ...prev]);
 
-      if (payload.reportedStats.medianPackageLPA) {
+      if (payload.reportedStats.medianPackageLPA || payload.reportedStats.averagePackageLPA) {
         setStudentStats((prev) => ({
           ...prev,
-          medianPackageLPA: payload.reportedStats.medianPackageLPA,
+          hasEnoughData: true,
+          emptyStateMessage: null,
+          medianPackageLPA: payload.reportedStats.medianPackageLPA || prev?.medianPackageLPA,
           averagePackageLPA: payload.reportedStats.averagePackageLPA || prev?.averagePackageLPA,
           highestPackageLPA: Math.max(prev?.highestPackageLPA || 0, payload.reportedStats.highestPackageLPA || 0),
           actualPlacementRate: payload.reportedStats.actualPlacementRate || prev?.actualPlacementRate,
-          sampleSize: (prev?.sampleSize || 100) + 1,
+          observedPlacementRate: payload.reportedStats.actualPlacementRate || prev?.observedPlacementRate,
+          sampleSize: (prev?.verifiedStudentOutcomes || 0) + 1,
+          verifiedStudentOutcomes: (prev?.verifiedStudentOutcomes || 0) + 1,
+          verifiedPackageRecords: (prev?.verifiedPackageRecords || 0) + 1,
+          placedVerifiedStudents: (prev?.placedVerifiedStudents || 0) + 1,
           verifiedReviewsCount: (prev?.verifiedReviewsCount || 0) + 1,
         }));
       }
