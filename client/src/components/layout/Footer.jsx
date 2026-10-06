@@ -37,20 +37,15 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Transparency & Methodology */}
+          {/* Transparency & Standards */}
           <div>
-            <h4 className="font-semibold text-white mb-3 text-xs uppercase tracking-wider">Methodology</h4>
+            <h4 className="font-semibold text-white mb-3 text-xs uppercase tracking-wider">Audit Standards</h4>
             <ul className="space-y-2 text-slate-400">
               <li><span className="text-slate-300">Denominator Verification</span> - No manufactured rates</li>
               <li><span className="text-slate-300">Unique vs Gross Offers</span> - Distinct headcounts</li>
               <li><span className="text-slate-300">Tier Benchmark</span> - Objective platform standards</li>
               <li><span className="text-slate-300">Privacy Safeguards</span> - Strict student PII protection</li>
             </ul>
-            <div className="mt-3">
-              <Link to="/methodology" className="font-semibold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1">
-                Read Evidence Methodology →
-              </Link>
-            </div>
           </div>
 
           {/* Compliance & DPDP */}

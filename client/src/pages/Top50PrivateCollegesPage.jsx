@@ -336,14 +336,6 @@ export const Top50PrivateCollegesPage = () => {
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
-                onClick={() => setShowMethodologyModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-sm transition cursor-pointer"
-              >
-                <BookOpen className="w-4 h-4 text-brand-secondary" />
-                <span>View Transparent Ranking Methodology</span>
-              </button>
-
-              <button
                 onClick={() => setIsAddCollegeModalOpen(true)}
                 className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-bold rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-lg shadow-emerald-500/20 transition cursor-pointer"
               >
