@@ -11,12 +11,25 @@ const { signToken } = require('../utils/jwt');
 const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { recordAuditLog } = require('../services/auditService');
 const { syncCollegeStudentVerifiedStats } = require('../services/studentVerifiedAggregationService');
+const { validateCollegeEmail } = require('../utils/collegeEmailValidator');
 
 // @desc Register user
 // @route POST /api/auth/register
 const register = async (req, res, next) => {
   try {
     const { name, email, password, role = 'student', collegeId, departmentId, graduationYear, privacyConsent } = req.body;
+
+    // Enforce that student accounts must use an official college email ID
+    if (role === 'student' || !['moderator', 'admin'].includes(role)) {
+      let targetCollege = null;
+      if (collegeId) {
+        targetCollege = await College.findById(collegeId);
+      }
+      const emailValidation = validateCollegeEmail(email, targetCollege);
+      if (!emailValidation.isValid) {
+        return sendError(res, emailValidation.message, 400);
+      }
+    }
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
@@ -448,6 +461,17 @@ const studentJoinSubmit = async (req, res, next) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
+
+    // Enforce that student accounts must use an official college email ID
+    let targetCollege = null;
+    if (collegeId) {
+      targetCollege = await College.findById(collegeId);
+    }
+    const emailValidation = validateCollegeEmail(cleanEmail, targetCollege);
+    if (!emailValidation.isValid) {
+      return sendError(res, emailValidation.message, 400);
+    }
+
     let user = await User.findOne({ email: cleanEmail }).select('+passwordHash');
 
     if (user) {

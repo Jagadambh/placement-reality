@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { collegeApi } from '../api/collegeApi';
 import { AddCollegeModal } from '../components/common/AddCollegeModal';
+import { validateCollegeEmail } from '../utils/collegeEmailValidator';
 import {
   GraduationCap,
   ShieldCheck,
@@ -102,6 +103,7 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(null);
+  const [emailValidation, setEmailValidation] = useState(null);
 
   // Sign In State
   const [signInEmail, setSignInEmail] = useState('');
@@ -153,6 +155,9 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
       collegeId: newCollege._id,
       collegeName: newCollege.name,
     }));
+    if (formData.email?.trim()) {
+      setEmailValidation(validateCollegeEmail(formData.email, newCollege));
+    }
   };
 
   const handleStudentSubmit = async (e) => {
@@ -161,6 +166,14 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
 
     if (!formData.collegeId) {
       setSubmitError('Please select your college or institute from the list.');
+      return;
+    }
+
+    const selectedCollege = colleges.find((c) => c._id === formData.collegeId);
+    const emailCheck = validateCollegeEmail(formData.email, selectedCollege);
+    if (!emailCheck.isValid) {
+      setEmailValidation(emailCheck);
+      setSubmitError(emailCheck.message);
       return;
     }
 
@@ -341,13 +354,25 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
             ) : (
               <form onSubmit={handleStudentSubmit} className="space-y-8">
                 {/* Notice Banner */}
-                <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 flex items-start gap-3 text-xs text-blue-900">
-                  <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-blue-950">Strict Evidence Verification Protocol</h4>
-                    <p className="text-blue-800 mt-0.5 leading-relaxed">
-                      Only currently enrolled students and verified alumni can submit records. All College IDs and Offer Letters are encrypted and reviewed strictly by the Lead Verifier (<code>placement.reality1@gmail.com</code>). Personal documents are never published.
-                    </p>
+                <div className="space-y-3">
+                  <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 flex items-start gap-3 text-xs text-blue-900">
+                    <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-blue-950">Strict Evidence Verification Protocol</h4>
+                      <p className="text-blue-800 mt-0.5 leading-relaxed">
+                        Only currently enrolled students and verified alumni can submit records. All College IDs and Offer Letters are encrypted and reviewed strictly by the Lead Verifier (<code>placement.reality1@gmail.com</code>). Personal documents are never published.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-3.5 flex items-start gap-3 text-xs text-amber-900">
+                    <Mail className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-amber-950">Mandatory Official College Email Requirement</h4>
+                      <p className="text-amber-800 mt-0.5 leading-relaxed">
+                        Registration is strictly restricted to official college-issued email IDs (e.g. <code>rollno@kiit.ac.in</code>, <code>student@college.edu.in</code>). Personal webmail addresses (Gmail, Yahoo, Outlook, etc.) are strictly not accepted.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -383,18 +408,69 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">
-                        Student Email (College or Personal) <span className="text-rose-500">*</span>
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-semibold text-slate-700">
+                          Official College Email ID <span className="text-rose-500">*</span>
+                        </label>
+                        <span className="text-[10px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                          No Personal Email Accepted
+                        </span>
+                      </div>
                       <input
                         type="email"
                         required
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="e.g. 2405114@kiit.ac.in or student@gmail.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-brand-primary focus:outline-none"
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData({ ...formData, email: val });
+                          if (val.trim()) {
+                            const selCollege = colleges.find((c) => c._id === formData.collegeId);
+                            setEmailValidation(validateCollegeEmail(val, selCollege));
+                          } else {
+                            setEmailValidation(null);
+                          }
+                        }}
+                        onBlur={() => {
+                          if (formData.email.trim()) {
+                            const selCollege = colleges.find((c) => c._id === formData.collegeId);
+                            setEmailValidation(validateCollegeEmail(formData.email, selCollege));
+                          }
+                        }}
+                        placeholder="e.g. 2405114@kiit.ac.in or student@college.edu.in"
+                        className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:outline-none transition-colors ${
+                          emailValidation
+                            ? emailValidation.isValid
+                              ? 'border-emerald-500 bg-emerald-50/20 text-slate-900 focus:ring-emerald-500'
+                              : 'border-rose-500 bg-rose-50/20 text-slate-900 focus:ring-rose-500'
+                            : 'border-slate-300 focus:ring-brand-primary'
+                        }`}
                       />
                     </div>
+
+                    {emailValidation && (
+                      <div className="sm:col-span-2">
+                        {emailValidation.isValid ? (
+                          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <span className="font-semibold">{emailValidation.message}</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs">
+                            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                            <div>
+                              <p className="font-bold text-rose-900">
+                                {emailValidation.isPersonal
+                                  ? 'Personal Email Detected — Not Allowed'
+                                  : 'Official College Email Required'}
+                              </p>
+                              <p className="text-[11px] text-rose-700 mt-0.5 leading-relaxed font-medium">
+                                {emailValidation.message}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-semibold text-slate-700 mb-1">
@@ -438,7 +514,14 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
                       <select
                         required
                         value={formData.collegeId}
-                        onChange={(e) => setFormData({ ...formData, collegeId: e.target.value })}
+                        onChange={(e) => {
+                          const newCollegeId = e.target.value;
+                          setFormData({ ...formData, collegeId: newCollegeId });
+                          if (formData.email?.trim()) {
+                            const selCollege = colleges.find((c) => c._id === newCollegeId);
+                            setEmailValidation(validateCollegeEmail(formData.email, selCollege));
+                          }
+                        }}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-brand-primary focus:outline-none"
                       >
                         <option value="">-- Choose your college from the directory --</option>
