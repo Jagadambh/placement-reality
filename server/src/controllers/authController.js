@@ -202,9 +202,10 @@ const forgotPassword = async (req, res, next) => {
     if (!user) {
       return sendError(
         res,
-        `No account found for "${cleanEmail}". Student accounts use registered college emails (e.g. 24051174@kiit.ac.in).`,
+        `No account found for "${cleanEmail}". Please check your registered college email or create an account first.`,
         404
       );
+
     }
 
     // Generate 6-digit numeric OTP and crypto reset token

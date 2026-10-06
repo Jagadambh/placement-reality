@@ -174,14 +174,12 @@ export const ForgotPasswordPage = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="24051174@kiit.ac.in or verifier email"
+                  placeholder="Enter your registered college email"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-brand-primary focus:outline-none transition"
                 />
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">
-                Enter your registered college email (e.g. <code>24051174@kiit.ac.in</code>).
-              </p>
             </div>
+
 
             <button
               type="submit"

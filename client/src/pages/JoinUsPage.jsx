@@ -1010,7 +1010,7 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
               </div>
               <h2 className="text-2xl font-extrabold text-navy-950 tracking-tight">Sign In</h2>
               <p className="text-xs text-slate-500">
-                Access your student verification portal or log in as Lead Verifier (<code>placement.reality1@gmail.com</code>).
+                Access your student verification portal or dashboard.
               </p>
             </div>
 
@@ -1050,11 +1050,12 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
                     required
                     value={signInEmail}
                     onChange={(e) => setSignInEmail(e.target.value)}
-                    placeholder="name@college.ac.in or verifier email"
+                    placeholder="Enter your registered college email"
                     className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-brand-primary focus:outline-none"
                   />
                 </div>
               </div>
+
 
               <div>
                 <div className="flex items-center justify-between mb-1">
