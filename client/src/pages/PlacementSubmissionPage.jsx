@@ -26,9 +26,12 @@ export const PlacementSubmissionPage = () => {
   const [myOffers, setMyOffers] = useState([]);
   const [isAddCollegeModalOpen, setIsAddCollegeModalOpen] = useState(false);
 
+  const getColId = (col) => (col && typeof col === 'object' ? col._id : col) || '';
+  const getDeptId = (dept) => (dept && typeof dept === 'object' ? dept._id : dept) || '';
+
   const [formData, setFormData] = useState({
-    collegeId: user?.collegeId || '',
-    departmentId: user?.departmentId || '',
+    collegeId: getColId(user?.collegeId),
+    departmentId: getDeptId(user?.departmentId),
     seasonId: '',
     graduationYear: user?.graduationYear || 2024,
     companyName: '',
@@ -48,6 +51,20 @@ export const PlacementSubmissionPage = () => {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState('');
 
+  // Sync user defaults when auth profile arrives
+  useEffect(() => {
+    if (user) {
+      const colId = getColId(user.collegeId);
+      const deptId = getDeptId(user.departmentId);
+      setFormData((prev) => ({
+        ...prev,
+        collegeId: prev.collegeId || colId,
+        departmentId: prev.departmentId || deptId,
+        graduationYear: prev.graduationYear || user.graduationYear || 2024,
+      }));
+    }
+  }, [user]);
+
   useEffect(() => {
     collegeApi.getColleges({ limit: 50 }).then((res) => {
       if (res.data?.success) setColleges(res.data.data.colleges);
@@ -56,11 +73,12 @@ export const PlacementSubmissionPage = () => {
   }, []);
 
   useEffect(() => {
-    if (formData.collegeId) {
-      collegeApi.getDepartments(formData.collegeId).then((res) => {
+    const cleanCollegeId = getColId(formData.collegeId);
+    if (cleanCollegeId) {
+      collegeApi.getDepartments(cleanCollegeId).then((res) => {
         if (res.data?.success) setDepartments(res.data.data.departments);
       });
-      collegeApi.getSeasons(formData.collegeId).then((res) => {
+      collegeApi.getSeasons(cleanCollegeId).then((res) => {
         if (res.data?.success) {
           setSeasons(res.data.data.seasons);
           if (res.data.data.seasons.length > 0 && !formData.seasonId) {
@@ -107,8 +125,18 @@ export const PlacementSubmissionPage = () => {
 
     try {
       const formPayload = new FormData();
+      const cleanColId = getColId(formData.collegeId);
+      const cleanDeptId = getDeptId(formData.departmentId);
+      const cleanSeasonId = getColId(formData.seasonId);
+
       Object.keys(formData).forEach((key) => {
-        formPayload.append(key, formData[key]);
+        let val = formData[key];
+        if (key === 'collegeId') val = cleanColId;
+        if (key === 'departmentId') val = cleanDeptId;
+        if (key === 'seasonId') val = cleanSeasonId;
+        if (val !== undefined && val !== null) {
+          formPayload.append(key, val);
+        }
       });
       if (documentFile) {
         formPayload.append('supportingDocument', documentFile);

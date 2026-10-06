@@ -17,12 +17,12 @@ const offerSchema = new mongoose.Schema(
     departmentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Department',
-      required: [true, 'Department is required'],
+      required: false,
     },
     seasonId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PlacementSeason',
-      required: [true, 'Placement season is required'],
+      required: false,
     },
     graduationYear: {
       type: Number,

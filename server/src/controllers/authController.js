@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const College = require('../models/College');
 const VerificationEvidence = require('../models/VerificationEvidence');
+const Department = require('../models/Department');
 const Offer = require('../models/Offer');
 const CollegeReview = require('../models/CollegeReview');
 const PlacementSeason = require('../models/PlacementSeason');
@@ -529,10 +530,24 @@ const studentJoinSubmit = async (req, res, next) => {
         } catch (_) {}
       }
 
+      // Resolve departmentId if missing
+      let resolvedDeptId = departmentId;
+      if (!resolvedDeptId && departmentName) {
+        const foundDept = await Department.findOne({
+          collegeId,
+          name: new RegExp(`^${departmentName.trim()}$`, 'i'),
+        });
+        if (foundDept) resolvedDeptId = foundDept._id;
+      }
+      if (!resolvedDeptId) {
+        const firstDept = await Department.findOne({ collegeId });
+        if (firstDept) resolvedDeptId = firstDept._id;
+      }
+
       offerRecord = await Offer.create({
         studentId: user._id,
         collegeId,
-        departmentId: departmentId || null,
+        departmentId: resolvedDeptId || null,
         seasonId: season ? season._id : null,
         graduationYear: user.graduationYear || 2026,
         companyName: companyName.trim(),

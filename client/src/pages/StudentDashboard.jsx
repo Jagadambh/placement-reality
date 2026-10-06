@@ -265,7 +265,7 @@ export const StudentDashboard = () => {
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
               <FileCheck2 className="w-4 h-4 text-brand-secondary" />
-              <span>My Submitted Offers</span>
+              <span>My Submitted Offers {myOffers.length > 0 && `(${myOffers.length})`}</span>
             </h3>
             <Link to="/submit-offer" className="text-xs text-brand-secondary font-semibold hover:underline">
               Submit another
@@ -278,15 +278,23 @@ export const StudentDashboard = () => {
             </div>
           ) : (
             <div className="space-y-3">
-              {myOffers.slice(0, 3).map((offer) => (
-                <div key={offer._id} className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center text-xs">
-                  <div>
+              {myOffers.slice(0, 5).map((offer) => (
+                <div key={offer._id} className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center text-xs hover:border-slate-300 transition">
+                  <div className="space-y-0.5">
                     <span className="font-bold text-slate-900 block">{offer.companyName}</span>
-                    <span className="text-slate-500">{offer.jobRole}</span>
+                    <span className="text-slate-500 text-[11px]">{offer.jobRole}</span>
                   </div>
-                  <div className="text-right">
-                    <span className="font-extrabold text-brand-primary block">{offer.annualCtcLpa} LPA</span>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
+                  <div className="text-right space-y-1">
+                    <span className="font-extrabold text-brand-primary block text-sm">₹{offer.annualCtcLpa} LPA</span>
+                    <span
+                      className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                        offer.verificationStatus === 'Verified'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : offer.verificationStatus === 'Rejected'
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
+                      }`}
+                    >
                       {offer.verificationStatus}
                     </span>
                   </div>

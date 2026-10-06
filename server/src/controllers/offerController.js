@@ -1,11 +1,33 @@
 const Offer = require('../models/Offer');
 const User = require('../models/User');
+const Department = require('../models/Department');
+const PlacementSeason = require('../models/PlacementSeason');
 const VerificationEvidence = require('../models/VerificationEvidence');
 const Notification = require('../models/Notification');
 const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { checkOfferDuplicate } = require('../services/duplicateDetectionService');
 const { recordAuditLog } = require('../services/auditService');
 const { syncCollegeStudentVerifiedStats } = require('../services/studentVerifiedAggregationService');
+
+// Helper to retrieve all student account ObjectIds linked to current user
+const getLinkedUserIds = async (user) => {
+  const ids = [user._id];
+  const userColId = user.collegeId?._id || user.collegeId;
+  if (user.name && userColId) {
+    const related = await User.find({
+      $or: [
+        { name: new RegExp(`^${user.name.trim()}$`, 'i'), collegeId: userColId },
+        { email: user.email?.toLowerCase().trim() },
+      ],
+    }).select('_id');
+    related.forEach((u) => {
+      if (!ids.some((id) => id.toString() === u._id.toString())) {
+        ids.push(u._id);
+      }
+    });
+  }
+  return ids;
+};
 
 // @desc Submit placement offer
 // @route POST /api/offers
@@ -37,12 +59,32 @@ const submitOffer = async (req, res, next) => {
       return sendError(res, 'Annual CTC must be a valid positive number up to 300 LPA.', 400);
     }
 
+    // Clean and auto-resolve IDs if necessary
+    let cleanCollegeId = typeof collegeId === 'object' ? collegeId?._id : collegeId;
+    let cleanDeptId = typeof departmentId === 'object' ? departmentId?._id : departmentId;
+    let cleanSeasonId = typeof seasonId === 'object' ? seasonId?._id : seasonId;
+
+    if (!cleanCollegeId && req.user?.collegeId) {
+      cleanCollegeId = req.user.collegeId?._id || req.user.collegeId;
+    }
+
+    if (cleanCollegeId) {
+      if (!cleanDeptId) {
+        const firstDept = await Department.findOne({ collegeId: cleanCollegeId });
+        if (firstDept) cleanDeptId = firstDept._id;
+      }
+      if (!cleanSeasonId) {
+        const latestSeason = await PlacementSeason.findOne({ collegeId: cleanCollegeId }).sort({ createdAt: -1 });
+        if (latestSeason) cleanSeasonId = latestSeason._id;
+      }
+    }
+
     // 1. Run Duplicate Detection Service
     const duplicateCheck = await checkOfferDuplicate({
       studentId: req.user._id,
       companyName,
       jobRole,
-      seasonId,
+      seasonId: cleanSeasonId,
       annualCtcLpa: parsedCtc,
     });
 
@@ -67,13 +109,13 @@ const submitOffer = async (req, res, next) => {
     // 3. Create Offer
     const offer = await Offer.create({
       studentId: req.user._id,
-      collegeId,
-      departmentId,
-      seasonId,
-      graduationYear: parseInt(graduationYear, 10),
+      collegeId: cleanCollegeId,
+      departmentId: cleanDeptId || null,
+      seasonId: cleanSeasonId || null,
+      graduationYear: graduationYear ? parseInt(graduationYear, 10) : (req.user.graduationYear || 2026),
       companyName: companyName.trim(),
       jobRole: jobRole.trim(),
-      offerDate: new Date(offerDate),
+      offerDate: offerDate ? new Date(offerDate) : new Date(),
       annualCtcLpa: parsedCtc,
       fixedCompensationLpa: fixedCompensationLpa ? parseFloat(fixedCompensationLpa) : null,
       variableCompensationLpa: variableCompensationLpa ? parseFloat(variableCompensationLpa) : null,
@@ -119,12 +161,36 @@ const submitOffer = async (req, res, next) => {
 // @route GET /api/offers/my-offers
 const getMyOffers = async (req, res, next) => {
   try {
-    const offers = await Offer.find({ studentId: req.user._id })
+    const user = req.user;
+    const matchingUserIds = await getLinkedUserIds(user);
+
+    // Unify linked offers under the active student account so ownership is consolidated
+    await Offer.updateMany(
+      { studentId: { $in: matchingUserIds }, isDeleted: { $ne: true } },
+      { $set: { studentId: user._id } }
+    );
+
+    const offers = await Offer.find({
+      $or: [
+        { studentId: { $in: matchingUserIds } },
+        { studentId: user._id },
+      ],
+      isDeleted: { $ne: true },
+    })
       .populate('collegeId', 'name shortName')
       .populate('departmentId', 'name code')
       .populate('seasonId', 'academicYear')
       .populate('supportingDocument', 'originalFileName verificationStatus reviewNotes')
       .sort({ createdAt: -1 });
+
+    // Ensure user profile reflects verified status if they have at least one verified offer
+    const hasVerified = offers.some((o) => o.verificationStatus === 'Verified');
+    if (hasVerified && (!user.isCollegeVerified || user.collegeVerificationStatus !== 'verified')) {
+      await User.updateMany(
+        { _id: { $in: matchingUserIds } },
+        { isCollegeVerified: true, collegeVerificationStatus: 'verified' }
+      );
+    }
 
     return sendSuccess(res, { offers }, 'My offers retrieved successfully');
   } catch (error) {
@@ -263,7 +329,8 @@ const unpublishOffer = async (req, res, next) => {
       return sendError(res, 'Offer not found', 404);
     }
 
-    const isOwner = req.user._id.toString() === offer.studentId?.toString();
+    const linkedIds = await getLinkedUserIds(req.user);
+    const isOwner = linkedIds.some((id) => id.toString() === offer.studentId?.toString());
     const isPrivileged = ['moderator', 'admin'].includes(req.user.role);
     if (!isOwner && !isPrivileged) {
       return sendError(res, 'Not authorized to unpublish this offer', 403);
@@ -313,7 +380,8 @@ const deleteOffer = async (req, res, next) => {
       return sendError(res, 'Offer not found', 404);
     }
 
-    const isOwner = req.user._id.toString() === offer.studentId?.toString();
+    const linkedIds = await getLinkedUserIds(req.user);
+    const isOwner = linkedIds.some((id) => id.toString() === offer.studentId?.toString());
     const isPrivileged = ['moderator', 'admin'].includes(req.user.role);
     if (!isOwner && !isPrivileged) {
       return sendError(res, 'Not authorized to delete this offer', 403);
