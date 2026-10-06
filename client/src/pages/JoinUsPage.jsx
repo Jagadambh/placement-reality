@@ -259,13 +259,13 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
         <div className="text-center space-y-3 mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold shadow-xs">
             <Sparkles className="w-4 h-4 text-blue-600" />
-            <span>Traceable Institutional Transparency • Zero Fabricated Stats</span>
+            <span>Students &amp; Seniors Verification • Zero Fabricated Stats</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight">
-            Join Placement Reality &amp; Submit Verification
+            Students &amp; Seniors: Verification &amp; Placement Reality Portal
           </h1>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Only authentic students can publish and submit College ID cards and Offer Letters for verification by the Lead Verifier.
+            For enrolled engineering students and seniors to authenticate credentials, report cohort batch metrics (Median, Average, Highest LPA), and upload offer verification securely.
           </p>
         </div>
 
@@ -282,7 +282,7 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
               }`}
             >
               <GraduationCap className="w-4 h-4" />
-              <span>Join Us — Student Sign Up &amp; Verification</span>
+              <span>Students &amp; Seniors Sign Up &amp; Verification</span>
             </button>
             <button
               type="button"

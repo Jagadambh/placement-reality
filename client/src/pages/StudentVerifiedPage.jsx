@@ -255,16 +255,16 @@ export const StudentVerifiedPage = () => {
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/20 text-emerald-300 text-xs font-bold tracking-wider uppercase">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>100% Student Verified Ground-Truth Intelligence</span>
+            <span>Students &amp; Seniors Verified Reality Portal</span>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div className="space-y-3 max-w-3xl">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
-                Student Verified Comments &amp; Reality Placement Statistics
+                Students &amp; Seniors: Ground-Truth Placement Reality Portal
               </h1>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-                Direct, confidential reports from verified engineering students and alumni across IITs, NITs, and top private universities. Real median packages, honest placed ratios, and authentic recruiter experiences — bypassing university PR brochures.
+                Direct, confidential reports from verified engineering students and seniors across IITs, NITs, and top private universities. Real median packages, honest placed ratios, and authentic recruiter experiences — bypassing university PR brochures.
               </p>
             </div>
 
@@ -274,7 +274,7 @@ export const StudentVerifiedPage = () => {
                 className="px-5 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl transition shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-slate-950" />
-                <span>{showSubmitForm ? 'Close Contribution Form' : '+ Submit Your Verified Batch Stats'}</span>
+                <span>{showSubmitForm ? 'Close Contribution Form' : '🎓 Students & Seniors: Submit Batch Stats'}</span>
               </button>
             </div>
           </div>

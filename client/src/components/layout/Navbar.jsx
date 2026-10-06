@@ -40,6 +40,7 @@ export const Navbar = () => {
   const navLinks = [
     { name: 'Colleges', path: '/colleges', icon: GraduationCap },
     { name: 'Top 50 Private', path: '/top-private-engineering-colleges-india', icon: Award, isBadge: true },
+    { name: 'Students & Seniors', path: '/student-verified', icon: ShieldCheck, highlight: true },
     { name: 'Official Reports', path: '/official-reports', icon: FileText },
     { name: 'ROI & Loan', path: '/roi-calculator', icon: Calculator },
     { name: 'Compare', path: '/compare', icon: Layers },
@@ -66,7 +67,7 @@ export const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-0.5 lg:gap-1">
             {navLinks.map((link) => {
               const Icon = link.icon;
               const active = isActive(link.path);
@@ -74,14 +75,19 @@ export const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-1.5 px-2 lg:px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition-all ${
                     active
-                      ? 'bg-slate-100 text-brand-primary font-semibold'
+                      ? 'bg-slate-100 text-brand-primary font-bold'
+                      : link.highlight
+                      ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold border border-emerald-200 shadow-2xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{link.name}</span>
+                  <Icon className={`w-3.5 h-3.5 xl:w-4 xl:h-4 ${link.highlight ? 'text-emerald-600' : ''}`} />
+                  <span className="whitespace-nowrap">{link.name}</span>
+                  {link.highlight && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  )}
                   {link.isBadge && (
                     <span className="px-1.5 py-0.2 text-[10px] bg-amber-100 text-amber-800 rounded-full font-bold">
                       50
@@ -213,15 +219,32 @@ export const Navbar = () => {
         <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-2">
           {navLinks.map((link) => {
             const Icon = link.icon;
+            const active = isActive(link.path);
             return (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  active
+                    ? 'bg-slate-100 text-brand-primary font-bold'
+                    : link.highlight
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200'
+                    : 'text-slate-700 hover:bg-slate-50'
+                }`}
               >
-                <Icon className="w-4 h-4 text-slate-500" />
+                <Icon className={`w-4 h-4 ${link.highlight ? 'text-emerald-600' : 'text-slate-500'}`} />
                 <span>{link.name}</span>
+                {link.highlight && (
+                  <span className="ml-auto text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">
+                    Student Reality
+                  </span>
+                )}
+                {link.isBadge && (
+                  <span className="ml-auto px-1.5 py-0.2 text-[10px] bg-amber-100 text-amber-800 rounded-full font-bold">
+                    50
+                  </span>
+                )}
               </Link>
             );
           })}

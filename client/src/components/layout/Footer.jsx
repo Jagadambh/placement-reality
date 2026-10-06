@@ -30,6 +30,7 @@ export const Footer = () => {
             <ul className="space-y-2 text-slate-400">
               <li><Link to="/colleges" className="hover:text-white transition">College Directory</Link></li>
               <li><Link to="/top-private-engineering-colleges-india" className="hover:text-white transition">Top 50 Private Colleges</Link></li>
+              <li><Link to="/student-verified" className="text-emerald-400 hover:text-emerald-300 font-semibold transition">🎓 Students &amp; Seniors Portal</Link></li>
               <li><Link to="/roi-calculator" className="hover:text-white transition">ROI & Loan Simulator</Link></li>
               <li><Link to="/compare" className="hover:text-white transition">Multi-College Comparison</Link></li>
               <li><Link to="/community" className="hover:text-white transition">Campus Community & Q&A</Link></li>

@@ -771,7 +771,7 @@ export const CollegeDetailPage = () => {
                 className="w-full sm:w-auto px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold rounded-xl transition text-center shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-200" />
-                <span>🎓 Student Verified Comments & Stats</span>
+                <span>🎓 Students &amp; Seniors Reality</span>
               </button>
               <Link
                 to={`/roi-calculator?collegeId=${college._id}`}
@@ -858,7 +858,7 @@ export const CollegeDetailPage = () => {
         {[
           {
             id: 'verified-reviews',
-            label: `🎓 Student Verified Comments & Stats (${verifiedReviews.length || college.verifiedStudentComments?.length || 0})`,
+            label: `🎓 Students & Seniors Reality (${verifiedReviews.length || college.verifiedStudentComments?.length || 0})`,
           },
           { id: 'tit-for-tat', label: 'Advertised vs. Reality (Tit-for-Tat)' },
                     { id: 'internships', label: 'Internships' },
@@ -886,17 +886,17 @@ export const CollegeDetailPage = () => {
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 border border-emerald-500/30">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Student Verified Ground Truth</span>
+                  <span>Students &amp; Seniors Verified Reality</span>
                 </span>
                 <span className="text-xs text-slate-300">
                   • {verifiedReviews.length || college.verifiedStudentComments?.length || 0} Authenticated Submissions
                 </span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Campus Reality Reported by Verified Students
+                Campus Reality Reported by Students &amp; Seniors
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                The statistics and comments below are contributed directly by enrolled engineering students and recent alumni verified with roll IDs and institutional email domains. Marketing brochures and PR embellishments are audited out.
+                The statistics and comments below are contributed directly by enrolled engineering students and seniors verified with roll IDs and institutional email domains. Marketing brochures and PR embellishments are audited out.
               </p>
             </div>
 
@@ -907,7 +907,7 @@ export const CollegeDetailPage = () => {
                   className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Sparkles className="w-4 h-4 text-slate-950" />
-                  <span>{showReviewForm ? 'Close Contribution Form' : '+ Report Batch Stats & Experience'}</span>
+                  <span>{showReviewForm ? 'Close Contribution Form' : '🎓 Students & Seniors: Report Batch Stats'}</span>
                 </button>
                 <button
                   onClick={() => setIsVerifiedModalOpen(true)}
@@ -920,6 +920,42 @@ export const CollegeDetailPage = () => {
               <span className="text-[10px] text-emerald-300 font-medium">
                 * Enrolled students &amp; seniors can report batch median, avg &amp; placement rates
               </span>
+            </div>
+          </div>
+
+          {/* CALLOUT SPECIFICALLY FOR STUDENTS & SENIORS OF THIS COLLEGE */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 border border-emerald-500/40 text-white flex flex-col md:flex-row items-center justify-between gap-4 shadow-md">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                <GraduationCap className="w-5 h-5" />
+              </div>
+              <div className="space-y-0.5">
+                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                  <span>Are you a current student or senior at {college.name}?</span>
+                  <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
+                    Students &amp; Seniors
+                  </span>
+                </h4>
+                <p className="text-xs text-slate-300">
+                  Report your batch's ground-truth Median, Average, Highest LPA &amp; placement rate. Directly influences real-time public statistics.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setShowReviewForm(true)}
+                className="px-4 py-2 bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-xs rounded-xl transition shadow-md flex items-center gap-1.5 cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Report Batch Stats</span>
+              </button>
+              <Link
+                to="/student-verified"
+                className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl border border-white/20 transition flex items-center gap-1.5"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+                <span>All Colleges Portal</span>
+              </Link>
             </div>
           </div>
 
