@@ -682,8 +682,16 @@ export const StudentVerifiedCommentsModal = ({
           {/* REVIEWS LIST */}
           <div className="space-y-4">
             {reviews.length === 0 ? (
-              <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-500 text-xs">
-                No comments submitted for this college yet. Be the first verified student to report!
+              <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-500 text-xs space-y-3">
+                <p>No comments submitted for this college yet.</p>
+                <button
+                  type="button"
+                  onClick={() => setShowSubmitForm(true)}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Be the first verified student to report!</span>
+                </button>
               </div>
             ) : (
               reviews.map((rev, idx) => {
