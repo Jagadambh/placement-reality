@@ -24,17 +24,20 @@ async function autoBootstrapDatabase(force = false) {
       await mongoose.connect(uri, { serverSelectionTimeoutMS: 15000 });
     }
 
+    const CollegeReview = require('../models/CollegeReview');
     const collegeCount = await College.countDocuments();
     const top50Count = await College.countDocuments({ isTop50Private: true });
     const postCount = await CommunityPost.countDocuments();
     const recordCount = await PlacementRecord.countDocuments();
+    const reviewCount = await CollegeReview.countDocuments();
 
-    console.log(`[AutoBootstrap] Checking database: ${collegeCount} colleges (${top50Count} Top 50 Private), ${recordCount} placement records, ${postCount} community posts.`);
+    console.log(`[AutoBootstrap] Checking database: ${collegeCount} colleges (${top50Count} Top 50 Private), ${recordCount} placement records, ${postCount} community posts, ${reviewCount} verified reviews.`);
 
     const needsColleges = force || collegeCount < 80 || top50Count < 50;
     const needsPosts = force || postCount === 0;
+    const needsReviews = force || reviewCount < 30;
 
-    if (!needsColleges && !needsPosts) {
+    if (!needsColleges && !needsPosts && !needsReviews) {
       console.log(`[AutoBootstrap] Database fully populated. Skipping bootstrap.`);
       return {
         success: true,
@@ -43,6 +46,7 @@ async function autoBootstrapDatabase(force = false) {
         top50Private: top50Count,
         communityPosts: postCount,
         placementRecords: recordCount,
+        reviews: reviewCount,
       };
     }
 
@@ -77,12 +81,14 @@ async function autoBootstrapDatabase(force = false) {
     }
 
     // 4. Seed Verified Student Comments & Placement Statistics
-    try {
-      console.log(`[AutoBootstrap] Seeding verified student comments, ratings, and ground-truth stats...`);
-      await seedVerifiedStudentReportsAndReviews();
-      console.log(`[AutoBootstrap] Phase 4 completed: Verified student comments and stats seeded.`);
-    } catch (err) {
-      console.error(`[AutoBootstrap] Warning in Phase 4:`, err.message);
+    if (needsReviews) {
+      try {
+        console.log(`[AutoBootstrap] Seeding verified student comments, ratings, and ground-truth stats...`);
+        await seedVerifiedStudentReportsAndReviews();
+        console.log(`[AutoBootstrap] Phase 4 completed: Verified student comments and stats seeded.`);
+      } catch (err) {
+        console.error(`[AutoBootstrap] Warning in Phase 4:`, err.message);
+      }
     }
 
     // 5. Ensure Strict Tier Classification: IITs & NITs in Tier 1, all rest in Tier 2
