@@ -95,14 +95,6 @@ export const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             {isAuthenticated ? (
               <div className="flex items-center gap-2.5">
-                <Link
-                  to="/submit-offer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-primary text-white hover:bg-navy-800 transition shadow-sm"
-                >
-                  <PlusCircle className="w-3.5 h-3.5" />
-                  <span>Submit Offer</span>
-                </Link>
-
                 {isModerator && (
                   <Link
                     to="/admin"
@@ -250,13 +242,6 @@ export const Navbar = () => {
                   className="block px-3 py-2 text-sm font-medium text-slate-700"
                 >
                   Dashboard
-                </Link>
-                <Link
-                  to="/submit-offer"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 text-sm font-medium text-brand-primary font-semibold"
-                >
-                  Submit Offer
                 </Link>
                 {isModerator && (
                   <Link
