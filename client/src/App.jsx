@@ -19,6 +19,7 @@ import { Top50PrivateCollegesPage } from './pages/Top50PrivateCollegesPage';
 import { CampusCommunityPage } from './pages/CampusCommunityPage';
 import { RoiLoanSimulatorPage } from './pages/RoiLoanSimulatorPage';
 import { FounderPage } from './pages/FounderPage';
+import { MethodologyPage } from './pages/MethodologyPage';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children, requiredRole = null }) => {
@@ -83,6 +84,7 @@ export const App = () => {
               <Route path="/advertised-vs-reality" element={<Navigate to="/community" replace />} />
               <Route path="/internships" element={<Navigate to="/community" replace />} />
               <Route path="/ai" element={<Navigate to="/colleges" replace />} />
+              <Route path="/methodology" element={<MethodologyPage />} />
               <Route path="/founder" element={<FounderPage />} />
               <Route path="/about-founder" element={<Navigate to="/founder" replace />} />
               <Route path="/ceo" element={<Navigate to="/founder" replace />} />

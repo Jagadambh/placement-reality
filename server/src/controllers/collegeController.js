@@ -290,6 +290,9 @@ const submitUnlistedCollege = async (req, res, next) => {
       isNewlyEstablished = false,
       firstGraduatingBatchYear,
       website,
+      officialPlacementPageUrl,
+      nirfRank,
+      nirfRanking,
       approvedCourses,
       initialDepartments,
       about,
@@ -355,6 +358,8 @@ const submitUnlistedCollege = async (req, res, next) => {
       submissionNotes: submissionNotes || 'Submitted by student via the unlisted college registration workflow.',
       aicteApprovalOrAffiliation: aicteApprovalOrAffiliation || '',
       website: website?.trim() || '',
+      officialPlacementPageUrl: officialPlacementPageUrl?.trim() || null,
+      nirfRanking: nirfRanking || (nirfRank ? { engineeringRank: parseInt(nirfRank, 10), year: new Date().getFullYear() } : undefined),
       placementDiscovery: {
         status: website ? 'pending' : 'idle',
         message: website

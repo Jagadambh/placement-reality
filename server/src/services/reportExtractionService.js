@@ -511,7 +511,22 @@ async function downloadAndExtractReport(reportId, options = {}) {
     // Remove previously pending metrics for this report if re-running
     await OfficialReportMetric.deleteMany({ reportId: report._id, reviewStatus: 'Pending' });
 
-    // Save Extracted Metrics
+    // Calculate coverage denominator if eligible and placed students are present
+    const eligibleM = metricsFound.find((x) => x.metricName === 'Eligible Students');
+    const placedM = metricsFound.find((x) => x.metricName === 'Students Placed');
+    const eligibleVal = eligibleM?.normalizedValue || null;
+    const placedVal = placedM?.normalizedValue || null;
+    const coverageObj = {
+      verifiedOutcomesCount: placedVal,
+      totalEligibleDenominator: eligibleVal,
+      coveragePercentage: placedVal && eligibleVal ? Number(((placedVal / eligibleVal) * 100).toFixed(1)) : null,
+      isKnown: Boolean(eligibleVal && eligibleVal > 0),
+      coverageNotes: eligibleVal
+        ? `Eligible population reported as ${eligibleVal} students.`
+        : 'Coverage unknown unless total eligible population is officially reported.',
+    };
+
+    // Save Extracted Metrics with full 20-field Evidence Traceability
     for (const m of metricsFound) {
       try {
         await OfficialReportMetric.create({
@@ -519,15 +534,28 @@ async function downloadAndExtractReport(reportId, options = {}) {
           collegeId: report.collegeId._id,
           seasonId: report.seasonId,
           academicSession: detectedSession,
+          institutionCategory: report.collegeId.institutionCategory?.category || 'Unclassified',
+          graduatingBatch: detectedSession ? parseInt(detectedSession.split('-')[0], 10) + 1 : null,
+          branchName: m.branchName || 'All Branches / Institute Wide',
           metricName: m.metricName,
           rawReportedValue: m.rawReportedValue,
           normalizedValue: m.normalizedValue,
           unit: m.unit,
-          pageNumber: m.pageNumber,
-          sourceTextSnippet: m.sourceTextSnippet,
-          confidenceScore: m.confidenceScore,
+          sourceType: 'Official Report',
+          sourceUrl: report.reportUrl,
+          sourceDocument: report.documentTitle,
+          pageNumber: m.pageNumber || 1,
+          sourcePublicationDate: report.publicationDate || null,
+          retrievedDate: new Date(),
+          sourceTextSnippet: m.sourceTextSnippet || `Directly cited in ${report.documentTitle}`,
+          tableReference: m.tableReference || null,
+          confidenceScore: m.confidenceScore || 90,
+          verificationStatus: 'Pending Review',
           reviewStatus: 'Pending',
           isPublished: false,
+          coverage: coverageObj,
+          notes: m.notes || null,
+          extractionMethod: 'deterministic_regex',
         });
       } catch (metricSaveErr) {
         // Skip duplicate identical key collisions safely

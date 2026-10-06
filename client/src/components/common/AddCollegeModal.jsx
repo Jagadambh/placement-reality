@@ -24,6 +24,8 @@ export const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded }) => {
     isNewlyEstablished: true,
     firstGraduatingBatchYear: new Date().getFullYear() + 2,
     website: '',
+    officialPlacementPageUrl: '',
+    nirfRank: '',
     aicteApprovalOrAffiliation: '',
     approvedCourses: 'B.Tech',
     initialDepartments: 'Computer Science and Engineering (CSE), Artificial Intelligence & Data Science (AI&DS), Electronics and Communication Engineering (ECE)',
@@ -315,21 +317,42 @@ export const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded }) => {
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs"
               />
-              <span className="text-[10px] text-slate-500 mt-1 block leading-tight">
-                Placement statistics will be automatically discovered from this official domain. You do not need to manually enter placement figures.
+            </div>
+          </div>
+
+          {/* Official Placement Page URL & NIRF Rank */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                Official Placement Office Page (URL)
+              </label>
+              <input
+                type="url"
+                placeholder="https://example.ac.in/placement"
+                value={formData.officialPlacementPageUrl}
+                onChange={(e) => setFormData({ ...formData, officialPlacementPageUrl: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs"
+              />
+              <span className="text-[10px] text-slate-400 mt-0.5 block">
+                Direct URL to training & placement cell, annual reports, or statistics.
               </span>
             </div>
             <div>
               <label className="block font-bold text-slate-700 mb-1">
-                AICTE Approval / University Affiliation
+                NIRF Engineering Rank (If applicable)
               </label>
               <input
-                type="text"
-                placeholder="e.g. AICTE Approved / Affiliated to VTU / UGC Recognised"
-                value={formData.aicteApprovalOrAffiliation}
-                onChange={(e) => setFormData({ ...formData, aicteApprovalOrAffiliation: e.target.value })}
+                type="number"
+                min={1}
+                max={500}
+                placeholder="e.g. 15, 42, 101"
+                value={formData.nirfRank}
+                onChange={(e) => setFormData({ ...formData, nirfRank: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs"
               />
+              <span className="text-[10px] text-slate-400 mt-0.5 block">
+                Official rank under MoE NIRF Engineering category.
+              </span>
             </div>
           </div>
 

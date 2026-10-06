@@ -831,8 +831,11 @@ export const CollegeDetailPage = () => {
               <ShieldAlert className="w-7 h-7" />
             </div>
             <h3 className="text-xl font-bold text-slate-900">
-              Verified data not available for this session.
+              Verified placement data is not available for {college?.name || 'this institution'} for session {currentSessionLabel}.
             </h3>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mx-auto">
+              <span>No verified data available for {currentSessionLabel}</span>
+            </div>
             <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
               We enforce strict evidence validation. No verified placement records or student offer letters have been
               approved for academic session <strong>{currentSessionLabel}</strong> yet. Select a different session or submit

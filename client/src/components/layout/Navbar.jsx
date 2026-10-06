@@ -40,6 +40,7 @@ export const Navbar = () => {
     { name: 'Colleges', path: '/colleges', icon: GraduationCap },
     { name: 'Top 50 Private', path: '/top-private-engineering-colleges-india', icon: Award, isBadge: true },
     { name: 'Official Reports', path: '/official-reports', icon: FileText },
+    { name: 'Methodology', path: '/methodology', icon: ShieldCheck },
     { name: 'ROI & Loan', path: '/roi-calculator', icon: Calculator },
     { name: 'Compare', path: '/compare', icon: Layers },
     { name: 'Campus Q&A', path: '/community', icon: MessageSquare },

@@ -46,6 +46,11 @@ export const Footer = () => {
               <li><span className="text-slate-300">Tier Benchmark</span> - Objective platform standards</li>
               <li><span className="text-slate-300">Privacy Safeguards</span> - Strict student PII protection</li>
             </ul>
+            <div className="mt-3">
+              <Link to="/methodology" className="font-semibold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1">
+                Read Evidence Methodology →
+              </Link>
+            </div>
           </div>
 
           {/* Compliance & DPDP */}

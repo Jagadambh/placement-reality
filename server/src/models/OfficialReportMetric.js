@@ -26,6 +26,15 @@ const officialReportMetricSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    institutionCategory: {
+      type: String,
+      default: 'Unclassified',
+      trim: true,
+    },
+    graduatingBatch: {
+      type: Number,
+      default: null,
+    },
     branchName: {
       type: String,
       default: 'All Branches / Institute Wide',
@@ -51,9 +60,40 @@ const officialReportMetricSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    sourceType: {
+      type: String,
+      enum: [
+        'Official Report',
+        'Official Website',
+        'NIRF Mandatory Disclosure',
+        'Annual Placement Brochure',
+        'RTI Disclosure',
+        'Student Verified',
+        'Independent Audit',
+      ],
+      default: 'Official Report',
+    },
+    sourceUrl: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    sourceDocument: {
+      type: String,
+      default: null,
+      trim: true,
+    },
     pageNumber: {
       type: Number,
       default: 1,
+    },
+    sourcePublicationDate: {
+      type: Date,
+      default: null,
+    },
+    retrievedDate: {
+      type: Date,
+      default: Date.now,
     },
     sourceTextSnippet: {
       type: String,
@@ -71,11 +111,36 @@ const officialReportMetricSchema = new mongoose.Schema(
       min: 0,
       max: 100,
     },
+    // Requirement 11 Verification Levels
+    verificationStatus: {
+      type: String,
+      enum: [
+        'Officially Reported',
+        'Independently Verified',
+        'Student Verified',
+        'Partially Verified',
+        'Unverified',
+        'Pending Review',
+      ],
+      default: 'Pending Review',
+      index: true,
+    },
+    coverage: {
+      verifiedOutcomesCount: { type: Number, default: null },
+      totalEligibleDenominator: { type: Number, default: null },
+      coveragePercentage: { type: Number, default: null },
+      isKnown: { type: Boolean, default: false },
+      coverageNotes: { type: String, default: 'Coverage unknown unless total eligible population is officially reported.' },
+    },
     reviewStatus: {
       type: String,
       enum: ['Pending', 'Approved', 'Rejected', 'Corrected'],
       default: 'Pending',
       index: true,
+    },
+    notes: {
+      type: String,
+      default: null,
     },
     moderatorNotes: {
       type: String,
@@ -94,6 +159,11 @@ const officialReportMetricSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
       index: true,
+    },
+    extractionMethod: {
+      type: String,
+      enum: ['deterministic_regex', 'table_parser', 'ai_assistant', 'manual_moderator'],
+      default: 'deterministic_regex',
     },
   },
   {

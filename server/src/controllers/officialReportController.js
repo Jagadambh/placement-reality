@@ -204,6 +204,7 @@ const reviewOfficialReport = async (req, res, next) => {
         { reportId: report._id, reviewStatus: { $ne: 'Rejected' } },
         {
           reviewStatus: 'Approved',
+          verificationStatus: 'Officially Reported',
           isPublished: true,
           reviewedBy: req.user._id,
           reviewedAt: new Date(),
@@ -332,6 +333,7 @@ const reviewReportMetric = async (req, res, next) => {
 
     if (action === 'approve') {
       metric.reviewStatus = 'Approved';
+      metric.verificationStatus = 'Officially Reported';
       metric.isPublished = true;
       metric.moderatorNotes = moderatorNotes || null;
       metric.reviewedBy = req.user._id;
@@ -347,13 +349,14 @@ const reviewReportMetric = async (req, res, next) => {
         performedByRole: req.user.role,
         changeReason: moderatorNotes || 'Individual metric extraction approved',
         oldValues: previousValues,
-        newValues: { reviewStatus: 'Approved' },
+        newValues: { reviewStatus: 'Approved', verificationStatus: 'Officially Reported' },
         req,
       });
 
       return sendSuccess(res, { metric }, 'Metric approved.');
     } else if (action === 'reject') {
       metric.reviewStatus = 'Rejected';
+      metric.verificationStatus = 'Unverified';
       metric.isPublished = false;
       metric.moderatorNotes = moderatorNotes || 'Rejected by moderator';
       metric.reviewedBy = req.user._id;
@@ -369,7 +372,7 @@ const reviewReportMetric = async (req, res, next) => {
         performedByRole: req.user.role,
         changeReason: moderatorNotes || 'Individual metric rejected',
         oldValues: previousValues,
-        newValues: { reviewStatus: 'Rejected' },
+        newValues: { reviewStatus: 'Rejected', verificationStatus: 'Unverified' },
         req,
       });
 
@@ -382,6 +385,7 @@ const reviewReportMetric = async (req, res, next) => {
       metric.normalizedValue = parseFloat(correctedValue);
       metric.rawReportedValue = `${correctedValue} ${metric.unit}`;
       metric.reviewStatus = 'Corrected';
+      metric.verificationStatus = 'Partially Verified';
       metric.isPublished = true;
       metric.moderatorNotes = moderatorNotes || 'Corrected manually by moderator';
       metric.reviewedBy = req.user._id;
@@ -400,6 +404,7 @@ const reviewReportMetric = async (req, res, next) => {
         newValues: {
           normalizedValue: metric.normalizedValue,
           reviewStatus: 'Corrected',
+          verificationStatus: 'Partially Verified',
         },
         req,
       });
