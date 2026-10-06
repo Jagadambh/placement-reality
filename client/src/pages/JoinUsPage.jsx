@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { collegeApi } from '../api/collegeApi';
+import { authApi } from '../api/authApi';
 import { AddCollegeModal } from '../components/common/AddCollegeModal';
 import { validateCollegeEmail } from '../utils/collegeEmailValidator';
 import {
@@ -110,6 +111,30 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
   const [signInPassword, setSignInPassword] = useState('');
   const [signInLoading, setSignInLoading] = useState(false);
   const [signInError, setSignInError] = useState('');
+  const [emailVerifyNotice, setEmailVerifyNotice] = useState(null);
+
+  // Auto-detect email verification token from URL query string
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const verifyToken = params.get('verifyToken');
+    if (verifyToken) {
+      setActiveTab('signin');
+      authApi
+        .verifyEmail(verifyToken)
+        .then(() => {
+          setEmailVerifyNotice({
+            type: 'success',
+            message: '🎉 Your college email has been verified successfully! You can now sign in.',
+          });
+        })
+        .catch((err) => {
+          setEmailVerifyNotice({
+            type: 'error',
+            message: err.response?.data?.message || 'Email verification link is invalid or has expired.',
+          });
+        });
+    }
+  }, [location.search]);
 
   // Fetch colleges list
   useEffect(() => {
@@ -989,6 +1014,23 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
               </p>
             </div>
 
+            {emailVerifyNotice && (
+              <div
+                className={`mb-4 p-3.5 rounded-xl border text-xs flex items-start gap-2.5 ${
+                  emailVerifyNotice.type === 'success'
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                    : 'bg-rose-50 border-rose-200 text-rose-700'
+                }`}
+              >
+                {emailVerifyNotice.type === 'success' ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                )}
+                <span>{emailVerifyNotice.message}</span>
+              </div>
+            )}
+
             {signInError && (
               <div className="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -1017,7 +1059,10 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-semibold text-slate-700">Password</label>
-                  <Link to="/forgot-password" className="text-xs text-brand-secondary hover:underline font-medium">
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                  >
                     Forgot password?
                   </Link>
                 </div>

@@ -12,6 +12,7 @@ const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { recordAuditLog } = require('../services/auditService');
 const { syncCollegeStudentVerifiedStats } = require('../services/studentVerifiedAggregationService');
 const { validateCollegeEmail } = require('../utils/collegeEmailValidator');
+const emailService = require('../services/emailService');
 
 // @desc Register user
 // @route POST /api/auth/register
@@ -87,6 +88,19 @@ const register = async (req, res, next) => {
       'Registration successful. Note: Selecting a college registers your association, but student verification requires verified student ID/email evidence.',
       201
     );
+
+    // Asynchronously dispatch email verification in background
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+    const verifyUrl = `${clientUrl}/login?verifyToken=${verificationToken}`;
+    emailService.sendEmailVerificationEmail({
+      to: user.email,
+      name: user.name,
+      verifyUrl,
+      verificationToken,
+    }).catch((mailErr) => {
+      console.warn('[Registration Email Dispatch Warning]', mailErr.message);
+    });
+
   } catch (error) {
     next(error);
   }
@@ -178,10 +192,14 @@ const getMe = async (req, res, next) => {
 const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email: email?.toLowerCase() });
+    if (!email) {
+      return sendError(res, 'Please provide an account email address.', 400);
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
-      // Don't leak user existence
+      // Don't leak user existence for security
       return sendSuccess(
         res,
         null,
@@ -196,13 +214,30 @@ const forgotPassword = async (req, res, next) => {
     user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
     await user.save();
 
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+    const resetUrl = `${clientUrl}/reset-password?token=${resetToken}`;
+
+    // Dispatch transactional email
+    try {
+      await emailService.sendPasswordResetEmail({
+        to: user.email,
+        name: user.name,
+        resetUrl,
+        resetToken,
+        expiresMinutes: 60,
+      });
+    } catch (mailErr) {
+      console.warn('[Email Dispatch Warning]', mailErr.message);
+    }
+
     return sendSuccess(
       res,
       {
-        resetToken, // Returned for dev testing & local evaluation
+        email: user.email,
+        resetToken: process.env.NODE_ENV !== 'production' ? resetToken : undefined,
         expiresAt: user.passwordResetExpires,
       },
-      'Password reset token generated successfully. In production, this is transmitted via secure transactional email.'
+      'A secure password reset link has been dispatched to your email address.'
     );
   } catch (error) {
     next(error);
@@ -219,6 +254,10 @@ const resetPassword = async (req, res, next) => {
       return sendError(res, 'Token and new password are required.', 400);
     }
 
+    if (newPassword.length < 6) {
+      return sendError(res, 'Password must be at least 6 characters long.', 400);
+    }
+
     const hashedResetToken = crypto.createHash('sha256').update(token).digest('hex');
 
     const user = await User.findOne({
@@ -233,7 +272,29 @@ const resetPassword = async (req, res, next) => {
     user.passwordHash = newPassword;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
+    user.mustChangePassword = false;
     await user.save();
+
+    await recordAuditLog({
+      actionType: 'STATUS_CHANGE',
+      entityType: 'User',
+      entityId: user._id,
+      performedBy: user._id,
+      performedByEmail: user.email,
+      performedByRole: user.role,
+      changeReason: 'User completed password reset via secure token',
+      newValues: { passwordResetCompleted: true },
+    });
+
+    // Dispatch password change confirmation email
+    try {
+      await emailService.sendPasswordResetSuccessEmail({
+        to: user.email,
+        name: user.name,
+      });
+    } catch (mailErr) {
+      console.warn('[Email Confirmation Warning]', mailErr.message);
+    }
 
     return sendSuccess(res, null, 'Password has been successfully updated. You may now log in.');
   } catch (error) {
