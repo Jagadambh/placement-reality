@@ -9,4 +9,9 @@ export const authApi = {
   resetPassword: (payload) => api.post('/auth/reset-password', payload),
   verifyEmail: (token) => api.post('/auth/verify-email', { token }),
   submitIdProof: (formData) => api.post('/auth/submit-id-proof', formData),
+  changePassword: (payload) => api.post('/auth/change-password', payload),
+  studentJoinSubmit: (formData) =>
+    api.post('/auth/student-join-submit', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 };

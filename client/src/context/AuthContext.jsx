@@ -105,6 +105,34 @@ export const AuthProvider = ({ children }) => {
     setUser((prev) => (prev ? { ...prev, ...updatedUser } : updatedUser));
   };
 
+  const changePassword = async (currentPassword, newPassword) => {
+    const res = await authApi.changePassword({ currentPassword, newPassword });
+    if (res.data?.success) {
+      if (res.data.data?.user) {
+        setUser(res.data.data.user);
+      } else {
+        setUser((prev) => (prev ? { ...prev, mustChangePassword: false } : null));
+      }
+      return res.data;
+    }
+    throw new Error(res.data?.message || 'Password update failed');
+  };
+
+  const submitStudentJoin = async (formData) => {
+    localStorage.removeItem('pr_auth_token');
+    setUser(null);
+    setToken(null);
+    const res = await authApi.studentJoinSubmit(formData);
+    if (res.data?.success) {
+      const { user: newUser, token: authToken } = res.data.data;
+      localStorage.setItem('pr_auth_token', authToken);
+      setToken(authToken);
+      setUser(newUser);
+      return res.data;
+    }
+    throw new Error(res.data?.message || 'Submission failed');
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -112,10 +140,13 @@ export const AuthProvider = ({ children }) => {
         token,
         loading,
         isAuthenticated: Boolean(user && token),
+        mustChangePassword: Boolean(user?.mustChangePassword),
         login,
         register,
         logout,
         updateUser,
+        changePassword,
+        submitStudentJoin,
         refreshProfile: fetchProfile,
         isStudent: user?.role === 'student',
         isModerator: user?.role === 'moderator' || user?.role === 'admin',

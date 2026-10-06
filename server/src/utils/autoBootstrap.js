@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
 const College = require('../models/College');
 const CommunityPost = require('../models/CommunityPost');
 const PlacementRecord = require('../models/PlacementRecord');
@@ -119,6 +121,26 @@ async function autoBootstrapDatabase(force = false) {
         };
         await c.save();
       }
+    // 6. Ensure Lead Verifier account exists
+    const verifierEmail = (process.env.VERIFIER_EMAIL || 'placement.reality1@gmail.com').trim().toLowerCase();
+    const existingVerifier = await User.findOne({ email: verifierEmail });
+    if (!existingVerifier) {
+      console.log(`[AutoBootstrap] Provisioning Lead Verifier account (${verifierEmail})...`);
+      const defaultPass = process.env.VERIFIER_INITIAL_PASSWORD || 'PlacementVerifier@2026!';
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(defaultPass, salt);
+      await User.create({
+        name: 'Lead Placement Verifier',
+        email: verifierEmail,
+        passwordHash: hash,
+        role: 'moderator',
+        mustChangePassword: true,
+        isEmailVerified: true,
+        isCollegeVerified: true,
+        isActive: true,
+        pseudonym: 'Verifier_Lead',
+      });
+      console.log(`[AutoBootstrap] Lead Verifier account provisioned.`);
     }
 
     const finalColleges = await College.countDocuments();

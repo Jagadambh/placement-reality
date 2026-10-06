@@ -1,8 +1,8 @@
 import React from 'react';
-import { StudentVerifiedPage } from './StudentVerifiedPage';
+import { JoinUsPage } from './JoinUsPage';
 
 export const LoginPage = () => {
-  return <StudentVerifiedPage />;
+  return <JoinUsPage initialTab="signin" />;
 };
 
 export default LoginPage;

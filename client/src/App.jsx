@@ -20,6 +20,12 @@ import { CampusCommunityPage } from './pages/CampusCommunityPage';
 import { RoiLoanSimulatorPage } from './pages/RoiLoanSimulatorPage';
 import { FounderPage } from './pages/FounderPage';
 import { MethodologyPage } from './pages/MethodologyPage';
+import { JoinUsPage } from './pages/JoinUsPage';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { MandatoryPasswordChangeModal } from './components/common/MandatoryPasswordChangeModal';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children, requiredRole = null }) => {
@@ -53,19 +59,24 @@ export const App = () => {
     <AuthProvider>
       <Router>
         <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+          <MandatoryPasswordChangeModal />
           <Navbar />
           <main className="flex-1">
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
+              <Route path="/join-us" element={<JoinUsPage />} />
+              <Route path="/join" element={<Navigate to="/join-us" replace />} />
+              <Route path="/student-verification" element={<Navigate to="/join-us" replace />} />
               <Route path="/student-verified" element={<StudentVerifiedPage />} />
               <Route path="/student-verified-comments" element={<Navigate to="/student-verified" replace />} />
               <Route path="/verified-comments" element={<Navigate to="/student-verified" replace />} />
               <Route path="/verified-stats" element={<Navigate to="/student-verified" replace />} />
-              <Route path="/login" element={<StudentVerifiedPage />} />
-              <Route path="/register" element={<Navigate to="/student-verified" replace />} />
-              <Route path="/forgot-password" element={<Navigate to="/student-verified" replace />} />
-              <Route path="/reset-password" element={<Navigate to="/student-verified" replace />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signin" element={<Navigate to="/login" replace />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/colleges" element={<CollegeDirectoryPage />} />
               <Route path="/colleges/:slugOrId" element={<CollegeDetailPage />} />
               <Route path="/top-private-engineering-colleges-india" element={<Top50PrivateCollegesPage />} />

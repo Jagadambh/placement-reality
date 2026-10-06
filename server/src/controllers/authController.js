@@ -2,6 +2,10 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const College = require('../models/College');
 const VerificationEvidence = require('../models/VerificationEvidence');
+const Offer = require('../models/Offer');
+const CollegeReview = require('../models/CollegeReview');
+const PlacementSeason = require('../models/PlacementSeason');
+const Notification = require('../models/Notification');
 const { signToken } = require('../utils/jwt');
 const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { recordAuditLog } = require('../services/auditService');
@@ -121,6 +125,7 @@ const login = async (req, res, next) => {
           collegeVerificationRejectionReason: user.collegeVerificationRejectionReason,
           collegeVerificationDocument: user.collegeVerificationDocument,
           pseudonym: user.pseudonym,
+          mustChangePassword: user.mustChangePassword || false,
         },
         token,
       },
@@ -347,6 +352,277 @@ const submitStudentIdProof = async (req, res, next) => {
   }
 };
 
+// @desc Change user password (authenticated)
+// @route POST /api/auth/change-password
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!newPassword || newPassword.length < 8) {
+      return sendError(res, 'New password must be at least 8 characters long.', 400);
+    }
+
+    const user = await User.findById(req.user._id).select('+passwordHash');
+    if (!user) {
+      return sendError(res, 'User profile not found.', 404);
+    }
+
+    // If user is not flagged with mustChangePassword, check current password
+    if (currentPassword) {
+      const isMatch = await user.comparePassword(currentPassword);
+      if (!isMatch) {
+        return sendError(res, 'Current temporary password is incorrect.', 400);
+      }
+    } else if (!user.mustChangePassword) {
+      return sendError(res, 'Current password is required to change password.', 400);
+    }
+
+    user.passwordHash = newPassword;
+    user.mustChangePassword = false;
+    await user.save();
+
+    await recordAuditLog({
+      actionType: 'STATUS_CHANGE',
+      entityType: 'User',
+      entityId: user._id,
+      performedBy: user._id,
+      performedByEmail: user.email,
+      performedByRole: user.role,
+      changeReason: 'User changed password / completed mandatory initial password change',
+      newValues: { mustChangePassword: false },
+    });
+
+    const refreshedUser = await User.findById(user._id)
+      .populate('collegeId', 'name shortName tierClassification')
+      .populate('departmentId', 'name code');
+
+    const userData = refreshedUser.toObject();
+    userData.id = refreshedUser._id;
+    userData.mustChangePassword = false;
+
+    return sendSuccess(res, { user: userData }, 'Password successfully changed! You now have full access.');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc Unified Student Join & Verification Submission (College ID + Offer Letter)
+// @route POST /api/auth/student-join-submit
+const studentJoinSubmit = async (req, res, next) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      collegeId,
+      departmentId,
+      departmentName,
+      graduationYear,
+      academicSession = '2026-2027',
+      degree = 'B.Tech',
+      isPseudonymous = true,
+      privacyConsent = true,
+      placementStatus = 'placed',
+      companyName,
+      jobRole,
+      annualCtcLpa,
+      fixedCompensationLpa,
+      offerType = 'On-Campus Full-Time',
+      rating,
+      comment,
+    } = req.body;
+
+    if (!name || !email || !collegeId) {
+      return sendError(res, 'Please provide student name, email, and select your college.', 400);
+    }
+
+    // Require ID Proof file
+    const idProofFile = req.files?.['idProofDocument']?.[0];
+    if (!idProofFile) {
+      return sendError(res, 'A valid College ID Card or enrollment proof document is required for verification.', 400);
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    let user = await User.findOne({ email: cleanEmail }).select('+passwordHash');
+
+    if (user) {
+      // If user exists, verify password if provided
+      if (password) {
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+          return sendError(res, 'An account with this email exists. Please enter the correct password to submit new proof.', 401);
+        }
+      }
+      user.collegeId = collegeId;
+      if (departmentId) user.departmentId = departmentId;
+      if (graduationYear) user.graduationYear = parseInt(graduationYear, 10);
+      user.collegeVerificationStatus = 'pending';
+    } else {
+      if (!password || password.length < 6) {
+        return sendError(res, 'Password is required and must be at least 6 characters long.', 400);
+      }
+      user = new User({
+        name: name.trim(),
+        email: cleanEmail,
+        passwordHash: password,
+        role: 'student',
+        collegeId,
+        departmentId: departmentId || null,
+        graduationYear: graduationYear ? parseInt(graduationYear, 10) : 2026,
+        isCollegeVerified: false,
+        collegeVerificationStatus: 'pending',
+        isEmailVerified: true,
+        privacyConsent: privacyConsent !== false && privacyConsent !== 'false',
+      });
+    }
+
+    // 1. Create College ID Proof Evidence
+    const idEvidence = await VerificationEvidence.create({
+      studentId: user._id,
+      documentType: 'College ID Card',
+      filePath: idProofFile.path,
+      originalFileName: idProofFile.originalname,
+      mimeType: idProofFile.mimetype,
+      fileSize: idProofFile.size,
+      verificationStatus: 'Pending',
+      reviewNotes: `Submitted during Student Join registration for session ${academicSession}`,
+    });
+
+    user.collegeVerificationDocument = idEvidence._id;
+    user.collegeVerificationStatus = 'pending';
+    await user.save();
+
+    // 2. Handle Placement Offer Submission if placed
+    let offerRecord = null;
+    let offerEvidence = null;
+    const offerLetterFile = req.files?.['offerLetterDocument']?.[0];
+
+    if (placementStatus === 'placed' && companyName && annualCtcLpa) {
+      if (offerLetterFile) {
+        offerEvidence = await VerificationEvidence.create({
+          studentId: user._id,
+          documentType: 'Offer Letter',
+          filePath: offerLetterFile.path,
+          originalFileName: offerLetterFile.originalname,
+          mimeType: offerLetterFile.mimetype,
+          fileSize: offerLetterFile.size,
+          verificationStatus: 'Pending',
+          reviewNotes: `Offer letter for ${companyName} (${annualCtcLpa} LPA)`,
+        });
+      }
+
+      // Check or create season
+      const cleanSession = academicSession.includes('–') ? academicSession.replace('–', '-') : academicSession;
+      let season = await PlacementSeason.findOne({ collegeId, academicYear: cleanSession });
+      if (!season) {
+        try {
+          season = await PlacementSeason.create({
+            collegeId,
+            academicYear: cleanSession,
+            displaySession: academicSession,
+            seasonStatus: 'Ongoing',
+          });
+        } catch (_) {}
+      }
+
+      offerRecord = await Offer.create({
+        studentId: user._id,
+        collegeId,
+        departmentId: departmentId || null,
+        seasonId: season ? season._id : null,
+        graduationYear: user.graduationYear || 2026,
+        companyName: companyName.trim(),
+        jobRole: (jobRole || 'Graduate Engineer Trainee').trim(),
+        offerDate: new Date(),
+        annualCtcLpa: parseFloat(annualCtcLpa),
+        fixedCompensationLpa: fixedCompensationLpa ? parseFloat(fixedCompensationLpa) : null,
+        offerType: offerType || 'On-Campus Full-Time',
+        acceptedOffer: 'Yes',
+        joinedCompany: 'Yet to Join',
+        supportingDocument: offerEvidence ? offerEvidence._id : null,
+        verificationStatus: 'Pending',
+        consentToAggregate: true,
+      });
+
+      if (offerEvidence) {
+        offerEvidence.offerId = offerRecord._id;
+        await offerEvidence.save();
+      }
+    }
+
+    // 3. Handle Student Review / Transparent Comment if provided
+    let reviewRecord = null;
+    if (comment && comment.trim().length >= 10) {
+      try {
+        const ratingVal = Math.min(5, Math.max(1, parseInt(rating, 10) || 4));
+        reviewRecord = await CollegeReview.create({
+          collegeId,
+          studentId: user._id,
+          graduationYear: user.graduationYear || 2026,
+          branch: departmentName || 'Engineering & Technology',
+          authorDisplayName: (isPseudonymous === true || isPseudonymous === 'true') ? user.pseudonym : user.name,
+          isPseudonymous: isPseudonymous === true || isPseudonymous === 'true',
+          isVerifiedStudentBadge: true,
+          verificationProofType: 'College ID Card & Offer Verified',
+          title: companyName ? `Placement Experience at ${companyName}` : 'Student Placement Reality Feedback',
+          reviewText: comment.trim(),
+          ratings: {
+            placementSupport: ratingVal,
+            internshipSupport: ratingVal,
+            teachingAcademics: 4,
+            infrastructure: 4,
+            campusExperience: 4,
+            careerPrep: 4,
+          },
+          overallRating: ratingVal,
+          moderationStatus: 'Approved',
+        });
+      } catch (revErr) {
+        console.warn('[Join Us] Review creation error (non-fatal):', revErr.message);
+      }
+    }
+
+    // 4. Create Notification
+    try {
+      await Notification.create({
+        userId: user._id,
+        title: 'Verification Proofs Received',
+        message: 'Your College ID Card and placement documents have been submitted to the Lead Verifier (placement.reality1@gmail.com). You will be notified once reviewed.',
+        type: 'Verification Update',
+      });
+    } catch (_) {}
+
+    // 5. Generate Token and return
+    const token = signToken({ id: user._id, role: user.role });
+
+    const populatedUser = await User.findById(user._id)
+      .populate('collegeId', 'name shortName tierClassification city state')
+      .populate('departmentId', 'name code')
+      .populate('collegeVerificationDocument');
+
+    const userData = populatedUser.toObject();
+    userData.id = populatedUser._id;
+    userData.mustChangePassword = false;
+
+    return sendSuccess(
+      res,
+      {
+        user: userData,
+        token,
+        evidence: {
+          idProofId: idEvidence._id,
+          offerProofId: offerEvidence ? offerEvidence._id : null,
+          offerId: offerRecord ? offerRecord._id : null,
+        },
+      },
+      'Verification documents submitted successfully! Your credentials have been queued for the Lead Verifier.',
+      201
+    );
+  } catch (error) {
+    console.error('[Student Join Submit Error]', error);
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -356,4 +632,7 @@ module.exports = {
   verifyEmail,
   updateProfile,
   submitStudentIdProof,
+  changePassword,
+  studentJoinSubmit,
 };
+
