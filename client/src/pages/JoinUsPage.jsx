@@ -353,29 +353,6 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
               </div>
             ) : (
               <form onSubmit={handleStudentSubmit} className="space-y-8">
-                {/* Notice Banner */}
-                <div className="space-y-3">
-                  <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 flex items-start gap-3 text-xs text-blue-900">
-                    <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-bold text-blue-950">Strict Evidence Verification Protocol</h4>
-                      <p className="text-blue-800 mt-0.5 leading-relaxed">
-                        Only currently enrolled students and verified alumni can submit records. All College IDs and Offer Letters are encrypted and reviewed strictly by the Lead Verifier (<code>placement.reality1@gmail.com</code>). Personal documents are never published.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-3.5 flex items-start gap-3 text-xs text-amber-900">
-                    <Mail className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-bold text-amber-950">Mandatory Official College Email Requirement</h4>
-                      <p className="text-amber-800 mt-0.5 leading-relaxed">
-                        Registration is strictly restricted to official college-issued email IDs (e.g. <code>rollno@kiit.ac.in</code>, <code>student@college.edu.in</code>). Personal webmail addresses (Gmail, Yahoo, Outlook, etc.) are strictly not accepted.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
                 {submitError && (
                   <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5">
                     <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-600" />
@@ -436,7 +413,7 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
                             setEmailValidation(validateCollegeEmail(formData.email, selCollege));
                           }
                         }}
-                        placeholder="e.g. 2405114@kiit.ac.in or student@college.edu.in"
+                        placeholder="student@college.edu.in"
                         className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:outline-none transition-colors ${
                           emailValidation
                             ? emailValidation.isValid
@@ -445,32 +422,17 @@ export const JoinUsPage = ({ initialTab = 'join' }) => {
                             : 'border-slate-300 focus:ring-brand-primary'
                         }`}
                       />
+                      {emailValidation && (
+                        <p
+                          className={`text-[11px] mt-1.5 font-medium flex items-center gap-1 ${
+                            emailValidation.isValid ? 'text-emerald-600' : 'text-rose-600'
+                          }`}
+                        >
+                          {emailValidation.isValid ? '✓ ' : '❌ '}
+                          {emailValidation.message}
+                        </p>
+                      )}
                     </div>
-
-                    {emailValidation && (
-                      <div className="sm:col-span-2">
-                        {emailValidation.isValid ? (
-                          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                            <span className="font-semibold">{emailValidation.message}</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs">
-                            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-                            <div>
-                              <p className="font-bold text-rose-900">
-                                {emailValidation.isPersonal
-                                  ? 'Personal Email Detected — Not Allowed'
-                                  : 'Official College Email Required'}
-                              </p>
-                              <p className="text-[11px] text-rose-700 mt-0.5 leading-relaxed font-medium">
-                                {emailValidation.message}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
 
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-semibold text-slate-700 mb-1">

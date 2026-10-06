@@ -79,8 +79,7 @@ export function validateCollegeEmail(email, collegeOrDomain = null) {
     return {
       isValid: false,
       isPersonal: true,
-      message:
-        'Personal email addresses (Gmail, Yahoo, Outlook, etc.) are strictly not accepted. Please enter your official college-provided email ID (e.g. rollno@kiit.ac.in, student@college.edu.in).',
+      message: 'Please enter your college mail ID, no personal mail accepted.',
     };
   }
 
@@ -122,7 +121,7 @@ export function validateCollegeEmail(email, collegeOrDomain = null) {
     return {
       isValid: true,
       isPersonal: false,
-      message: 'Verified official college institutional email ID.',
+      message: 'Verified official college email ID.',
     };
   }
 
@@ -130,7 +129,6 @@ export function validateCollegeEmail(email, collegeOrDomain = null) {
   return {
     isValid: false,
     isPersonal: false,
-    message:
-      'Only official college email IDs (ending with .ac.in, .edu, .edu.in, or your institution domain) are accepted. Personal and non-college emails are not permitted.',
+    message: 'Please enter your college mail ID, no personal mail accepted.',
   };
 }
