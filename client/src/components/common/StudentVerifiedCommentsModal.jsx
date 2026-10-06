@@ -208,13 +208,6 @@ export const StudentVerifiedCommentsModal = ({
 
       setReviews((prev) => [newReview, ...prev]);
 
-      if (formMedianLPA) {
-        setStudentStats((prev) => ({
-          ...prev,
-          medianPackageLPA: parseFloat(formMedianLPA),
-        }));
-      }
-
       if (onReviewSubmitted) onReviewSubmitted(newReview);
     } catch (err) {
       // Local fallback submission if offline

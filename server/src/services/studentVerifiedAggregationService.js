@@ -215,7 +215,8 @@ async function calculatePlacementStatistics({
     moderationStatus: 'Approved',
     isDeleted: { $ne: true },
     $or: [
-      { graduationYear: gradYearNum },
+      { seasonId: { $in: matchingSeasonIds } },
+      { graduationYear: { $in: [gradYearNum, gradYearNum - 1] } },
       { graduationYear: { $exists: false } },
       { graduationYear: null },
     ],

@@ -453,6 +453,7 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
     };
   }
 
+  const hasVerifiedRecords = Boolean(verifiedData && verifiedData.available);
   if (!hasVerifiedRecords) {
     const verifiedPlacementRecord = await PlacementRecord.findOne({
       collegeId,

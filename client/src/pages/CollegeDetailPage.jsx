@@ -243,22 +243,11 @@ export const CollegeDetailPage = () => {
 
       setVerifiedReviews((prev) => [newReview, ...prev]);
 
-      if (payload.reportedStats.medianPackageLPA || payload.reportedStats.averagePackageLPA) {
-        setStudentStats((prev) => ({
-          ...prev,
-          hasEnoughData: true,
-          emptyStateMessage: null,
-          medianPackageLPA: payload.reportedStats.medianPackageLPA || prev?.medianPackageLPA,
-          averagePackageLPA: payload.reportedStats.averagePackageLPA || prev?.averagePackageLPA,
-          highestPackageLPA: Math.max(prev?.highestPackageLPA || 0, payload.reportedStats.highestPackageLPA || 0),
-          actualPlacementRate: payload.reportedStats.actualPlacementRate || prev?.actualPlacementRate,
-          observedPlacementRate: payload.reportedStats.actualPlacementRate || prev?.observedPlacementRate,
-          sampleSize: (prev?.verifiedStudentOutcomes || 0) + 1,
-          verifiedStudentOutcomes: (prev?.verifiedStudentOutcomes || 0) + 1,
-          verifiedPackageRecords: (prev?.verifiedPackageRecords || 0) + 1,
-          placedVerifiedStudents: (prev?.placedVerifiedStudents || 0) + 1,
-          verifiedReviewsCount: (prev?.verifiedReviewsCount || 0) + 1,
-        }));
+      // Immediately re-fetch verified intelligence and season data to calculate true mathematical aggregate
+      const cid = collegeData.college?._id || collegeId;
+      await fetchStudentReviews(cid, collegeData.college);
+      if (selectedSeasonId) {
+        await loadSeasonData(cid, selectedSeasonId);
       }
     } catch (err) {
       console.error('[Submit Review Error]', err);
@@ -2115,8 +2104,11 @@ export const CollegeDetailPage = () => {
           isOpen={isVerifiedModalOpen}
           onClose={() => setIsVerifiedModalOpen(false)}
           college={college}
-          onReviewSubmitted={() => {
-            fetchStudentReviews(college._id || slugOrId, college);
+          onReviewSubmitted={async () => {
+            await fetchStudentReviews(college?._id || slugOrId, college);
+            if (selectedSeasonId) {
+              await loadSeasonData(college?._id || slugOrId, selectedSeasonId);
+            }
           }}
         />
       )}
