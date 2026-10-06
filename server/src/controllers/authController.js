@@ -199,10 +199,16 @@ const forgotPassword = async (req, res, next) => {
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
-      // Don't leak user existence for security
+      // Don't leak user existence in production for security, but provide helpful dev feedback
       return sendSuccess(
         res,
-        null,
+        {
+          userExists: false,
+          searchedEmail: email,
+          hint: process.env.NODE_ENV !== 'production'
+            ? 'Account not found in database. Student accounts require registered college emails (e.g. 24051174@kiit.ac.in).'
+            : undefined,
+        },
         'If an account exists with that email, a password reset link has been dispatched.'
       );
     }
@@ -233,8 +239,10 @@ const forgotPassword = async (req, res, next) => {
     return sendSuccess(
       res,
       {
+        userExists: true,
         email: user.email,
         resetToken: process.env.NODE_ENV !== 'production' ? resetToken : undefined,
+        smtpConfigured: emailService.isSmtpConfigured(),
         expiresAt: user.passwordResetExpires,
       },
       'A secure password reset link has been dispatched to your email address.'

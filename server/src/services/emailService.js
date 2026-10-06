@@ -223,7 +223,9 @@ async function sendEmailVerificationEmail({ to, name = 'Student', verifyUrl, ver
 
 module.exports = {
   getTransporter,
+  isSmtpConfigured: () => Boolean(process.env.SMTP_USER && process.env.SMTP_PASS),
   sendPasswordResetEmail,
   sendPasswordResetSuccessEmail,
   sendEmailVerificationEmail,
 };
+
