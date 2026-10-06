@@ -121,6 +121,8 @@ async function autoBootstrapDatabase(force = false) {
         };
         await c.save();
       }
+    }
+
     // 6. Ensure Lead Verifier account exists
     const verifierEmail = (process.env.VERIFIER_EMAIL || 'placement.reality1@gmail.com').trim().toLowerCase();
     const existingVerifier = await User.findOne({ email: verifierEmail });

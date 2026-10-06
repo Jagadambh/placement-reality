@@ -516,7 +516,6 @@ async function seedVerifiedStudentReportsAndReviews() {
         lastUpdated: new Date(),
       };
       await c.save();
-    }
 
       // Also create a sample verified review for this college
       const sampleReview = await CollegeReview.findOne({ collegeId: c._id });
