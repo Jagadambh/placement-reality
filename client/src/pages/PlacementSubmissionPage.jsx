@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { collegeApi } from '../api/collegeApi';
 import { offerApi } from '../api/offerApi';
@@ -6,6 +7,7 @@ import { DataBadge } from '../components/common/DataBadge';
 import {
   FileCheck2,
   ShieldCheck,
+  ShieldAlert,
   AlertCircle,
   CheckCircle2,
   UploadCloud,
@@ -190,6 +192,33 @@ export const PlacementSubmissionPage = () => {
               <span>Identity Protected</span>
             </span>
           </div>
+
+          {user?.collegeVerificationStatus === 'rejected' && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-rose-50 border border-rose-200 text-xs space-y-2.5">
+              <div className="flex items-center gap-2 font-bold text-rose-950 text-sm">
+                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>Notice: College ID Verification Rejected</span>
+              </div>
+              <div className="text-rose-800 space-y-1 leading-relaxed">
+                <p>
+                  <strong>Feedback from Lead Verifier:</strong>{' '}
+                  {user.collegeVerificationRejectionReason || 'The uploaded student credentials did not meet institutional standards.'}
+                </p>
+                <p className="text-[11px] text-rose-700">
+                  Moderators only approve offer letters for <strong>document-verified students</strong>. Unverified submissions cannot be included in public placement analytics.
+                </p>
+              </div>
+              <div className="pt-0.5">
+                <Link
+                  to="/profile"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-xs"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Update ID Proof in Profile</span>
+                </Link>
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5">

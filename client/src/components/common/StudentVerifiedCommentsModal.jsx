@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import {
   X,
   ShieldCheck,
@@ -18,6 +20,7 @@ import {
   GraduationCap,
   Send,
   Sparkles,
+  ShieldAlert,
 } from 'lucide-react';
 import { reviewApi } from '../../api/reviewApi';
 import { collegeApi } from '../../api/collegeApi';
@@ -44,6 +47,7 @@ export const StudentVerifiedCommentsModal = ({
   college,
   onReviewSubmitted,
 }) => {
+  const { user } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [studentStats, setStudentStats] = useState(null);
   const [categoryAverages, setCategoryAverages] = useState(null);
@@ -52,6 +56,7 @@ export const StudentVerifiedCommentsModal = ({
   const [showMethodologyModal, setShowMethodologyModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submissionError, setSubmissionError] = useState('');
 
   // Submission Form State
   const [formBranch, setFormBranch] = useState('Computer Science & Engineering');
@@ -257,7 +262,20 @@ export const StudentVerifiedCommentsModal = ({
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+    setSubmissionError('');
     if (!formReviewText.trim() || !formTitle.trim()) return;
+
+    if (!user) {
+      setSubmissionError('Please sign in to submit a review.');
+      return;
+    }
+
+    if (!user.isCollegeVerified || user.collegeVerificationStatus !== 'verified') {
+      setSubmissionError(
+        'Only document-verified students can publish reviews and placement metrics under Verified Student Comments. Please verify your student ID in your profile first.'
+      );
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -297,104 +315,37 @@ export const StudentVerifiedCommentsModal = ({
       setSubmitSuccess(true);
       setShowSubmitForm(false);
 
-      const newReview = res.data?.data?.review || {
-        _id: 'local-' + Date.now(),
-        title: formTitle,
-        reviewText: formReviewText,
-        pros: formPros,
-        cons: formCons,
-        branch: formBranch,
-        graduationYear: parseInt(formYear, 10),
-        authorDisplayName: `${formBranch.split(' ')[0]} Verified Senior`,
-        isVerifiedStudentBadge: true,
-        verificationProofType: 'Student Roll ID & Institutional Email Verified',
-        overallRating: formOverallRating,
-        ratings: payload.ratings,
-        reportedStats: payload.reportedStats,
-        createdAt: new Date().toISOString(),
-      };
+      if (res.data?.data?.review) {
+        const newReview = res.data.data.review;
+        const updatedReviews = [newReview, ...reviews];
+        setReviews(updatedReviews);
 
-      const updatedReviews = [newReview, ...reviews];
-      setReviews(updatedReviews);
+        // Re-aggregate studentStats live from verified reviews
+        const medians = updatedReviews.map((r) => r.reportedStats?.medianPackageLPA).filter((v) => v != null);
+        const avgs = updatedReviews.map((r) => r.reportedStats?.averagePackageLPA).filter((v) => v != null);
+        const highests = updatedReviews.map((r) => r.reportedStats?.highestPackageLPA).filter((v) => v != null);
+        const rates = updatedReviews.map((r) => r.reportedStats?.actualPlacementRate).filter((v) => v != null);
 
-      // Re-aggregate studentStats live so the 4 boxes update immediately!
-      const medians = updatedReviews.map((r) => r.reportedStats?.medianPackageLPA).filter((v) => v != null);
-      const avgs = updatedReviews.map((r) => r.reportedStats?.averagePackageLPA).filter((v) => v != null);
-      const highests = updatedReviews.map((r) => r.reportedStats?.highestPackageLPA).filter((v) => v != null);
-      const rates = updatedReviews.map((r) => r.reportedStats?.actualPlacementRate).filter((v) => v != null);
+        setStudentStats((prev) => ({
+          ...prev,
+          hasEnoughData: true,
+          sampleSize: updatedReviews.length,
+          verifiedStudentOutcomes: updatedReviews.length,
+          verifiedPackageRecords: Math.max(prev?.verifiedPackageRecords || 0, updatedReviews.length),
+          medianPackageLPA: medians.length > 0 ? calcMedian(medians) : parsedMedian,
+          averagePackageLPA: avgs.length > 0 ? calcAvg(avgs) : parsedAvg,
+          highestPackageLPA: highests.length > 0 ? Math.max(...highests) : parsedHighest,
+          actualPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
+          observedPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
+          isLowSample: updatedReviews.length < 10,
+        }));
 
-      setStudentStats((prev) => ({
-        ...prev,
-        hasEnoughData: true,
-        sampleSize: updatedReviews.length,
-        verifiedStudentOutcomes: updatedReviews.length,
-        verifiedPackageRecords: Math.max(prev?.verifiedPackageRecords || 0, updatedReviews.length),
-        medianPackageLPA: medians.length > 0 ? calcMedian(medians) : parsedMedian,
-        averagePackageLPA: avgs.length > 0 ? calcAvg(avgs) : parsedAvg,
-        highestPackageLPA: highests.length > 0 ? Math.max(...highests) : parsedHighest,
-        actualPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
-        observedPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
-        isLowSample: updatedReviews.length < 10,
-      }));
-
-      if (onReviewSubmitted) onReviewSubmitted(newReview);
+        if (onReviewSubmitted) onReviewSubmitted(newReview);
+      }
     } catch (err) {
-      // Local fallback submission if offline
-      const parsedMedian = formMedianLPA ? parseFloat(formMedianLPA) : (studentStats?.medianPackageLPA || null);
-      const parsedAvg = formAvgLPA ? parseFloat(formAvgLPA) : (studentStats?.averagePackageLPA || null);
-      const parsedHighest = formHighestLPA ? parseFloat(formHighestLPA) : (studentStats?.highestPackageLPA || null);
-      const parsedRate = formPlacementRate ? parseFloat(formPlacementRate) : (studentStats?.actualPlacementRate || null);
-
-      const localReview = {
-        _id: 'local-' + Date.now(),
-        title: formTitle,
-        reviewText: formReviewText,
-        pros: formPros,
-        cons: formCons,
-        branch: formBranch,
-        graduationYear: parseInt(formYear, 10),
-        authorDisplayName: `${formBranch.split(' ')[0]} Verified Senior`,
-        isVerifiedStudentBadge: true,
-        verificationProofType: 'Student Roll ID Verified',
-        overallRating: formOverallRating,
-        ratings: {
-          placementSupport: formRatingPlacement || formOverallRating,
-          internshipSupport: formRatingInternship || formOverallRating,
-          teachingAcademics: formRatingAcademics || formOverallRating,
-        },
-        reportedStats: {
-          medianPackageLPA: parsedMedian,
-          averagePackageLPA: parsedAvg,
-          highestPackageLPA: parsedHighest,
-          actualPlacementRate: parsedRate,
-        },
-        createdAt: new Date().toISOString(),
-      };
-
-      const updatedReviews = [localReview, ...reviews];
-      setReviews(updatedReviews);
-
-      const medians = updatedReviews.map((r) => r.reportedStats?.medianPackageLPA).filter((v) => v != null);
-      const avgs = updatedReviews.map((r) => r.reportedStats?.averagePackageLPA).filter((v) => v != null);
-      const highests = updatedReviews.map((r) => r.reportedStats?.highestPackageLPA).filter((v) => v != null);
-      const rates = updatedReviews.map((r) => r.reportedStats?.actualPlacementRate).filter((v) => v != null);
-
-      setStudentStats((prev) => ({
-        ...prev,
-        hasEnoughData: true,
-        sampleSize: updatedReviews.length,
-        verifiedStudentOutcomes: updatedReviews.length,
-        verifiedPackageRecords: Math.max(prev?.verifiedPackageRecords || 0, updatedReviews.length),
-        medianPackageLPA: medians.length > 0 ? calcMedian(medians) : parsedMedian,
-        averagePackageLPA: avgs.length > 0 ? calcAvg(avgs) : parsedAvg,
-        highestPackageLPA: highests.length > 0 ? Math.max(...highests) : parsedHighest,
-        actualPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
-        observedPlacementRate: rates.length > 0 ? calcAvg(rates) : parsedRate,
-        isLowSample: updatedReviews.length < 10,
-      }));
-
-      setSubmitSuccess(true);
-      setShowSubmitForm(false);
+      setSubmissionError(
+        err.response?.data?.message || err.message || 'Submission failed. Only document-verified students can contribute.'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -619,20 +570,88 @@ export const StudentVerifiedCommentsModal = ({
             </button>
           </div>
 
-          {/* SUBMISSION FORM (COLLAPSIBLE) */}
-          {showSubmitForm && (
+          {/* SUBMISSION FORM (COLLAPSIBLE WITH VERIFICATION GATE) */}
+          {showSubmitForm && !user && (
+            <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm space-y-3 text-xs animate-in fade-in duration-200">
+              <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                <AlertCircle className="w-4 h-4 text-brand-primary" />
+                <span>Sign In Required</span>
+              </div>
+              <p className="text-slate-600 leading-relaxed">
+                You must be logged in with a verified institutional student account to publish verified reviews and ground-truth metrics.
+              </p>
+              <div>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-primary hover:bg-navy-800 text-white font-bold rounded-xl text-xs transition"
+                >
+                  <span>Sign In / Register</span>
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {showSubmitForm && user && (!user.isCollegeVerified || user.collegeVerificationStatus !== 'verified') && (
+            <div className="p-5 sm:p-6 rounded-2xl bg-rose-50 border border-rose-200 shadow-sm space-y-3 text-xs animate-in fade-in duration-200">
+              <div className="flex items-center gap-2 font-bold text-rose-950 text-sm">
+                <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0" />
+                <span>Student Verification Required</span>
+              </div>
+              <div className="text-rose-800 space-y-2 leading-relaxed">
+                <p>
+                  Your student affiliation status is currently:{' '}
+                  <strong className="uppercase px-2 py-0.5 rounded bg-rose-200 text-rose-900 font-bold">
+                    {user.collegeVerificationStatus || 'Unverified'}
+                  </strong>.
+                </p>
+                {user.collegeVerificationStatus === 'rejected' && (
+                  <div className="p-3 bg-white/90 rounded-xl border border-rose-200 text-rose-900 text-xs">
+                    <strong>Feedback from Lead Verifier:</strong>{' '}
+                    <span>{user.collegeVerificationRejectionReason || 'The submitted student credentials did not meet institutional standards.'}</span>
+                  </div>
+                )}
+                <p className="text-[11px] text-rose-700">
+                  To protect public placement integrity, only <strong>document-verified students</strong> can publish comments under <em>Verified Student Comments</em> and contribute to college placement statistics.
+                </p>
+              </div>
+              <div className="pt-1">
+                <Link
+                  to="/profile"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-xs"
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Verify Student ID in Profile</span>
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {showSubmitForm && user && user.isCollegeVerified && user.collegeVerificationStatus === 'verified' && (
             <form
               onSubmit={handleSubmitReview}
               className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm space-y-4 animate-in fade-in duration-200 text-xs"
             >
               <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                <span className="font-bold text-slate-800 text-sm">
-                  Report Student Verified Placement Reality
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-slate-800 text-sm">
+                    Report Student Verified Placement Reality
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                    Verified Student
+                  </span>
+                </div>
                 <span className="text-[11px] text-slate-500">
                   Submissions are confidential & roll-verified
                 </span>
               </div>
+
+              {submissionError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{submissionError}</span>
+                </div>
+              )}
 
               {/* OVERALL STAR RATING PICKER (PROVIDED BY STUDENT) */}
               <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200/90 space-y-2">

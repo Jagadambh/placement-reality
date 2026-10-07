@@ -43,8 +43,13 @@ const getCollegeReviews = async (req, res, next) => {
       .skip(skip)
       .limit(parseInt(limit));
 
-    // Calculate aggregated category score averages & verified placement stats
-    const allApproved = await CollegeReview.find({ collegeId: targetCollegeId, moderationStatus: 'Approved', isDeleted: false });
+    // Calculate aggregated category score averages & verified placement stats (STRICTLY FROM VERIFIED REVIEWS ONLY)
+    const allApproved = await CollegeReview.find({
+      collegeId: targetCollegeId,
+      moderationStatus: 'Approved',
+      isVerifiedStudentBadge: true,
+      isDeleted: false,
+    });
     const categoryAverages = {
       overall: 0,
       placementSupport: 0,
@@ -155,6 +160,18 @@ const submitReview = async (req, res, next) => {
     }
 
     const user = req.user ? await User.findById(req.user._id) : null;
+    if (!user) {
+      return sendError(res, 'Authentication required to post reviews.', 401);
+    }
+
+    // STRICT VERIFICATION CHECK: Only document-verified students can publish to Verified Student Comments
+    if (!user.isCollegeVerified || user.collegeVerificationStatus !== 'verified') {
+      return sendError(
+        res,
+        'Only document-verified students can publish reviews and placement metrics under Verified Student Comments. Please upload your student ID in your profile first.',
+        403
+      );
+    }
 
     // Spam / Quality check
     let moderationStatus = 'Approved';
@@ -211,10 +228,15 @@ const submitReview = async (req, res, next) => {
       flaggedReasons,
     });
 
-    // Update College.studentVerifiedStats
+    // Update College.studentVerifiedStats (STRICTLY FROM VERIFIED REVIEWS ONLY)
     const college = await College.findById(targetCollegeId);
     if (college) {
-      const allApproved = await CollegeReview.find({ collegeId: targetCollegeId, moderationStatus: 'Approved', isDeleted: false });
+      const allApproved = await CollegeReview.find({
+        collegeId: targetCollegeId,
+        moderationStatus: 'Approved',
+        isVerifiedStudentBadge: true,
+        isDeleted: false,
+      });
       const medians = allApproved.map(r => r.reportedStats?.medianPackageLPA).filter(Boolean);
       const avgs = allApproved.map(r => r.reportedStats?.averagePackageLPA).filter(Boolean);
       const highests = allApproved.map(r => r.reportedStats?.highestPackageLPA).filter(Boolean);
