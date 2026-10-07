@@ -123,6 +123,14 @@ export const PlacementSubmissionPage = () => {
     e.preventDefault();
     setError('');
     setMessage(null);
+
+    if (user?.collegeVerificationStatus === 'rejected') {
+      setError(
+        'Offer submissions are locked because your student ID verification was rejected by the moderation team. Please re-upload valid credentials in your profile first.'
+      );
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -193,53 +201,65 @@ export const PlacementSubmissionPage = () => {
             </span>
           </div>
 
-          {user?.collegeVerificationStatus === 'rejected' && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-rose-50 border border-rose-200 text-xs space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-rose-950 text-sm">
-                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
-                <span>Notice: College ID Verification Rejected</span>
+          {user?.collegeVerificationStatus === 'rejected' ? (
+            <div className="p-8 sm:p-10 rounded-3xl bg-rose-50/80 border-2 border-rose-200 text-center space-y-5 animate-in fade-in duration-200">
+              <div className="w-16 h-16 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto shadow-inner">
+                <ShieldAlert className="w-8 h-8" />
               </div>
-              <div className="text-rose-800 space-y-1 leading-relaxed">
-                <p>
-                  <strong>Feedback from Lead Verifier:</strong>{' '}
-                  {user.collegeVerificationRejectionReason || 'The uploaded student credentials did not meet institutional standards.'}
+              <div className="space-y-2.5 max-w-lg mx-auto">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-200/80 text-rose-900 text-xs font-bold">
+                  <span>Verification Rejected</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-rose-950">
+                  Offer Submissions Locked
+                </h3>
+                <p className="text-xs sm:text-sm text-rose-800 leading-relaxed">
+                  Your student college affiliation verification was reviewed and <strong>rejected</strong> by the Lead Verifier. Because your verification was not approved, you cannot submit placement offers.
                 </p>
-                <p className="text-[11px] text-rose-700">
-                  Moderators only approve offer letters for <strong>document-verified students</strong>. Unverified submissions cannot be included in public placement analytics.
+                {user.collegeVerificationRejectionReason && (
+                  <div className="p-4 bg-white rounded-2xl border border-rose-200 text-xs text-rose-900 font-medium text-left shadow-2xs space-y-1">
+                    <span className="font-bold block text-rose-700 text-[10px] uppercase tracking-wider">
+                      Feedback from Lead Verifier:
+                    </span>
+                    <p className="font-semibold text-rose-950">"{user.collegeVerificationRejectionReason}"</p>
+                  </div>
+                )}
+                <p className="text-xs text-slate-600 pt-1 leading-relaxed">
+                  To protect public placement data integrity, direct offer submissions are restricted to document-verified students. Please update and re-upload your official College ID card, bonafide certificate, or admission letter on your profile.
                 </p>
               </div>
-              <div className="pt-0.5">
+              <div className="pt-2">
                 <Link
                   to="/profile"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-xs"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-sm"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Update ID Proof in Profile</span>
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Update & Re-verify ID in Profile</span>
                 </Link>
               </div>
             </div>
-          )}
+          ) : (
+            <>
+              {error && (
+                <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              )}
 
-          {error && (
-            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>{error}</span>
-            </div>
-          )}
+              {message && (
+                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>{message}</span>
+                </div>
+              )}
 
-          {message && (
-            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span>{message}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* College & Department */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-semibold text-slate-700">College</label>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* College & Department */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-semibold text-slate-700">College</label>
                   <button
                     type="button"
                     onClick={() => setIsAddCollegeModalOpen(true)}
@@ -478,7 +498,9 @@ export const PlacementSubmissionPage = () => {
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
-        </div>
+        </>
+      )}
+    </div>
 
         {/* SIDEBAR: MY SUBMISSIONS & VERIFICATION STATUS */}
         <div className="space-y-6">

@@ -50,6 +50,24 @@ const submitOffer = async (req, res, next) => {
       consentToAggregate,
     } = req.body;
 
+    // Fetch latest user state to ensure real-time verification accuracy
+    const currentUser = await User.findById(req.user._id);
+    if (!currentUser) {
+      return sendError(res, 'User account not found.', 404);
+    }
+
+    // STRICT CHECK: Block offer submission if student ID verification was rejected by admin
+    if (currentUser.collegeVerificationStatus === 'rejected') {
+      const reasonSuffix = currentUser.collegeVerificationRejectionReason
+        ? ` Reason: "${currentUser.collegeVerificationRejectionReason}".`
+        : '';
+      return sendError(
+        res,
+        `Your student ID verification was rejected by the lead verifier.${reasonSuffix} You cannot submit placement offers directly until you re-upload valid institutional credentials in your profile and get verified.`,
+        403
+      );
+    }
+
     if (consentToAggregate === false || consentToAggregate === 'false') {
       return sendError(res, 'Consent to use submission in statistical models is required for transparency.', 400);
     }
