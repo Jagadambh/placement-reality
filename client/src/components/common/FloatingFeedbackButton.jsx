@@ -20,9 +20,6 @@ export const FloatingFeedbackButton = () => {
       >
         <MessageSquarePlus className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
       </Link>
-      <span className="mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-900/90 backdrop-blur-xs text-[10px] font-extrabold text-white shadow-lg border border-slate-700/60 uppercase tracking-wider group-hover:bg-blue-600 transition-colors">
-        Give Feedback
-      </span>
     </aside>
   );
 };

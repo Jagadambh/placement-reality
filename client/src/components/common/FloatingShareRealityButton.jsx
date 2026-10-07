@@ -280,7 +280,7 @@ export const FloatingShareRealityButton = () => {
       {/* FLOATING ACTION BUTTON (BOTTOM-LEFT) */}
       <aside
         aria-label="Share College Reality Card"
-        className="fixed bottom-[5.5rem] left-6 z-40 flex flex-col items-center group"
+        className="fixed bottom-[7.5rem] left-6 z-40 flex flex-col items-center group"
       >
         <button
           onClick={() => setIsOpen(true)}
@@ -292,9 +292,6 @@ export const FloatingShareRealityButton = () => {
           <span className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
           <span className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full bg-amber-400 border-2 border-emerald-800"></span>
         </button>
-        <span className="mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-900/90 backdrop-blur-xs text-[10px] font-extrabold text-white shadow-lg border border-slate-700/60 uppercase tracking-wider group-hover:bg-emerald-600 transition-colors">
-          Share Reality
-        </span>
       </aside>
 
       {/* MODAL: SHARE REALITY CARD & INFOGRAPHIC */}

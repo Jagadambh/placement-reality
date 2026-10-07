@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collegeApi } from '../api/collegeApi';
 import { DataBadge } from '../components/common/DataBadge';
 import { TierBadge } from '../components/common/TierBadge';
+import { LiveCommunityRating } from '../components/common/LiveCommunityRating';
 import founderImage from '../assets/harish-sonkar.jpg';
 import { FALLBACK_TOP_50_COLLEGES, FALLBACK_CORE_COLLEGES } from '../data/fallbackData';
 import {
@@ -323,6 +324,9 @@ export const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* LIVE COMMUNITY RATING SECTION */}
+      <LiveCommunityRating />
 
       {/* FOUNDER & CEO SPOTLIGHT SECTION */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
