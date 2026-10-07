@@ -28,6 +28,7 @@ import { FeedbackPage } from './pages/FeedbackPage';
 import { MandatoryPasswordChangeModal } from './components/common/MandatoryPasswordChangeModal';
 import { FloatingSubmitOfferButton } from './components/common/FloatingSubmitOfferButton';
 import { FloatingShareRealityButton } from './components/common/FloatingShareRealityButton';
+import { FloatingFeedbackButton } from './components/common/FloatingFeedbackButton';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children, requiredRole = null }) => {
@@ -149,6 +150,7 @@ export const App = () => {
           <Footer />
           <FloatingShareRealityButton />
           <FloatingSubmitOfferButton />
+          <FloatingFeedbackButton />
         </div>
       </Router>
     </AuthProvider>

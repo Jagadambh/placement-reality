@@ -280,7 +280,7 @@ export const FloatingShareRealityButton = () => {
       {/* FLOATING ACTION BUTTON (BOTTOM-LEFT) */}
       <aside
         aria-label="Share College Reality Card"
-        className="fixed bottom-6 left-6 z-40 flex flex-col items-center group"
+        className="fixed bottom-[5.5rem] left-6 z-40 flex flex-col items-center group"
       >
         <button
           onClick={() => setIsOpen(true)}

@@ -1,5 +1,5 @@
 const Feedback = require('../models/Feedback');
-const { sendResponse, sendError } = require('../utils/responseHelper');
+const { sendSuccess, sendError } = require('../utils/responseHelper');
 
 // @desc    Submit new feedback
 // @route   POST /api/feedback
@@ -30,7 +30,7 @@ exports.submitFeedback = async (req, res, next) => {
 
     const feedback = await Feedback.create(feedbackData);
 
-    sendResponse(res, 201, 'Feedback submitted successfully', { feedback });
+    sendSuccess(res, { feedback }, 'Feedback submitted successfully', 201);
   } catch (error) {
     next(error);
   }
@@ -58,14 +58,14 @@ exports.getAllFeedback = async (req, res, next) => {
 
     const total = await Feedback.countDocuments(query);
 
-    sendResponse(res, 200, 'Feedback fetched successfully', {
+    sendSuccess(res, {
       feedback,
       pagination: {
         total,
         page,
         pages: Math.ceil(total / limit),
       }
-    });
+    }, 'Feedback fetched successfully', 200);
   } catch (error) {
     next(error);
   }
