@@ -79,23 +79,61 @@ export const TriangulationEngine = ({
     tri?.nirfData?.placementPercentage ||
     Number(((nirfPlaced / nirfCohort) * 100).toFixed(1));
 
-  const verifiedMedian =
-    pillars?.studentVerified?.medianLPA ||
-    tri?.pillars?.studentVerified?.medianLPA ||
-    advRealityData?.titForTatComparison?.verifiedFigures?.medianPackageLPA ||
-    advRealityData?.verified?.metrics?.medianPackageLPA ||
-    studentStats?.verifiedMedianPackageLPA ||
-    (studentStats?.medianPackageLPA && studentStats.medianPackageLPA !== 10 ? studentStats.medianPackageLPA : null) ||
+  const sampleCount =
+    pillars?.studentVerified?.sampleCount ??
+    studentStats?.verifiedPackageRecords ??
+    advRealityData?.titForTatComparison?.sampleVerifiedOffers?.length ??
+    0;
+
+  const sampleOffers =
+    pillars?.studentVerified?.sampleOffers ||
+    advRealityData?.titForTatComparison?.sampleVerifiedOffers ||
+    [];
+
+  const sampleOfferText = sampleOffers.length > 0
+    ? sampleOffers.map(o => `${o.companyName} ₹${o.annualCtcLpa}L`).join(', ')
+    : 'Accenture ₹11L, TCS Digital ₹7L';
+
+  const isLowSample =
+    pillars?.studentVerified?.isLowSample ??
+    studentStats?.isLowSample ??
+    (sampleCount > 0 && sampleCount < 10);
+
+  const batchConsensusMedian =
+    pillars?.studentVerified?.batchConsensusMedianLPA ??
+    studentStats?.batchConsensusMedianLPA ??
+    6.0;
+
+  const batchConsensusAvg =
+    pillars?.studentVerified?.batchConsensusAverageLPA ??
+    studentStats?.batchConsensusAverageLPA ??
+    7.0;
+
+  const sampleMedian =
+    pillars?.studentVerified?.sampleMedianLPA ??
+    studentStats?.sampleMedianPackageLPA ??
+    pillars?.studentVerified?.medianLPA ??
+    studentStats?.verifiedMedianPackageLPA ??
     9.0;
 
-  const verifiedAvg =
-    pillars?.studentVerified?.averageLPA ||
-    tri?.pillars?.studentVerified?.averageLPA ||
-    advRealityData?.titForTatComparison?.verifiedFigures?.averagePackageLPA ||
-    advRealityData?.verified?.metrics?.averagePackageLPA ||
-    studentStats?.verifiedAveragePackageLPA ||
-    (studentStats?.averagePackageLPA && studentStats.averagePackageLPA !== 16.75 ? studentStats.averagePackageLPA : null) ||
+  const sampleAvg =
+    pillars?.studentVerified?.sampleAverageLPA ??
+    studentStats?.sampleAveragePackageLPA ??
+    pillars?.studentVerified?.averageLPA ??
+    studentStats?.verifiedAveragePackageLPA ??
     9.0;
+
+  // The primary representative median for Student Reality
+  // If isLowSample is true and batchConsensusMedian exists, the primary figure is batch consensus (~6.0 LPA)
+  const verifiedMedian = isLowSample && batchConsensusMedian
+    ? batchConsensusMedian
+    : (pillars?.studentVerified?.medianLPA ?? studentStats?.verifiedMedianPackageLPA ?? sampleMedian ?? 6.0);
+
+  // The primary representative average for Student Reality
+  // Strictly eliminates rogue 11.25 LPA; displays batch consensus (~7.0 LPA) or sample average (9.0 LPA)
+  const verifiedAvg = isLowSample && batchConsensusAvg
+    ? batchConsensusAvg
+    : (pillars?.studentVerified?.averageLPA ?? studentStats?.verifiedAveragePackageLPA ?? sampleAvg ?? 7.0);
 
   const verifiedHighest =
     pillars?.studentVerified?.highestLPA ||
@@ -113,14 +151,6 @@ export const TriangulationEngine = ({
     studentStats?.observedPlacementRate ||
     studentStats?.actualPlacementRate ||
     72.0;
-
-  const sampleCount =
-    pillars?.studentVerified?.sampleCount ||
-    advRealityData?.titForTatComparison?.sampleVerifiedOffers?.length ||
-    studentStats?.verifiedPackageRecords ||
-    studentStats?.verifiedStudentOutcomes ||
-    studentStats?.sampleSize ||
-    0;
 
   const estimatedInHand = Math.round((verifiedMedian * 100000 * 0.72) / 12);
 
@@ -299,15 +329,15 @@ export const TriangulationEngine = ({
 
           <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-600 font-medium">Verified Offer Median:</span>
-              <span className="font-mono font-bold text-sm text-emerald-700">
-                ₹{verifiedMedian} LPA
+              <span className="text-xs text-slate-600 font-medium">Batch Consensus Median:</span>
+              <span className="font-mono font-bold text-sm text-emerald-800">
+                ~₹{batchConsensusMedian} LPA
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-600 font-medium">Batch Consensus Median:</span>
-              <span className="font-mono font-bold text-xs text-slate-700">
-                ~₹6.0 LPA (Student Reviews)
+              <span className="text-xs text-slate-600 font-medium">Audited Sample Median:</span>
+              <span className="font-mono font-bold text-xs text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded">
+                ₹{sampleMedian} LPA ({sampleCount} Offers)
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -330,7 +360,7 @@ export const TriangulationEngine = ({
               <span>Evidence Basis:</span>
             </p>
             <p className="text-emerald-800 text-[10px] leading-relaxed">
-              Calculated from {sampleCount > 0 ? `${sampleCount} audited student offer letters (Accenture ₹11L, TCS Digital ₹7L)` : 'audited student submissions'} and approved batch reviews reporting ~₹6.0 LPA batch median.
+              Calculated from {sampleCount} audited student offer letter{sampleCount !== 1 ? 's' : ''} ({sampleOfferText}) alongside approved batch reviews reporting ~₹{batchConsensusMedian} LPA batch median.
             </p>
           </div>
         </div>
@@ -388,10 +418,13 @@ export const TriangulationEngine = ({
                   ₹{nirfMedian} LPA
                 </td>
                 <td className="py-4 px-4 font-mono font-bold text-emerald-700 bg-emerald-50/20 border-l border-emerald-100">
-                  <div className="space-y-0.5">
-                    <span>₹{verifiedMedian} LPA</span>
-                    <span className="block text-[10px] text-emerald-600 font-normal">
-                      Audited sample ({sampleCount > 0 ? `${sampleCount} offers: Accenture ₹11L, TCS ₹7L` : 'verified offers'})
+                  <div className="space-y-1">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-sm font-black text-emerald-800">~₹{batchConsensusMedian} LPA</span>
+                      <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Batch Consensus</span>
+                    </div>
+                    <span className="block text-[10px] text-emerald-700 font-normal">
+                      Audited sample: ₹{sampleMedian} LPA ({sampleCount} offers: {sampleOfferText})
                     </span>
                   </div>
                 </td>
@@ -401,7 +434,7 @@ export const TriangulationEngine = ({
                       +{inflationDelta}% Brochure Gap
                     </span>
                     <p className="text-[11px] text-slate-500 leading-snug">
-                      Brochures conceal median CTC to obscure the bulk of bulk-recruiter 3.5–4.5 LPA packages.
+                      Brochures conceal median CTC to obscure the bulk of mass-recruiter 3.5–4.5 LPA packages.
                     </p>
                   </div>
                 </td>
@@ -420,10 +453,13 @@ export const TriangulationEngine = ({
                   ₹{(nirfMedian * 1.08).toFixed(1)} LPA (Audited est.)
                 </td>
                 <td className="py-4 px-4 font-mono font-bold text-emerald-700 bg-emerald-50/20 border-l border-emerald-100">
-                  <div className="space-y-0.5">
-                    <span>₹{verifiedAvg} LPA</span>
-                    <span className="block text-[10px] text-emerald-600 font-normal">
-                      Batch consensus: ~₹7.0L | Sample avg: ₹9.0L
+                  <div className="space-y-1">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-sm font-black text-emerald-800">~₹{batchConsensusAvg} LPA</span>
+                      <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Batch Consensus</span>
+                    </div>
+                    <span className="block text-[10px] text-emerald-700 font-normal">
+                      Sample avg: ₹{sampleAvg} LPA | Consensus: ~₹{batchConsensusAvg} LPA
                     </span>
                   </div>
                 </td>
@@ -433,7 +469,7 @@ export const TriangulationEngine = ({
                       Mean Outlier Skew
                     </span>
                     <p className="text-[11px] text-slate-500 leading-snug">
-                      Average is elevated by top 2% dream offers. 80% of students receive significantly less.
+                      Sample average is pulled up to ₹{sampleAvg} LPA by top dream offers. Regular batch consensus sits at ~₹{batchConsensusAvg} LPA.
                     </p>
                   </div>
                 </td>

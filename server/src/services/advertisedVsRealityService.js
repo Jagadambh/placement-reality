@@ -1106,6 +1106,16 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         highestLPA: verifiedHighest,
         placementRate: verifiedRate,
         sampleCount: liveStats?.verifiedPackageRecords || verM?.uniqueStudentsPlaced || 0,
+        sampleMedianLPA: liveStats?.sampleMedianPackageLPA ?? verifiedMedian,
+        sampleAverageLPA: liveStats?.sampleAveragePackageLPA ?? verifiedAverage,
+        batchConsensusMedianLPA: liveStats?.batchConsensusMedianLPA ?? null,
+        batchConsensusAverageLPA: liveStats?.batchConsensusAverageLPA ?? null,
+        isLowSample: Boolean(liveStats?.isLowSample),
+        sampleOffers: (liveStats?.sampleVerifiedOffers || []).map(o => ({
+          companyName: o.companyName,
+          annualCtcLpa: o.annualCtcLpa,
+          roleTitle: o.jobRole,
+        })),
         estimatedInHandMonthly: verifiedMedian ? Math.round((verifiedMedian * 100000 * 0.72) / 12) : null,
         source: 'Verified Offer Letters, College ID Badges, and Senior Placement Audits',
         description: 'Real student submissions verified with official college email IDs and encrypted offer letters. Unvested stocks and deferred bonuses are isolated from true take-home pay.',
@@ -1124,7 +1134,12 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         unit: 'LPA',
         brochure: brochureMedian ? `${brochureMedian} LPA` : (brochureAverage ? `~${brochureAverage} LPA (Omitted in ads)` : 'Not Disclosed'),
         nirf: nirfData.medianPackageLPA ? `${nirfData.medianPackageLPA} LPA` : 'Not Disclosed',
-        verified: verifiedMedian ? `${verifiedMedian} LPA` : 'Pending Proofs',
+        verified: liveStats?.isLowSample && liveStats?.batchConsensusMedianLPA
+          ? `~${liveStats.batchConsensusMedianLPA} LPA (Consensus)`
+          : (verifiedMedian ? `₹${verifiedMedian} LPA` : 'Pending Proofs'),
+        batchConsensus: liveStats?.batchConsensusMedianLPA ? `~${liveStats.batchConsensusMedianLPA} LPA` : null,
+        sampleValue: liveStats?.sampleMedianPackageLPA ? `₹${liveStats.sampleMedianPackageLPA} LPA` : null,
+        sampleCount: liveStats?.verifiedPackageRecords || 0,
         deltaLabel: brochureMedian && verifiedMedian
           ? (brochureMedian > verifiedMedian
               ? `+${(brochureMedian - verifiedMedian).toFixed(1)} LPA Overstated`
@@ -1142,7 +1157,12 @@ const getAdvertisedVsRealityComparison = async (collegeId, options = {}) => {
         unit: 'LPA',
         brochure: brochureAverage ? `${brochureAverage} LPA` : 'Claimed 10-15 LPA',
         nirf: nirfData.averagePackageLPA ? `${nirfData.averagePackageLPA} LPA` : 'Statutory Benchmark',
-        verified: verifiedAverage ? `${verifiedAverage} LPA` : 'Pending Proofs',
+        verified: liveStats?.isLowSample && liveStats?.batchConsensusAverageLPA
+          ? `~${liveStats.batchConsensusAverageLPA} LPA (Consensus)`
+          : (verifiedAverage ? `₹${verifiedAverage} LPA` : 'Pending Proofs'),
+        batchConsensus: liveStats?.batchConsensusAverageLPA ? `~${liveStats.batchConsensusAverageLPA} LPA` : null,
+        sampleValue: liveStats?.sampleAveragePackageLPA ? `₹${liveStats.sampleAveragePackageLPA} LPA` : null,
+        sampleCount: liveStats?.verifiedPackageRecords || 0,
         deltaLabel: brochureAverage && verifiedAverage
           ? (brochureAverage > verifiedAverage
               ? `+${(brochureAverage - verifiedAverage).toFixed(1)} LPA Gap`

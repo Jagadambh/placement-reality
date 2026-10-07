@@ -286,12 +286,15 @@ async function calculatePlacementStatistics({
   // 8. Mathematical Calculations from Database Records
   packageRecordsList.sort((a, b) => a - b);
 
-  let averagePackageLPA = packageRecordsList.length > 0 ? calculateAverage(packageRecordsList) : null;
-  let medianPackageLPA = packageRecordsList.length > 0 ? calculateMedian(packageRecordsList) : null;
+  const sampleAveragePackageLPA = packageRecordsList.length > 0 ? calculateAverage(packageRecordsList) : null;
+  const sampleMedianPackageLPA = packageRecordsList.length > 0 ? calculateMedian(packageRecordsList) : null;
   let highestPackageLPA = packageRecordsList.length > 0 ? Math.max(...packageRecordsList) : null;
   let lowestPackageLPA = packageRecordsList.length > 0 ? Math.min(...packageRecordsList) : null;
 
   // Corroborate / enhance from approved verified student reviews
+  let batchConsensusMedian = null;
+  let batchConsensusAverage = null;
+
   if (approvedReviews.length > 0) {
     const revMedians = approvedReviews.map(r => r.reportedStats?.medianPackageLPA).filter(Boolean);
     const revAverages = approvedReviews.map(r => r.reportedStats?.averagePackageLPA).filter(Boolean);
@@ -301,11 +304,34 @@ async function calculatePlacementStatistics({
       const maxRev = Math.max(...revHighests);
       highestPackageLPA = highestPackageLPA ? Math.max(highestPackageLPA, maxRev) : maxRev;
     }
-    if (revAverages.length > 0 && (!averagePackageLPA || eligibleOffers.length === 0)) {
-      averagePackageLPA = calculateAverage(revAverages);
+    if (revAverages.length > 0) {
+      batchConsensusAverage = calculateAverage(revAverages);
     }
-    if (revMedians.length > 0 && (!medianPackageLPA || eligibleOffers.length === 0)) {
-      medianPackageLPA = calculateMedian(revMedians);
+    if (revMedians.length > 0) {
+      batchConsensusMedian = calculateMedian(revMedians);
+    }
+  }
+
+  const isLowSample = verifiedStudentOutcomesCount < 10;
+
+  // When sample size is small (< 10 offers), a small sample of top offers (e.g. 11L, 7L) artificially skews median & mean.
+  // We prioritize batch consensus (from verified reviews) for the overall representative figure if available, while explicitly exposing sample metrics.
+  let averagePackageLPA = sampleAveragePackageLPA;
+  let medianPackageLPA = sampleMedianPackageLPA;
+
+  if (isLowSample) {
+    if (batchConsensusMedian !== null) {
+      medianPackageLPA = batchConsensusMedian;
+    }
+    if (batchConsensusAverage !== null) {
+      averagePackageLPA = batchConsensusAverage;
+    }
+  } else {
+    if (!averagePackageLPA && batchConsensusAverage !== null) {
+      averagePackageLPA = batchConsensusAverage;
+    }
+    if (!medianPackageLPA && batchConsensusMedian !== null) {
+      medianPackageLPA = batchConsensusMedian;
     }
   }
 
@@ -327,8 +353,6 @@ async function calculatePlacementStatistics({
     // If eligible cohort size is not officially disclosed:
     observedPlacementRateLabel = `Observed verified outcomes: ${verifiedStudentOutcomesCount}`;
   }
-
-  const isLowSample = verifiedStudentOutcomesCount < 10;
 
   // 10. Sample Verified Offer Proofs (Strictly Anonymized - No PII)
   const sampleVerifiedOffers = eligibleOffers.slice(0, 10).map((o) => ({
@@ -358,9 +382,13 @@ async function calculatePlacementStatistics({
     observedPlacementRate,
     observedPlacementRateLabel,
     verifiedAveragePackageLPA: averagePackageLPA,
-    verifiedAveragePackageLabel: `₹${averagePackageLPA.toFixed(2)} LPA`,
+    verifiedAveragePackageLabel: averagePackageLPA !== null ? `₹${averagePackageLPA.toFixed(2)} LPA` : 'Not available',
     verifiedMedianPackageLPA: medianPackageLPA,
-    verifiedMedianPackageLabel: `₹${medianPackageLPA.toFixed(2)} LPA`,
+    verifiedMedianPackageLabel: medianPackageLPA !== null ? `₹${medianPackageLPA.toFixed(2)} LPA` : 'Not available',
+    sampleAveragePackageLPA,
+    sampleMedianPackageLPA,
+    batchConsensusAverageLPA: batchConsensusAverage,
+    batchConsensusMedianLPA: batchConsensusMedian,
     verifiedHighestPackageLPA: highestPackageLPA,
     verifiedLowestPackageLPA: lowestPackageLPA,
     packageDistribution,
@@ -400,6 +428,11 @@ async function syncCollegeStudentVerifiedStats(collegeId, seasonId) {
       'studentVerifiedStats.medianPackageLPA': stats.verifiedMedianPackageLPA,
       'studentVerifiedStats.verifiedMedianPackageLPA': stats.verifiedMedianPackageLPA,
       'studentVerifiedStats.averagePackageLPA': stats.verifiedAveragePackageLPA,
+      'studentVerifiedStats.verifiedAveragePackageLPA': stats.verifiedAveragePackageLPA,
+      'studentVerifiedStats.sampleMedianPackageLPA': stats.sampleMedianPackageLPA,
+      'studentVerifiedStats.sampleAveragePackageLPA': stats.sampleAveragePackageLPA,
+      'studentVerifiedStats.batchConsensusMedianLPA': stats.batchConsensusMedianLPA,
+      'studentVerifiedStats.batchConsensusAverageLPA': stats.batchConsensusAverageLPA,
       'studentVerifiedStats.highestPackageLPA': stats.verifiedHighestPackageLPA,
       'studentVerifiedStats.lowestPackageLPA': stats.verifiedLowestPackageLPA,
       'studentVerifiedStats.isLowSample': stats.isLowSample,
