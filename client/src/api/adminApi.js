@@ -1,6 +1,10 @@
 import api from './axios';
 
 export const adminApi = {
+  getFeedback: async (params) => {
+    const res = await api.get('/feedback', { params });
+    return res.data;
+  },
   getOverview: () => api.get('/admin/overview'),
   getAuditLogs: (params) => api.get('/admin/audit-logs', { params }),
   getOffersQueue: (params) => api.get('/admin/offers/queue', { params }),
@@ -15,4 +19,5 @@ export const adminApi = {
   updateUserRole: (id, data) => api.put(`/admin/users/${id}/role`, data),
   verifyCollegeAffiliation: (id, data) => api.put(`/admin/users/${id}/verify-college`, data),
 };
+
 

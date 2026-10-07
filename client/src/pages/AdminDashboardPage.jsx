@@ -18,6 +18,7 @@ import {
   History,
   Check,
   X,
+  MessageSquarePlus,
   AlertCircle,
   FileText,
   Search,
@@ -85,6 +86,7 @@ export const AdminDashboardPage = () => {
 
   // Audit logs
   const [auditLogs, setAuditLogs] = useState([]);
+  const [feedbackQueue, setFeedbackQueue] = useState([]);
 
   // Colleges
   const [colleges, setColleges] = useState([]);
@@ -168,7 +170,10 @@ export const AdminDashboardPage = () => {
       } else if (activeTab === 'top-50') {
         const res = await collegeApi.getTop50PrivateColleges();
         if (res.data?.success) setTop50Colleges(res.data.data.colleges);
-      } else if (activeTab === 'users') {
+      } else if (activeTab === 'feedback') {
+          const res = await adminApi.getFeedback({ limit: 50 });
+          if (res.data?.success) setFeedbackQueue(res.data.data.feedback);
+        } else if (activeTab === 'users') {
         const res = await adminApi.getUsers();
         if (res.data?.success) setUsersList(res.data.data.users);
       }
@@ -1994,6 +1999,48 @@ export const AdminDashboardPage = () => {
       )}
 
       {/* USER ROLES & VERIFICATIONS TAB */}
+            {activeTab === 'feedback' && (
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+          <h3 className="font-bold text-base text-slate-900">User Feedback & Bug Reports</h3>
+          <div className="overflow-x-auto rounded-xl border border-slate-100">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-slate-50 text-slate-500 font-medium">
+                <tr>
+                  <th className="px-4 py-3">User</th>
+                  <th className="px-4 py-3">Site Rating</th>
+                  <th className="px-4 py-3">Site Feedback</th>
+                  <th className="px-4 py-3">Reality Rating</th>
+                  <th className="px-4 py-3">Reality Feedback</th>
+                  <th className="px-4 py-3">Other/Bugs</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {feedbackQueue && feedbackQueue.map((fb) => (
+                  <tr key={fb._id} className="hover:bg-slate-50/50">
+                    <td className="px-4 py-3">
+                      {fb.name || (fb.user?.name) || 'Anonymous'}<br/>
+                      <span className="text-xs text-slate-400">{fb.email || (fb.user?.email) || 'N/A'}</span>
+                    </td>
+                    <td className="px-4 py-3 font-bold text-amber-500">{fb.websiteRating}/5</td>
+                    <td className="px-4 py-3 text-slate-700 whitespace-normal min-w-[200px]">{fb.websiteFeedback || '-'}</td>
+                    <td className="px-4 py-3 font-bold text-amber-500">{fb.realityRating}/5</td>
+                    <td className="px-4 py-3 text-slate-700 whitespace-normal min-w-[200px]">{fb.realityFeedback || '-'}</td>
+                    <td className="px-4 py-3 text-slate-700 whitespace-normal min-w-[200px]">{fb.otherFeedback || '-'}</td>
+                  </tr>
+                ))}
+                {(!feedbackQueue || feedbackQueue.length === 0) && (
+                  <tr>
+                    <td colSpan="6" className="px-4 py-8 text-center text-slate-500">
+                      No feedback submitted yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {activeTab === 'users' && (
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
           <h3 className="font-bold text-base text-slate-900">User Roles & Affiliation Status</h3>
@@ -2518,3 +2565,7 @@ export const AdminDashboardPage = () => {
     </div>
   );
 };
+
+
+
+
