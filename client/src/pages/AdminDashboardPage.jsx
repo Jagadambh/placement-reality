@@ -2206,12 +2206,15 @@ export const AdminDashboardPage = () => {
               <span className="text-[11px] font-semibold text-slate-700">Quick Reason Templates:</span>
               <div className="flex flex-wrap gap-1.5">
                 {[
+                  'Registered email ID does not match student ID card / invalid domain',
+                  'Email is not a recognized official institutional address',
                   'Photo is blurry or unreadable',
                   'College ID has expired',
                   'Name on ID does not match account name',
                   'Not an official college credential',
                   'College name mismatch with selected institution',
                 ].map((template) => (
+
                   <button
                     key={template}
                     type="button"

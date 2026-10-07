@@ -11,6 +11,7 @@ const UploadedReport = require('../models/UploadedReport');
 const Notification = require('../models/Notification');
 const { sendSuccess, sendError } = require('../utils/responseHelper');
 const { recordAuditLog } = require('../services/auditService');
+const emailService = require('../services/emailService');
 
 // @desc Platform-wide overview statistics for admin
 // @route GET /api/admin/overview
@@ -325,6 +326,18 @@ const verifyStudentAffiliation = async (req, res, next) => {
         link: '/profile',
       });
     }
+
+    // Asynchronously dispatch transactional email notice to the student
+    emailService.sendStudentVerificationStatusEmail({
+      to: user.email,
+      name: user.name,
+      collegeName,
+      status,
+      reason: finalReason,
+    }).catch((mailErr) => {
+      console.warn('[Student Verification Email Warning]', mailErr.message);
+    });
+
 
     const populatedUser = await User.findById(user._id)
       .populate('collegeId', 'name shortName tierClassification')

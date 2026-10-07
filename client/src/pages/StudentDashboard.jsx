@@ -18,6 +18,7 @@ import {
   Layers,
   ArrowRight,
   ShieldCheck,
+  ShieldAlert,
   Building,
   Star,
   MessageSquare,
@@ -143,6 +144,15 @@ export const StudentDashboard = () => {
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Document Verified Student</span>
               </span>
+            ) : user?.collegeVerificationStatus === 'rejected' ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/30 flex items-center gap-1">
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>Verification Rejected by Lead Verifier</span>
+              </span>
+            ) : user?.collegeVerificationStatus === 'pending' ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30">
+                Affiliation Under Review
+              </span>
             ) : (
               <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">
                 Self-Reported Affiliation (Awaiting ID Verification)
@@ -168,6 +178,38 @@ export const StudentDashboard = () => {
           </Link>
         </div>
       </div>
+
+      {/* Affiliation Verification Feedback Alert Banner */}
+      {user?.collegeVerificationStatus === 'rejected' && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-rose-50 border border-rose-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-bold text-sm text-rose-900">
+                  Affiliation Verification Notice
+                </h4>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-200 text-rose-800">
+                  Action Required
+                </span>
+              </div>
+              <p className="text-xs text-rose-700 mt-1 leading-relaxed">
+                <strong>Feedback from Lead Verifier:</strong>{' '}
+                {user?.collegeVerificationRejectionReason || 'The registered email or uploaded ID proof does not match institutional records.'}
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/profile"
+            className="shrink-0 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-1.5"
+          >
+            <span>Update ID in Profile</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
 
       {/* College Placement Highlights & Trends */}
       {analytics && (

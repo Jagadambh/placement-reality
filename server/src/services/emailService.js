@@ -223,11 +223,76 @@ async function sendEmailVerificationEmail({ to, name = 'Student', verifyUrl, ver
   });
 }
 
+/**
+ * Send student college verification status email (Approved or Rejected by Lead Verifier)
+ */
+async function sendStudentVerificationStatusEmail({ to, name = 'Student', collegeName = 'your institution', status, reason }) {
+  const mailer = getTransporter();
+  const from = process.env.SMTP_FROM || `"Placement Reality" <${process.env.SMTP_USER || 'placement.reality1@gmail.com'}>`;
+  const isApproved = status === 'verified';
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+  const profileUrl = `${clientUrl}/profile`;
+
+  const bodyContent = isApproved ? `
+    <p>Hello <strong>${name}</strong>,</p>
+    <p>Great news! Your college affiliation and student credentials for <strong>${collegeName}</strong> have been officially <strong>verified and approved</strong> by the Lead Placement Verifier.</p>
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px; margin: 20px 0; text-align: center;">
+      <span style="display: block; font-size: 11px; text-transform: uppercase; color: #166534; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">Status</span>
+      <span style="font-size: 18px; font-weight: 800; color: #15803d;">🛡️ Document Verified Student Badge Granted</span>
+    </div>
+    <p>Your profile and submissions now carry the official <strong>Verified Student</strong> badge, boosting trust for incoming juniors and parents.</p>
+    <div style="text-align: center; margin: 24px 0;">
+      <a href="${profileUrl}" class="btn" target="_blank">View Your Verified Profile</a>
+    </div>
+  ` : `
+    <p>Hello <strong>${name}</strong>,</p>
+    <p>Your college verification submission for <strong>${collegeName}</strong> was reviewed by the Lead Placement Verifier and <strong>could not be approved</strong> at this time.</p>
+    
+    <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; padding: 18px; margin: 20px 0;">
+      <span style="display: block; font-size: 11px; text-transform: uppercase; color: #9f1239; font-weight: 800; letter-spacing: 1px; margin-bottom: 6px;">Message from Lead Verifier</span>
+      <p style="font-size: 13px; color: #881337; font-weight: 600; margin: 0; line-height: 1.5;">"${reason || 'The registered email or uploaded ID proof does not meet institutional requirements.'}"</p>
+    </div>
+
+    <p style="font-size: 13px; color: #475569;">
+      <strong>What should you do next?</strong><br>
+      If your institutional email was incorrect or your uploaded ID card was blurry, expired, or unreadable, you can upload an updated official proof directly from your profile.
+    </p>
+
+    <div style="text-align: center; margin: 24px 0;">
+      <a href="${profileUrl}" class="btn" style="background: linear-gradient(135deg, #e11d48, #be123c);" target="_blank">Re-upload Proof on Your Profile</a>
+    </div>
+  `;
+
+  const html = wrapHtmlEmail({
+    title: isApproved ? 'College Affiliation Verified' : 'Verification Update: Action Required',
+    preheader: isApproved
+      ? `Your student verification for ${collegeName} has been approved.`
+      : `Your college verification was not approved. Feedback: ${reason || 'Details inside.'}`,
+    bodyContent,
+  });
+
+  const subject = isApproved
+    ? `🎓 Verified Student Status Approved — Placement Reality`
+    : `⚠️ Action Required: College Verification Update — Placement Reality`;
+
+  return await mailer.sendMail({
+    from,
+    to,
+    subject,
+    text: isApproved
+      ? `Hello ${name},\n\nYour student verification for ${collegeName} has been approved by the Lead Verifier.\n\nVisit: ${profileUrl}\n\n— Placement Reality Team`
+      : `Hello ${name},\n\nYour student verification was not approved.\n\nReason: ${reason}\n\nPlease visit ${profileUrl} to re-upload your document.\n\n— Placement Reality Team`,
+    html,
+  });
+}
+
 module.exports = {
   getTransporter,
   isSmtpConfigured: () => Boolean(process.env.SMTP_USER && process.env.SMTP_PASS),
   sendPasswordResetEmail,
   sendPasswordResetSuccessEmail,
   sendEmailVerificationEmail,
+  sendStudentVerificationStatusEmail,
 };
+
 
