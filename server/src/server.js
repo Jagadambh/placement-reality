@@ -28,6 +28,7 @@ const officialReportRoutes = require('./routes/officialReportRoutes');
 const studentSessionReportRoutes = require('./routes/studentSessionReportRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const roiRoutes = require('./routes/roiRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
 
 const app = express();
 
@@ -98,6 +99,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/comparisons', comparisonRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/feedback', feedbackRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/official-reports', officialReportRoutes);
 app.use('/api/student-session-reports', studentSessionReportRoutes);

@@ -33,7 +33,7 @@ export const Footer = () => {
               <li><Link to="/student-verified" className="text-emerald-400 hover:text-emerald-300 font-semibold transition">🎓 Students &amp; Seniors Portal</Link></li>
               <li><Link to="/roi-calculator" className="hover:text-white transition">ROI & Loan Simulator</Link></li>
               <li><Link to="/compare" className="hover:text-white transition">Multi-College Comparison</Link></li>
-              <li><Link to="/community" className="hover:text-white transition">Campus Community & Q&A</Link></li>
+              <li><Link to="/community" className="hover:text-white transition">Campus Community & Q&A</Link></li><li><Link to="/feedback" className="text-blue-400 hover:text-blue-300 font-semibold transition">Give Feedback</Link></li>
               <li><Link to="/founder" className="text-amber-400 hover:text-amber-300 font-semibold transition">Founder &amp; CEO (Harish Sonkar)</Link></li>
             </ul>
           </div>

@@ -16,6 +16,7 @@ const OfficialPlacementReport = require('./OfficialPlacementReport');
 const OfficialReportMetric = require('./OfficialReportMetric');
 const InstitutionDiscoveryLog = require('./InstitutionDiscoveryLog');
 const StudentSessionReport = require('./StudentSessionReport');
+const Feedback = require('./Feedback');
 
 module.exports = {
   User,
@@ -36,4 +37,5 @@ module.exports = {
   OfficialReportMetric,
   InstitutionDiscoveryLog,
   StudentSessionReport,
+  Feedback,
 };

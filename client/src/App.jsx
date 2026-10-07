@@ -24,6 +24,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { FeedbackPage } from './pages/FeedbackPage';
 import { MandatoryPasswordChangeModal } from './components/common/MandatoryPasswordChangeModal';
 import { FloatingSubmitOfferButton } from './components/common/FloatingSubmitOfferButton';
 import { FloatingShareRealityButton } from './components/common/FloatingShareRealityButton';
@@ -137,6 +138,9 @@ export const App = () => {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Feedback Route */}
+              <Route path="/feedback" element={<FeedbackPage />} />
 
               {/* Fallback */}
               <Route path="*" element={<Navigate to="/" replace />} />
