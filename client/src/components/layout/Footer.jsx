@@ -28,7 +28,6 @@ export const Footer = () => {
           <div>
             <h4 className="font-semibold text-white mb-3 text-xs uppercase tracking-wider">Explore Platform</h4>
             <ul className="space-y-2 text-slate-400">
-              <li><Link to="/colleges" className="hover:text-white transition">College Directory</Link></li>
               <li><Link to="/top-private-engineering-colleges-india" className="hover:text-white transition">Top 50 Private Colleges</Link></li>
               <li><Link to="/student-verified" className="text-emerald-400 hover:text-emerald-300 font-semibold transition">🎓 Students &amp; Seniors Portal</Link></li>
               <li><Link to="/roi-calculator" className="hover:text-white transition">ROI & Loan Simulator</Link></li>
@@ -95,3 +94,4 @@ export const Footer = () => {
     </footer>
   );
 };
+

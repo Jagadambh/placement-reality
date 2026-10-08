@@ -38,7 +38,6 @@ export const Navbar = () => {
   };
 
   const navLinks = [
-    { name: 'Colleges', path: '/colleges', icon: GraduationCap },
     { name: 'Top 50 Private', path: '/top-private-engineering-colleges-india', icon: Award, isBadge: true },
     { name: 'Students & Seniors', path: '/student-verified', icon: ShieldCheck, highlight: true },
     { name: 'Official Reports', path: '/official-reports', icon: FileText },
@@ -280,3 +279,4 @@ export const Navbar = () => {
     </nav>
   );
 };
+

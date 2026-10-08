@@ -8,7 +8,6 @@ import { Footer } from './components/layout/Footer';
 import { LandingPage } from './pages/LandingPage';
 import { StudentVerifiedPage } from './pages/StudentVerifiedPage';
 import { StudentDashboard } from './pages/StudentDashboard';
-import { CollegeDirectoryPage } from './pages/CollegeDirectoryPage';
 import { CollegeDetailPage } from './pages/CollegeDetailPage';
 import { PlacementSubmissionPage } from './pages/PlacementSubmissionPage';
 import { CollegeComparisonPage } from './pages/CollegeComparisonPage';
@@ -80,7 +79,6 @@ export const App = () => {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/colleges" element={<CollegeDirectoryPage />} />
               <Route path="/colleges/:slugOrId" element={<CollegeDetailPage />} />
               <Route path="/top-private-engineering-colleges-india" element={<Top50PrivateCollegesPage />} />
               <Route path="/top-50-private" element={<Navigate to="/top-private-engineering-colleges-india" replace />} />
@@ -158,3 +156,5 @@ export const App = () => {
 };
 
 export default App;
+
+
