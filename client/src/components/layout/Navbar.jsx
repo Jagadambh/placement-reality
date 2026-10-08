@@ -38,7 +38,7 @@ export const Navbar = () => {
   };
 
   const navLinks = [
-    { name: 'Top 50 Private', path: '/top-private-engineering-colleges-india', icon: Award, isBadge: true },
+    { name: 'Top 50 Colleges', path: '/top-private-engineering-colleges-india', icon: Award, isBadge: true },
     { name: 'Students & Seniors', path: '/student-verified', icon: ShieldCheck, highlight: true },
     { name: 'Official Reports', path: '/official-reports', icon: FileText },
     { name: 'ROI & Loan', path: '/roi-calculator', icon: Calculator },
