@@ -158,6 +158,7 @@ const seedDatabase = async () => {
   const kiitCse = await Department.create({ collegeId: kiit._id, name: 'Computer Science and Engineering', code: 'CSE', degreeLevel: 'B.Tech', totalSeats: 1200 });
   const kiitEce = await Department.create({ collegeId: kiit._id, name: 'Electronics and Communication Engineering', code: 'ECE', degreeLevel: 'B.Tech', totalSeats: 480 });
   const kiitIt = await Department.create({ collegeId: kiit._id, name: 'Information Technology', code: 'IT', degreeLevel: 'B.Tech', totalSeats: 360 });
+  const kiitChem = await Department.create({ collegeId: kiit._id, name: 'Chemical Engineering', code: 'CHE', degreeLevel: 'B.Tech', totalSeats: 120 });
 
   const vitCse = await Department.create({ collegeId: vit._id, name: 'Computer Science and Engineering', code: 'CSE', degreeLevel: 'B.Tech', totalSeats: 1800 });
   const vitEce = await Department.create({ collegeId: vit._id, name: 'Electronics and Communication Engineering', code: 'ECE', degreeLevel: 'B.Tech', totalSeats: 600 });

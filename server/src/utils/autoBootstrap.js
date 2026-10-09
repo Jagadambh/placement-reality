@@ -66,6 +66,18 @@ async function autoBootstrapDatabase(force = false) {
       }
     }
 
+    // Ensure Chemical Engineering department exists for all colleges that have departments
+    const Department = require('../models/Department');
+    const allCollegesWithDepts = await Department.distinct('collegeId');
+    for (const cId of allCollegesWithDepts) {
+      const exists = await Department.findOne({ collegeId: cId, code: 'CHE' });
+      if (!exists) {
+        try {
+          await Department.create({ collegeId: cId, name: 'Chemical Engineering', code: 'CHE', degreeLevel: 'B.Tech' });
+        } catch (e) { /* duplicate key is fine */ }
+      }
+    }
+
     const needsColleges = force || collegeCount < 80 || top50Count < 50;
     const needsPosts = force || postCount === 0;
     const needsReviews = force || reviewCount < 30;
